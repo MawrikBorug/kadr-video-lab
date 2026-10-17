@@ -1,0 +1,476 @@
+{
+  "environment": "Managed cloud HTTP proxy; not a physical iPhone or Russian home/mobile network. Provider countryIso=US is not a physical geolocation measurement.",
+  "method": "Bounded unauthenticated GET; no challenge bypass. SHA-256 refers to the actual bounded response. Media URLs and segment bytes are not retained in this repository.",
+  "http": [
+    {
+      "name": "stellar",
+      "url": "https://stellar.rip/en/api",
+      "checkedAt": "2026-10-17T04:53:29.121256+00:00",
+      "status": 403,
+      "finalUrl": "https://stellar.rip/en/api",
+      "headers": {
+        "content-type": "text/plain; charset=UTF-8",
+        "x-frame-options": "SAMEORIGIN"
+      },
+      "bytes": 17,
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "elapsedSeconds": 0.697
+    },
+    {
+      "name": "yapgrid",
+      "url": "https://raw.githubusercontent.com/enikqi/yapgrid/main/README.md",
+      "checkedAt": "2026-10-17T04:53:29.122041+00:00",
+      "status": 200,
+      "finalUrl": "https://raw.githubusercontent.com/enikqi/yapgrid/main/README.md",
+      "headers": {
+        "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "content-type": "text/plain; charset=utf-8",
+        "x-frame-options": "deny",
+        "vary": "Authorization,Accept-Encoding",
+        "access-control-allow-origin": "*"
+      },
+      "bytes": 5980,
+      "sha256": "81536d569de52d608e5a1c1d96bf5963c2b58a8f49c7673f6adbbff476a127b5",
+      "elapsedSeconds": 0.613
+    },
+    {
+      "name": "mapple",
+      "url": "https://mappletv.uk/",
+      "checkedAt": "2026-10-17T04:53:29.122547+00:00",
+      "status": 403,
+      "finalUrl": "https://mappletv.uk/",
+      "headers": {
+        "content-type": "text/plain; charset=UTF-8",
+        "x-frame-options": "SAMEORIGIN"
+      },
+      "bytes": 17,
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "elapsedSeconds": 0.201
+    },
+    {
+      "name": "ezvid",
+      "url": "https://ezvidapi.com/",
+      "checkedAt": "2026-10-17T04:53:29.123007+00:00",
+      "status": 403,
+      "finalUrl": "https://ezvidapi.com/",
+      "headers": {
+        "content-type": "text/plain; charset=UTF-8",
+        "x-frame-options": "SAMEORIGIN"
+      },
+      "bytes": 17,
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "elapsedSeconds": 0.297
+    },
+    {
+      "name": "aniliberty-docs",
+      "url": "https://anilibria.top/api/docs/v1",
+      "checkedAt": "2026-10-17T04:53:29.123423+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/api/docs/v1",
+      "headers": {
+        "content-type": "text/html; charset=UTF-8",
+        "vary": "Origin,accept-encoding"
+      },
+      "bytes": 2467,
+      "sha256": "d67a4832802d5b3211a316c8997d7291e3f0eef47e6edfe3f1aee9915d688df9",
+      "title": "AniLiberty API V1",
+      "elapsedSeconds": 0.857
+    },
+    {
+      "name": "aniliberty-openapi",
+      "url": "https://anilibria.top/storage/api/docs/v1?aniliberty-api-v1-docs.json",
+      "checkedAt": "2026-10-17T04:53:29.123882+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/storage/api/docs/v1?aniliberty-api-v1-docs.json",
+      "headers": {
+        "content-type": "application/json",
+        "vary": "accept-encoding"
+      },
+      "bytes": 304910,
+      "sha256": "f330b271928ba37d4b2ea1149dc54ebc7becb0b688281e07498b45c4fa7dc14f",
+      "elapsedSeconds": 1.777
+    },
+    {
+      "name": "yapgrid-getting-started",
+      "url": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/getting-started.md",
+      "checkedAt": "2026-10-17T04:54:08.180231+00:00",
+      "status": 200,
+      "finalUrl": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/getting-started.md",
+      "headers": {
+        "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "content-type": "text/plain; charset=utf-8",
+        "x-frame-options": "deny",
+        "vary": "Authorization,Accept-Encoding",
+        "access-control-allow-origin": "*"
+      },
+      "bytes": 3918,
+      "sha256": "dfb304b78e9bd66e1cb77958a978e7cb6d99a5890f38e56a9a3df9cc8d77431b",
+      "elapsedSeconds": 0.715
+    },
+    {
+      "name": "yapgrid-faq",
+      "url": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/faq.md",
+      "checkedAt": "2026-10-17T04:54:08.180988+00:00",
+      "status": 200,
+      "finalUrl": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/faq.md",
+      "headers": {
+        "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "content-type": "text/plain; charset=utf-8",
+        "x-frame-options": "deny",
+        "vary": "Authorization,Accept-Encoding",
+        "access-control-allow-origin": "*"
+      },
+      "bytes": 3335,
+      "sha256": "f738c96698a818588d2286df58807f3d41e20821027d5975c1a5effb16a49826",
+      "elapsedSeconds": 0.567
+    },
+    {
+      "name": "yapgrid-troubleshooting",
+      "url": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/troubleshooting.md",
+      "checkedAt": "2026-10-17T04:54:08.181697+00:00",
+      "status": 200,
+      "finalUrl": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/troubleshooting.md",
+      "headers": {
+        "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "content-type": "text/plain; charset=utf-8",
+        "x-frame-options": "deny",
+        "vary": "Authorization,Accept-Encoding",
+        "access-control-allow-origin": "*"
+      },
+      "bytes": 1473,
+      "sha256": "62d730bbb63fa8791a2ed80de8260913f019639e00b1a6e5c3f3c8de6b85d0f2",
+      "elapsedSeconds": 0.515
+    },
+    {
+      "name": "yapgrid-controls",
+      "url": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/player-controls.md",
+      "checkedAt": "2026-10-17T04:54:08.182402+00:00",
+      "status": 200,
+      "finalUrl": "https://raw.githubusercontent.com/enikqi/yapgrid/main/docs/player-controls.md",
+      "headers": {
+        "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        "content-type": "text/plain; charset=utf-8",
+        "x-frame-options": "deny",
+        "vary": "Authorization,Accept-Encoding",
+        "access-control-allow-origin": "*"
+      },
+      "bytes": 4713,
+      "sha256": "f4e549b7914d79753d593a480fbfa203ba296009de145536a65a6896eb3ee1fe",
+      "elapsedSeconds": 0.723
+    },
+    {
+      "name": "yapgrid-embed",
+      "url": "https://yapgrid.com/embed/movie/550",
+      "checkedAt": "2026-10-17T04:54:08.184981+00:00",
+      "status": 403,
+      "finalUrl": "https://yapgrid.com/embed/movie/550",
+      "headers": {
+        "content-type": "text/plain; charset=UTF-8",
+        "x-frame-options": "SAMEORIGIN"
+      },
+      "bytes": 17,
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "elapsedSeconds": 0.242
+    },
+    {
+      "name": "aniliberty-release",
+      "url": "https://anilibria.top/api/v1/anime/releases/10301",
+      "checkedAt": "2026-10-17T04:54:08.190915+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/api/v1/anime/releases/10301",
+      "headers": {
+        "content-type": "application/json",
+        "vary": "Origin,accept-encoding"
+      },
+      "bytes": 22462,
+      "sha256": "0f2041a2a9130bef0cef828cb9f98a2daf2878ef7ae0b7a1acb0dd714c4ddd83",
+      "elapsedSeconds": 0.435
+    },
+    {
+      "name": "aniliberty-dandadan",
+      "url": "https://anilibria.top/api/v1/anime/releases/9789",
+      "checkedAt": "2026-10-17T05:06:46.365561+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/api/v1/anime/releases/9789",
+      "headers": {
+        "content-type": "application/json",
+        "vary": "Origin,accept-encoding"
+      },
+      "bytes": 42730,
+      "sha256": "1c581e9d9a2462d2bdf8d7e339370a0d0025f91a51b1a99d70c096a7df41ff9e",
+      "elapsedSeconds": 0.881
+    },
+    {
+      "name": "aniliberty-solo",
+      "url": "https://anilibria.top/api/v1/anime/releases/9600",
+      "checkedAt": "2026-10-17T05:06:46.366240+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/api/v1/anime/releases/9600",
+      "headers": {
+        "content-type": "application/json",
+        "vary": "Origin,accept-encoding"
+      },
+      "bytes": 43983,
+      "sha256": "00b789830568f57aea9332fd59bafc93914d4fbccd07649c40963523d59d5464",
+      "elapsedSeconds": 0.872
+    },
+    {
+      "name": "aniliberty-frieren",
+      "url": "https://anilibria.top/api/v1/anime/releases/9542",
+      "checkedAt": "2026-10-17T05:06:46.366620+00:00",
+      "status": 200,
+      "finalUrl": "https://anilibria.top/api/v1/anime/releases/9542",
+      "headers": {
+        "content-type": "application/json",
+        "vary": "Origin,accept-encoding"
+      },
+      "bytes": 66614,
+      "sha256": "e95ef48e4fd1a6d7ed582debefa9a870db1e28f07af517c5c8c11568480aea54",
+      "elapsedSeconds": 0.928
+    },
+    {
+      "name": "tmdb-master",
+      "url": "https://www.themoviedb.org/movie/586353",
+      "checkedAt": "2026-10-17T04:57:05.221713+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/586353-master-i-margarita",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 146459,
+      "sha256": "32d5c5d58db1f36d5ff4cbf0b7e081e87fee855bdcadff4952963a806e49e683",
+      "title": "The Master and Margarita (2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.192
+    },
+    {
+      "name": "tmdb-hundred",
+      "url": "https://www.themoviedb.org/movie/732698",
+      "checkedAt": "2026-10-17T04:57:05.222303+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/732698",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 145065,
+      "sha256": "93a7327e1080f56f204b86f4572cd1518543b62c5dfdc662f8a0f9d8f25e479a",
+      "title": "Guest from the Future (2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 0.953
+    },
+    {
+      "name": "tmdb-cheburashka",
+      "url": "https://www.themoviedb.org/movie/751171",
+      "checkedAt": "2026-10-17T04:57:05.222784+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/751171",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 145426,
+      "sha256": "012455657ed2f9ca4a5f4459e627be835f2b15e79b4e470d77b5dc7a1cf621c8",
+      "title": "Chebi: My Fluffy Friend (2023) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.01
+    },
+    {
+      "name": "tmdb-dune",
+      "url": "https://www.themoviedb.org/movie/693134",
+      "checkedAt": "2026-10-17T04:54:54.658100+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/693134-dune-part-two",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 162685,
+      "sha256": "9ead07dc707184b9fda8f4f004c719269911b732721f7172b27de41cb7c39b67",
+      "title": "Dune: Part Two (2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.681
+    },
+    {
+      "name": "tmdb-substance",
+      "url": "https://www.themoviedb.org/movie/933260",
+      "checkedAt": "2026-10-17T04:55:29.005657+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/933260-the-substance",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 161415,
+      "sha256": "f06f0d31e218c285a79159de8ddedb6b175e7c58925424ebed3ee3b351309168",
+      "title": "The Substance (2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.134
+    },
+    {
+      "name": "tmdb-anora",
+      "url": "https://www.themoviedb.org/movie/1064213",
+      "checkedAt": "2026-10-17T04:55:29.006223+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/movie/1064213-anora",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 159925,
+      "sha256": "10ab369a65b48602560cdedd8f000f005cd2efd3e7f8474c24924c7c4e15c152",
+      "title": "Anora (2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 0.987
+    },
+    {
+      "name": "tmdb-boy",
+      "url": "https://www.themoviedb.org/tv/234763",
+      "checkedAt": "2026-10-17T04:57:05.223167+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/234763-the-boy-s-word-blood-on-the-asphalt",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 151313,
+      "sha256": "bb3e038a92a15244350d048501afc9ca7654fd8cc8d5aed8995971e4150a1157",
+      "title": "The Boy&#39;s Word: Blood on the Asphalt (TV Series 2023) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.049
+    },
+    {
+      "name": "tmdb-fallout",
+      "url": "https://www.themoviedb.org/tv/106379",
+      "checkedAt": "2026-10-17T04:55:29.779836+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/106379-fallout",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 163253,
+      "sha256": "cf0b63bb2729667118634120985ea527c52680312f3cbbe7dd688c5d26442291",
+      "title": "Fallout (TV Series 2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.213
+    },
+    {
+      "name": "tmdb-severance",
+      "url": "https://www.themoviedb.org/tv/95396",
+      "checkedAt": "2026-10-17T04:55:29.828324+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/95396-severance",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 159364,
+      "sha256": "603a8c79d8741a5ff3885ffe2fabc695706f575ceebec920f42c188f78145cf9",
+      "title": "Severance (TV Series 2022) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 1.053
+    },
+    {
+      "name": "tmdb-dandadan-correct",
+      "url": "https://www.themoviedb.org/tv/240411",
+      "checkedAt": "2026-10-17T05:06:46.364750+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/240411",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 170410,
+      "sha256": "db67bffeb36f0ab05d6c11a6db03eeddf78bdeb03cc27561779ec4a108452919",
+      "title": "Dan Da Dan (TV Series 2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 0.791
+    },
+    {
+      "name": "tmdb-solo",
+      "url": "https://www.themoviedb.org/tv/127532",
+      "checkedAt": "2026-10-17T04:55:29.993149+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/127532",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 162691,
+      "sha256": "ff70f093f956d98501968be8f56f77af70df4a8b60faa7f7bbf795fc7507fc60",
+      "title": "Solo Leveling (TV Series 2024) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 0.616
+    },
+    {
+      "name": "tmdb-frieren",
+      "url": "https://www.themoviedb.org/tv/209867",
+      "checkedAt": "2026-10-17T04:55:30.022597+00:00",
+      "status": 200,
+      "finalUrl": "https://www.themoviedb.org/tv/209867",
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "vary": "Accept-Encoding,accept-encoding"
+      },
+      "bytes": 171557,
+      "sha256": "a9ed14f0a17b8b38a58a55a27ae62d2d1d5535c143e18d10e1a7ed6cd4d1775e",
+      "title": "Frieren: Beyond Journey&#39;s End (TV Series 2023) &#8212; The Movie Database (TMDB)",
+      "elapsedSeconds": 0.636
+    }
+  ],
+  "anilibertyDelivery": {
+    "checkedAt": "2026-10-17T04:54:52.059238+00:00",
+    "origin": "https://mawrikborug.github.io",
+    "release": {
+      "status": 200,
+      "cors": "https://mawrikborug.github.io",
+      "credentials": "true",
+      "authenticated": false,
+      "name": {
+        "main": "Магия вернувшегося должна быть особенной 2",
+        "english": "Kikansha no Mahou wa Tokubetsu desu 2nd Season",
+        "alternative": null
+      },
+      "id": 10301
+    },
+    "manifest": {
+      "status": 200,
+      "type": "application/x-mpegURL",
+      "cors": "https://mawrikborug.github.io",
+      "bytes": 16262,
+      "sha256": "57b4b73561116260995d716995f3c9b19427d842bb07afa60207b433ff322948",
+      "startsWithExtM3u": true,
+      "mediaOrigin": "https://cache.libria.fun",
+      "flags": {
+        "countryIso": [
+          "US"
+        ],
+        "isAuthorized": [
+          "0"
+        ],
+        "isWithVideoAds": [
+          "1"
+        ],
+        "isWithVideoAdsAlways": [
+          "1"
+        ]
+      }
+    },
+    "segment": {
+      "status": 206,
+      "type": "video/mp2t",
+      "cors": "https://mawrikborug.github.io",
+      "contentRange": "bytes 0-1023/1348336",
+      "bytesRead": 1024,
+      "sha256": "541cf40d897535378637b47583ed528c47088eede61e9a60075c549fa14fb7e5"
+    },
+    "Dandadan": {
+      "status": 200,
+      "cors": "https://mawrikborug.github.io",
+      "url": "https://anilibria.top/api/v1/app/search/releases?query=Dandadan"
+    },
+    "Solo Leveling": {
+      "status": 200,
+      "cors": "https://mawrikborug.github.io",
+      "url": "https://anilibria.top/api/v1/app/search/releases?query=Solo+Leveling"
+    },
+    "Frieren": {
+      "status": 200,
+      "cors": "https://mawrikborug.github.io",
+      "url": "https://anilibria.top/api/v1/app/search/releases?query=Frieren"
+    }
+  },
+  "physicalE1E2": "NOT_RUN",
+  "pagesDeployment": "NOT_RUN"
+}

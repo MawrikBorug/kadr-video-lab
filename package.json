@@ -1,0 +1,16 @@
+{
+  "name": "kadr-video-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "test:browser": "playwright test",
+    "serve": "node scripts/serve.mjs",
+    "package": "python3 scripts/package.py"
+  },
+  "dependencies": { "hls.js": "1.7.3" },
+  "devDependencies": { "@playwright/test": "1.64.1" }
+}

@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-10-17",
+  "providers": [
+    {
+      "provider": "yapgrid",
+      "gate": "VERIFIED_DOCUMENTATION",
+      "source": "https://github.com/enikqi/yapgrid",
+      "sha256": "81536d569de52d608e5a1c1d96bf5963c2b58a8f49c7673f6adbbff476a127b5",
+      "quotes": [
+        "Movies and TV episodes can be embedded directly from `https://yapgrid.com` with no API key required.",
+        "YapGrid is an ad-free movie and TV streaming embed player for worldwide users.",
+        "Website owners remain responsible for how they use public embeds and for following applicable laws, platform rules, and content policies in their own projects."
+      ],
+      "paths": [
+        "https://yapgrid.com/embed/movie/{tmdbId}",
+        "https://yapgrid.com/embed/tv/{tmdbId}/{season}/{episode}"
+      ],
+      "domainReferrerAllowlist": "not stated in inspected documentation",
+      "registration": "no key per author",
+      "price": "no mandatory payment stated in inspected public embed documentation; no pricing guarantee inferred",
+      "adFree": "author claim only",
+      "postMessage": "not documented in inspected README/getting-started/FAQ/player-controls/troubleshooting; all rejected",
+      "live": "INCONCLUSIVE: HTTP 403 on documented movie example"
+    },
+    {
+      "provider": "aniliberty",
+      "gate": "VERIFIED_DOCUMENTATION",
+      "source": "https://anilibria.top/storage/api/docs/v1?aniliberty-api-v1-docs.json",
+      "sha256": "f330b271928ba37d4b2ea1149dc54ebc7becb0b688281e07498b45c4fa7dc14f",
+      "operation": "GET /anime/releases/{idOrAlias}",
+      "identification": "release id or alias; episodes[].ordinal; hls_480/720/1080",
+      "quotes": [
+        "Ссылка на поток 480p",
+        "Возвращает данные по релизу"
+      ],
+      "securityNote": "Global OpenAPI security mentions sessionToken; anonymous read requests empirically returned JSON and media without Cookie or Authorization. No key is distributed.",
+      "price": "anonymous access observed; no contractual free SLA inferred",
+      "domainReferrerAllowlist": "Origin https://mawrikborug.github.io allowed on tested JSON, HLS and segment; broader allowlist not asserted",
+      "advertising": "URL flags are 1; never altered; actual ads NOT_RUN",
+      "live": "PASS transport only; playback NOT_RUN"
+    },
+    {
+      "provider": "stellar",
+      "gate": "INCONCLUSIVE",
+      "source": "https://stellar.rip/en/api",
+      "observed": "HTTP 403, error code 1010",
+      "keysPricingDomainRestrictions": "unknown; no confirmed owner registration procedure",
+      "integration": "disabled; no inferred player URL"
+    },
+    {
+      "provider": "mapple",
+      "gate": "INCONCLUSIVE",
+      "source": "https://mappletv.uk/",
+      "observed": "HTTP 403, error code 1010",
+      "keysPricingDomainRestrictions": "unknown; no confirmed owner registration procedure",
+      "integration": "disabled; no inferred player URL"
+    },
+    {
+      "provider": "ezvidapi",
+      "gate": "INCONCLUSIVE",
+      "source": "https://ezvidapi.com/",
+      "observed": "HTTP 403, error code 1010",
+      "keysPricingDomainRestrictions": "unknown; no confirmed owner registration procedure",
+      "integration": "disabled; no inferred player URL"
+    }
+  ]
+}

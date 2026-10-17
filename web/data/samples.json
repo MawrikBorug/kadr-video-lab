@@ -1,0 +1,14 @@
+[
+  { "key": "master", "title": "Мастер и Маргарита (2024)", "category": "ru-film", "type": "movie", "tmdb": "586353", "source": "https://www.themoviedb.org/movie/586353" },
+  { "key": "hundred", "title": "Сто лет тому вперёд (2024)", "category": "ru-film", "type": "movie", "tmdb": "732698", "source": "https://www.themoviedb.org/movie/732698" },
+  { "key": "cheburashka", "title": "Чебурашка (2023)", "category": "ru-film", "type": "movie", "tmdb": "751171", "source": "https://www.themoviedb.org/movie/751171" },
+  { "key": "dune", "title": "Дюна: Часть вторая (2024)", "category": "foreign-film", "type": "movie", "tmdb": "693134", "source": "https://www.themoviedb.org/movie/693134" },
+  { "key": "substance", "title": "Субстанция (2024)", "category": "foreign-film", "type": "movie", "tmdb": "933260", "source": "https://www.themoviedb.org/movie/933260" },
+  { "key": "anora", "title": "Анора (2024)", "category": "foreign-film", "type": "movie", "tmdb": "1064213", "source": "https://www.themoviedb.org/movie/1064213" },
+  { "key": "boy", "title": "Слово пацана. Кровь на асфальте · S1E1 (2023)", "category": "series", "type": "tv", "tmdb": "234763", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/234763" },
+  { "key": "fallout", "title": "Fallout · S1E1 (2024)", "category": "series", "type": "tv", "tmdb": "106379", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/106379" },
+  { "key": "severance", "title": "Разделение · S1E1 (2022)", "category": "series", "type": "tv", "tmdb": "95396", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/95396" },
+  { "key": "dandadan", "title": "Dandadan · S1E1 (2024)", "category": "anime", "type": "tv", "tmdb": "240411", "aniliberty": "9789", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/240411", "animeSource": "https://anilibria.top/api/v1/app/search/releases?query=Dandadan" },
+  { "key": "solo", "title": "Solo Leveling · S1E1 (2024)", "category": "anime", "type": "tv", "tmdb": "127532", "aniliberty": "9600", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/127532", "animeSource": "https://anilibria.top/api/v1/app/search/releases?query=Solo%20Leveling" },
+  { "key": "frieren", "title": "Frieren · S1E1 (2023)", "category": "anime", "type": "tv", "tmdb": "209867", "aniliberty": "9542", "season": "1", "episode": "1", "source": "https://www.themoviedb.org/tv/209867", "animeSource": "https://anilibria.top/api/v1/app/search/releases?query=Frieren" }
+]
