@@ -1,6 +1,6 @@
 import Hls from './vendor/hls.mjs';
 import { PROVIDERS, buildRequest, selectEpisode } from './providers.js';
-import { CHECKS, ADS, DETAILS, RESULTS, AD_RESULTS, makeRecord, appendEvent, acceptPostMessage, loadJournal, saveJournal, exportJSON, exportCSV, resultIssues } from './core.js';
+import { CHECKS, ADS, DETAILS, RESULTS, AD_RESULTS, makeRecord, appendEvent, acceptPostMessage, loadJournal, saveJournal, exportJSON, exportCSV, e1Candidates, reconcileRecord, assessRecord } from './core.js';
 
 const $ = id => document.getElementById(id);
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
@@ -59,13 +59,14 @@ function providerInfo() {
   $('id-hint').textContent = provider.kind === 'hls' ? 'Для другого сезона нужен его ID релиза. Номер сезона не преобразуется в ID автоматически.' : provider.kind === 'iframe' ? 'Только TMDB. IMDb не конвертируется: проверенного бесключевого сопоставления нет.' : 'Можно сохранить попытку с результатом «источник не подтвердился».';
   $('content-id').required = provider.enabled;
   $('open-source').textContent = provider.enabled ? 'Открыть источник вручную' : 'Зафиксировать неподтверждённый источник';
-  $('unrestricted-label').hidden = provider.kind !== 'iframe' || $('sandbox').value !== 'documented';
+  const unsafe = provider.kind === 'iframe' && $('sandbox').value === 'documented';
+  for (const id of ['unrestricted-label', 'clean-session-label', 'sandbox-warning']) $(id).hidden = !unsafe;
 }
 
 function applySample() {
   const sample = samples.find(item => item.key === $('sample').value);
   $('catalog-link').hidden = !sample;
-  if (!sample) return;
+  if (!sample) { updateE1Options(); return; }
   $('catalog-link').href = sample.source;
   $('title').value = sample.title;
   $('type').value = sample.type;
@@ -73,27 +74,50 @@ function applySample() {
   const anime = $('provider').value === 'aniliberty';
   $('namespace').value = anime ? 'aniliberty' : 'tmdb';
   $('content-id').value = (anime ? sample.aniliberty : sample.tmdb) || '';
-  providerInfo();
+  providerInfo(); updateE1Options();
 }
 
 $('provider').addEventListener('change', () => {
   $('namespace').value = $('provider').value === 'aniliberty' ? 'aniliberty' : 'tmdb';
   $('unrestricted-consent').checked = false;
+  $('clean-session-consent').checked = false; $('sandbox').value = 'strict';
   providerInfo(); applySample();
 });
 $('sample').addEventListener('change', applySample);
-$('sandbox').addEventListener('change', () => { $('unrestricted-consent').checked = false; providerInfo(); });
+$('sandbox').addEventListener('change', () => { $('unrestricted-consent').checked = false; $('clean-session-consent').checked = false; providerInfo(); });
+
+function updateE1Options() {
+  const config = current?.config || readConfig();
+  const e2 = config.stage === 'E2';
+  $('e1-label').hidden = !e2; $('e1-warning').hidden = !e2;
+  const prior = current ? config.e1RecordId : $('e1-record').value;
+  const candidates = e1Candidates(config, records, current ? Date.parse(current.createdAt) : Date.now());
+  const empty = el('option', 'Нет подтверждённого E1 — только предварительная проба'); empty.value = '';
+  $('e1-record').replaceChildren(empty, ...candidates.map(record => { const option = el('option', `${record.id} · ${record.createdAt} · ${record.environment.network}`); option.value = record.id; return option; }));
+  if (current && prior && !candidates.some(item => item.id === prior)) { const invalid = el('option', `Недействительная ссылка E1: ${prior}`); invalid.value = prior; $('e1-record').append(invalid); }
+  $('e1-record').value = current ? prior || '' : candidates.some(item => item.id === prior) ? prior : candidates.at(-1)?.id || '';
+  const linked = candidates.some(item => item.id === $('e1-record').value);
+  $('e1-warning').classList.toggle('danger', !linked);
+  $('e1-warning').textContent = linked ? `Основание E1: ${$('e1-record').value}. Смена сети не требует нового E1; результат E2 относится только к своей среде.` : 'E1 не подтверждён. Можно записать предварительные наблюдения, но принимать E2 как итог и подтверждать полный сеанс без рекламы нельзя. Причина сохранится в журнале и экспорте.';
+}
+for (const id of ['stage', 'type', 'namespace', 'content-id', 'season', 'episode']) $(id).addEventListener('input', updateE1Options);
+$('e1-record').addEventListener('change', () => {
+  const linked = Boolean($('e1-record').value);
+  $('e1-warning').classList.toggle('danger', !linked);
+  $('e1-warning').textContent = linked ? `Основание E1: ${$('e1-record').value}. Смена сети не требует нового E1.` : 'E1 не подтверждён. E2 остаётся предварительной пробой; итоговый PASS недопустим.';
+});
 
 const resultText = { NOT_RUN: 'NOT_RUN · не проверено', PASS: 'PASS · подтверждено', FAIL: 'FAIL · не прошло', INCONCLUSIVE: 'INCONCLUSIVE · недостаточно данных', OBSERVED: 'Наблюдалось', NOT_OBSERVED: 'Не наблюдалось в сеансе' };
 
 function addObservation(parent, group, key, label, options) {
   const wrapper = el('label', label);
-  const control = options ? el('select') : el(key.endsWith('Seconds') ? 'input' : 'textarea');
+  const numeric = key.endsWith('Seconds') || key.endsWith('Minutes');
+  const control = options ? el('select') : el(numeric ? 'input' : 'textarea');
   control.id = `obs-${group}-${key}`;
   if (options) for (const optionValue of options) { const option = el('option', resultText[optionValue]); option.value = optionValue; control.append(option); }
   else {
     control.maxLength = 2000;
-    if (key.endsWith('Seconds')) { control.type = 'number'; control.min = '0'; control.max = '86400'; control.step = '0.1'; control.inputMode = 'decimal'; }
+    if (numeric) { control.type = 'number'; control.min = '0'; control.max = key.endsWith('Minutes') ? '1440' : '86400'; control.step = '0.1'; control.inputMode = 'decimal'; }
   }
   wrapper.append(control); $(parent).append(wrapper); observations.set(`${group}.${key}`, control);
   control.addEventListener(options ? 'change' : 'input', () => {
@@ -112,16 +136,22 @@ for (const [key, label] of Object.entries(DETAILS)) addObservation('details', 'd
 function enforceConsistency() {
   if (!current) return;
   const priorStatus = current.status;
-  const issues = resultIssues(current);
-  if (issues.length) {
-    if (current.checks.fullNoAds === 'PASS' && (current.config.watchScope !== 'full' || current.checks.ended !== 'PASS' || Object.values(current.ads).some(value => value !== 'NOT_OBSERVED'))) {
-      current.checks.fullNoAds = 'INCONCLUSIVE'; observations.get('checks.fullNoAds').value = 'INCONCLUSIVE';
-    }
-    if (current.status === 'PASS') { current.status = 'INCONCLUSIVE'; $('outcome').value = current.status; }
-  }
+  const issues = reconcileRecord(current, records);
+  observations.get('checks.fullNoAds').value = current.checks.fullNoAds;
+  $('outcome').value = current.status;
   $('consistency').hidden = !issues.length;
   $('consistency').textContent = issues.length ? issues.join(' ') + ' Противоречащая отметка заменена на INCONCLUSIVE; измерения сохранены.' : '';
   if (priorStatus !== current.status) renderHistory();
+  renderAssessment();
+}
+
+function renderAssessment() {
+  const e2 = current?.config.stage === 'E2';
+  $('outcome-label').textContent = e2 ? 'Итог E2: полный сеанс без рекламы и базовый контроль' : 'Итог E1: наличие и запуск';
+  $('e2-assessment').hidden = !e2;
+  if (!e2) return;
+  const assessment = assessRecord(current, records);
+  $('e2-assessment').textContent = `Проба наблюдений: ${assessment.probeStatus}. Полный сеанс без рекламы: ${assessment.adFreeSessionStatus}. Успешная фиксация рекламы/управления не означает отсутствие рекламы. Вердикт основан на ручных отметках одного сеанса; для вывода по выборке нужны полный фильм, эпизод и повтор в новой сессии.`;
 }
 
 $('outcome').addEventListener('change', () => {
@@ -133,9 +163,11 @@ $('outcome').addEventListener('change', () => {
 $('observations').addEventListener('submit', event => event.preventDefault());
 
 function renderCurrent() {
+  if (current) reconcileRecord(current, records);
   $('observation-fields').disabled = !current;
   $('config-fields').disabled = Boolean(current);
   $('open-source').disabled = Boolean(current);
+  $('stop').disabled = !current || Boolean(current.endedAt);
   $('current-record').textContent = current ? `${current.config.stage} · ${current.config.title} · ${current.createdAt} · ${current.id}` : 'Сначала откройте источник. Каждая попытка создаёт отдельную запись.';
   for (const [path, control] of observations) {
     const [group, key] = path.split('.');
@@ -143,7 +175,7 @@ function renderCurrent() {
   }
   $('outcome').value = current?.status || 'NOT_RUN';
   $('consistency').hidden = true;
-  renderEvents(); renderHistory();
+  updateE1Options(); renderAssessment(); renderEvents(); renderHistory();
 }
 
 function renderEvents() {
@@ -156,11 +188,13 @@ function renderHistory() {
   $('record-count').textContent = String(records.length);
   const nodes = records.slice().reverse().map(record => {
     const item = el('details');
-    item.append(el('summary', `${record.status} · ${PROVIDERS[record.config.provider]?.name || 'Источник'} · ${record.config.title} · ${record.createdAt}`));
+    const assessment = assessRecord(record, records);
+    const verdict = record.config.stage === 'E2' ? `E2 итог ${record.status} · наблюдения ${assessment.probeStatus} · без рекламы ${assessment.adFreeSessionStatus}` : `E1 ${record.status}`;
+    item.append(el('summary', `${verdict} · ${PROVIDERS[record.config.provider]?.name || 'Источник'} · ${record.config.title} · ${record.createdAt}`));
     item.addEventListener('toggle', () => {
       if (!item.open) return;
       item.querySelector('pre')?.remove(); item.querySelector('button')?.remove();
-      const copy = el('button', 'Скачать эту запись'); copy.type = 'button'; copy.addEventListener('click', () => download(exportJSON([record]), `kadr-${record.id}.json`, 'application/json'));
+      const copy = el('button', 'Скачать запись с основанием E1'); copy.type = 'button'; copy.addEventListener('click', () => download(exportJSON(records.filter(item => item.id === record.id || item.id === record.config.e1RecordId)), `kadr-${record.id}.json`, 'application/json'));
       item.append(copy, el('pre', JSON.stringify(record, null, 2)));
     });
     return item;
@@ -173,8 +207,8 @@ function readConfig() {
   return { provider: $('provider').value, sampleKey: sample?.key || 'custom', category: sample?.category || 'custom',
     title: $('title').value.trim(), type: $('type').value, namespace: $('namespace').value, id: $('content-id').value.trim(),
     season: $('season').value, episode: $('episode').value, quality: $('quality').value,
-    sandbox: $('sandbox').value, unrestrictedConsent: $('unrestricted-consent').checked,
-    accessAcknowledged: $('access-consent').checked, stage: $('stage').value, watchScope: $('watch-scope').value };
+    sandbox: $('sandbox').value, unrestrictedConsent: $('unrestricted-consent').checked, cleanSessionConsent: $('clean-session-consent').checked,
+    accessAcknowledged: $('access-consent').checked, stage: $('stage').value, watchScope: $('watch-scope').value, e1RecordId: $('stage').value === 'E2' ? $('e1-record').value || null : null };
 }
 
 function readEnvironment() {
@@ -198,12 +232,12 @@ function dispose() {
 }
 
 function closeSource() {
-  if (current && runtime) { log(current, { type: 'source-closed', channel: 'lab' }); current.endedAt = new Date().toISOString(); }
-  dispose(); persist(); renderHistory();
+  if (current && !current.endedAt) { log(current, { type: 'source-closed', channel: 'lab' }); current.endedAt = new Date().toISOString(); }
+  dispose(); if (current) enforceConsistency(); persist(); renderHistory();
 }
 $('stop').addEventListener('click', () => { closeSource(); message('Источник закрыт. Ручные наблюдения можно дописать; новый запуск создаст другой сеанс.'); });
 $('new-session').addEventListener('click', () => {
-  closeSource(); current = null; renderCurrent();
+  closeSource(); current = null; $('sandbox').value = 'strict'; $('unrestricted-consent').checked = false; $('clean-session-consent').checked = false; providerInfo(); renderCurrent();
   message('Укажите условия новой попытки. Предыдущая запись осталась в журнале.');
   $('provider').focus();
 });

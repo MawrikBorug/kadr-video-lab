@@ -58,6 +58,7 @@ export function buildRequest(config) {
     }
     if (!(config.sandbox in SANDBOX)) throw new Error('Неизвестный режим sandbox.');
     if (config.sandbox === 'documented' && !config.unrestrictedConsent) throw new Error('Для режима без sandbox подтвердите предупреждение об окнах и навигации.');
+    if (config.sandbox === 'documented' && !config.cleanSessionConsent) throw new Error('Без sandbox допускается только отдельная чистая тестовая сессия после strict-пробы. Подтвердите это отдельно; не используйте режим первым тестом на личном iPhone.');
     return { kind: 'iframe', url: `https://yapgrid.com/embed/${path}`, origin: provider.origin, sandbox: SANDBOX[config.sandbox] };
   }
   if (config.namespace !== 'aniliberty' || config.type !== 'tv') throw new Error('AniLiberty: выберите аниме-эпизод и ID / alias релиза, а не TMDB или IMDb.');

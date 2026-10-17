@@ -40,7 +40,7 @@ test('event log excludes payloads, URLs and secrets; buffer has explicit loss co
 test('JSON export round trips Cyrillic, quotes, newlines, observations and events', () => {
   const r=record(); r.ads.midRoll='OBSERVED'; r.tracking='INCONCLUSIVE'; appendEvent(r,{type:'seeked',currentTime:10});
   const data=JSON.parse(exportJSON([r],'2026-10-17T01:00:00Z'));
-  assert.equal(data.schemaVersion,1); assert.deepEqual(data.records,[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
+  assert.equal(data.schemaVersion,1); assert.equal(data.assessmentVersion,2); assert.deepEqual(data.records.map(({assessment,...raw})=>raw),[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
 });
 function parseCSV(text) {
   const rows=[]; let row=[], value='', quoted=false;
@@ -62,7 +62,7 @@ test('CSV spreadsheet formula injection is neutralized without changing JSON', (
 });
 test('persistent journal round trip and quota failure preserve in-memory records', () => {
   const data=new Map(); const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
-  const records=[record()]; assert.equal(saveJournal(storage,records),null); assert.deepEqual(loadJournal(storage).records,records);
+  const records=[record()]; assert.equal(saveJournal(storage,records),null); assert.deepEqual(loadJournal(storage).records.map(({assessment,...raw})=>raw),records);
   const failing={setItem:()=>{throw new Error('QuotaExceededError');}};
   assert.match(saveJournal(failing,records),/экспортируйте JSON/); assert.equal(JSON.parse(exportJSON(records)).records.length,1);
 });
@@ -74,7 +74,7 @@ test('corrupt, unknown-version and invalid-observation storage is recoverable an
 });
 test('fullNoAds cannot be consistent with ads, unknown observations or missing end', () => {
   const r=record(); r.checks.fullNoAds='PASS'; assert.ok(resultIssues(r).length);
-  r.checks.ended='PASS'; for(const key of Object.keys(r.ads))r.ads[key]='NOT_OBSERVED'; assert.deepEqual(resultIssues(r),[]);
+  r.checks.ended='PASS'; r.endedAt='2026-10-17T01:00:00Z'; for(const key of ['pageOpened','exactTitle','videoStarted'])r.checks[key]='PASS'; for(const key of Object.keys(r.ads))r.ads[key]='NOT_OBSERVED'; assert.deepEqual(resultIssues(r),[]);
   r.ads.overlay='OBSERVED'; assert.ok(resultIssues(r).length);
 });
 test('E1 PASS requires measured time, exact title, 5 minutes, seek, language and real network', () => {

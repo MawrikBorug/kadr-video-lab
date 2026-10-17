@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { passedE1, completedE2 } from '../fixtures.mjs';
 const journal = page => page.evaluate(() => JSON.parse(localStorage.getItem('kadr.videoLab.v1')));
 const fixtureRelease = { name:{main:'Synthetic fixture — not a real playback result'}, episodes:[{ordinal:1,name:'Fixture',duration:1200,hls_480:'https://cache.libria.fun/fixture.m3u8?isWithVideoAds=1&isWithVideoAdsAlways=1'}] };
 
@@ -38,9 +39,46 @@ test('real iframe boundary keeps sandbox and rejects even correctly sourced undo
 test('without-sandbox comparison needs acknowledgement; conditions stay fixed within a session',async({page})=>{
   await page.route('https://yapgrid.com/**',route=>route.fulfill({contentType:'text/html',body:'Synthetic fixture only.'}));
   await boot(page); await chooseYap(page); await page.selectOption('#sandbox','documented'); await page.click('#open-source'); await expect(page.locator('#message')).toContainText('подтвердите предупреждение'); await expect(page.locator('iframe')).toHaveCount(0);
-  await page.check('#unrestricted-consent'); await page.click('#open-source'); await expect(page.locator('iframe')).not.toHaveAttribute('sandbox');
+  await expect(page.locator('#sandbox-warning')).toContainText('Не используйте этот режим первым тестом на личном iPhone');
+  await page.check('#unrestricted-consent'); await page.click('#open-source'); await expect(page.locator('#message')).toContainText('чистая тестовая сессия'); await expect(page.locator('iframe')).toHaveCount(0);
+  await page.check('#clean-session-consent'); await page.click('#open-source'); await expect(page.locator('iframe')).not.toHaveAttribute('sandbox');
   await expect(page.locator('#provider')).toBeDisabled(); await page.click('#new-session'); await expect(page.locator('iframe')).toHaveCount(0); await expect(page.locator('#provider')).toBeEnabled();
+  await expect(page.locator('#sandbox')).toHaveValue('strict'); await expect(page.locator('#clean-session-consent')).not.toBeChecked(); await expect(page.locator('#sandbox-warning')).toBeHidden();
   await chooseBlocked(page); const data=await jsonDownload(page); expect(data.records).toHaveLength(2); expect(data.records[0].config.provider).toBe('yapgrid'); expect(data.records[1].config.provider).toBe('stellar');
+});
+
+async function seedManualFixture(page, records) {
+  await page.addInitScript(records=>{if(!localStorage.getItem('kadr.videoLab.v1'))localStorage.setItem('kadr.videoLab.v1',JSON.stringify({schemaVersion:1,records}));},records);
+}
+async function fixtureFrame(page) { await page.route('https://yapgrid.com/**',route=>route.fulfill({contentType:'text/html',body:'Synthetic fixture only; no actual playback.'})); }
+async function e2Checks(page) { for(const key of ['pageOpened','exactTitle','videoStarted','pause'])await page.selectOption(`#obs-checks-${key}`,'PASS'); }
+async function noAds(page) { for(const key of ['preRoll','midRoll','overlay','popup','navigation'])await page.selectOption(`#obs-ads-${key}`,'NOT_OBSERVED'); }
+
+test('audit regression: E2 without E1 stays preliminary and blank-ad smoke cannot pass',async({page})=>{
+  await fixtureFrame(page); await boot(page); await chooseYap(page); await page.selectOption('#stage','E2'); await expect(page.locator('#e1-warning')).toContainText('E1 не подтверждён');
+  await page.selectOption('#device','iphone-safari');await page.selectOption('#country','RU');await page.selectOption('#network','home');await page.click('#open-source');await e2Checks(page);await page.selectOption('#outcome','PASS');
+  await expect(page.locator('#outcome')).toHaveValue('INCONCLUSIVE');await expect(page.locator('#consistency')).toContainText('пять рекламных');await expect(page.locator('#e2-assessment')).not.toContainText('без рекламы: PASS');
+  const data=await jsonDownload(page);const r=data.records[0];expect(r.assessment.statusMeaning).toBe('E2_FULL_SESSION_AD_FREE_AND_BASIC_CONTROL');expect(r.assessment.eligibilityIssues.join(' ')).toContain('E1 не подтверждён');expect(r.config.e1RecordId).toBeNull();
+});
+
+test('audit regression: completed smoke has a distinct observation result with linked E1 across networks',async({page})=>{
+  const e1=passedE1();await seedManualFixture(page,[e1]);await fixtureFrame(page);await boot(page);await page.click('#new-session');await chooseYap(page);await page.selectOption('#stage','E2');
+  await expect(page.locator('#e1-record')).toHaveValue(e1.id);await page.selectOption('#network','mobile');await page.click('#open-source');await e2Checks(page);await noAds(page);await page.fill('#obs-details-watchMinutes','30');await page.click('#stop');await page.selectOption('#outcome','PASS');
+  await expect(page.locator('#outcome')).toHaveValue('INCONCLUSIVE');await expect(page.locator('#e2-assessment')).toContainText('Проба наблюдений: PASS');await expect(page.locator('#e2-assessment')).toContainText('без рекламы: INCONCLUSIVE');
+  await page.reload();await expect(page.locator('#e2-assessment')).toContainText('Проба наблюдений: PASS');const data=await jsonDownload(page);expect(data.records[1].config.e1RecordId).toBe(e1.id);expect(data.records[1].assessment.probeStatus).toBe('PASS');expect(data.records[1].status).toBe('INCONCLUSIVE');
+});
+
+test('audit regression: full E2 passes only after ad observations, video end and explicit session close',async({page})=>{
+  const e1=passedE1();await seedManualFixture(page,[e1]);await fixtureFrame(page);await boot(page);await page.click('#new-session');await chooseYap(page);await page.selectOption('#stage','E2');await page.selectOption('#watch-scope','full');await page.click('#open-source');await e2Checks(page);
+  await page.selectOption('#obs-checks-ended','PASS');await page.selectOption('#obs-checks-fullNoAds','PASS');await expect(page.locator('#obs-checks-fullNoAds')).toHaveValue('INCONCLUSIVE');
+  await noAds(page);await page.selectOption('#obs-checks-fullNoAds','PASS');await expect(page.locator('#obs-checks-fullNoAds')).toHaveValue('INCONCLUSIVE');await page.click('#stop');await page.selectOption('#obs-checks-fullNoAds','PASS');await page.selectOption('#outcome','PASS');await expect(page.locator('#outcome')).toHaveValue('PASS');
+  const clean=await jsonDownload(page);expect(clean.records[1].assessment.adFreeSessionStatus).toBe('PASS');expect(clean.records[1].assessment.e1RecordId).toBe(e1.id);expect(clean.records[1].endedAt).not.toBeNull();
+  await page.selectOption('#obs-ads-overlay','OBSERVED');await expect(page.locator('#outcome')).toHaveValue('INCONCLUSIVE');const changed=await jsonDownload(page);expect(changed.records[1].assessment.probeStatus).toBe('PASS');expect(changed.records[1].assessment.adFreeSessionStatus).toBe('FAIL');
+});
+
+test('audit regression: old unsupported E2 PASS cannot survive reload or export',async({page})=>{
+  const legacy=completedE2();delete legacy.config.e1RecordId;delete legacy.details.watchMinutes;await seedManualFixture(page,[legacy]);await boot(page);await expect(page.locator('#outcome')).toHaveValue('INCONCLUSIVE');await expect(page.locator('#e1-warning')).toContainText('E1 не подтверждён');
+  const data=await jsonDownload(page);expect(data.records[0].status).toBe('INCONCLUSIVE');expect(data.records[0].assessment.eligibilityIssues).not.toEqual([]);
 });
 
 test('real API response shape flows to HLS; ad flags survive and URL never enters journal',async({page})=>{

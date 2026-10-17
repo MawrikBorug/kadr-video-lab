@@ -18,7 +18,8 @@ test('unconfirmed candidates have no executable endpoints',()=>{
 });
 test('sandbox comparison without isolation needs explicit acknowledgement',()=>{
   assert.throws(()=>buildRequest({...yap,sandbox:'documented'}));
-  assert.equal(buildRequest({...yap,sandbox:'documented',unrestrictedConsent:true}).sandbox,null);
+  assert.throws(()=>buildRequest({...yap,sandbox:'documented',unrestrictedConsent:true}),/чистая тестовая сессия/);
+  assert.equal(buildRequest({...yap,sandbox:'documented',unrestrictedConsent:true,cleanSessionConsent:true}).sandbox,null);
   assert.throws(()=>buildRequest({...yap,sandbox:'invented'}));
   assert.ok(!SANDBOX.strict.includes('allow-popups')); assert.ok(!SANDBOX.popups.includes('top-navigation'));
 });
