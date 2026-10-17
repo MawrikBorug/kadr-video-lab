@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "КАДР — видеоэксперимент 3.3",
+  "short_name": "КАДР LAB",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf2f1",
+  "theme_color": "#102c35",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

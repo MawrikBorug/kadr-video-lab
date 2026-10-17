@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#102c35">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://anilibria.top https://*.libria.fun https://*.anilibria.top https://*.aniliberty.top; media-src 'self' blob: https://*.libria.fun https://*.anilibria.top https://*.aniliberty.top; frame-src https://yapgrid.com; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>КАДР 3.3 — лаборатория видео</title>
+  <meta name="description" content="Изолированный стенд E1/E2: проверка видеоисточников, рекламы и управления. Результаты хранятся на устройстве.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="top"><div class="wrap header-inner"><a class="brand" href="./" aria-label="КАДР, начало">КАДР <span>LAB / 3.3</span></a><span class="tag">Эксперимент E1–E2</span></div></header>
+  <main class="wrap">
+    <section class="intro">
+      <p class="eyebrow">Технический стенд · 17.10.2026</p>
+      <h1>Проверяем просмотр.<br>Фиксируем факты.</h1>
+      <p>Наличие фильма, реклама и контроль плеера — отдельные результаты. Доступность на iPhone и в сетях РФ остаётся <strong>NOT_RUN</strong> до реального испытания.</p>
+      <div class="links"><a href="./docs/e1-e2.md" target="_blank" rel="noopener noreferrer">Протокол E1/E2 ↗</a><a href="./docs/providers.md" target="_blank" rel="noopener noreferrer">Проверка поставщиков ↗</a><a href="#journal">К журналу ↓</a></div>
+    </section>
+    <aside id="storage-warning" class="notice danger" role="alert" hidden></aside>
+    <aside id="offline" class="notice" hidden>Вы офлайн. Форма и журнал доступны; для источников требуется сеть. Видео не кешируется стендом.</aside>
+    <div class="workspace">
+      <section class="panel setup" aria-labelledby="setup-title">
+        <div class="section-head"><span class="step">01</span><h2 id="setup-title">Сеанс испытания</h2></div>
+        <form id="setup-form">
+          <fieldset id="config-fields">
+            <legend class="sr-only">Источник и условия испытания</legend>
+            <label>Поставщик<select id="provider" name="provider"></select></label>
+            <div id="provider-info" class="provider-info"></div>
+            <label>Объект из выборки<select id="sample"><option value="custom">Другой объект — ввести вручную</option></select></label>
+            <p class="hint">Это список для проверки, а не подтверждённый каталог поставщика. <a id="catalog-link" target="_blank" rel="noopener noreferrer" hidden>Карточка TMDB ↗</a></p>
+            <label>Название и точная версия<input id="title" maxlength="200" autocomplete="off" required></label>
+            <div class="two"><label>Тип<select id="type"><option value="movie">Фильм</option><option value="tv">Сериал / аниме</option></select></label><label>Система ID<select id="namespace"><option value="aniliberty">AniLiberty</option><option value="tmdb">TMDB</option><option value="imdb">IMDb (не поддержан)</option></select></label></div>
+            <label>ID или alias<input id="content-id" maxlength="120" autocomplete="off" autocapitalize="none" spellcheck="false" required><span id="id-hint" class="hint"></span></label>
+            <div class="two"><label>Сезон<input id="season" type="number" min="1" max="999" value="1" inputmode="numeric"></label><label>Эпизод / ordinal<input id="episode" type="number" min="0.01" max="999" step="0.01" value="1" inputmode="decimal"></label></div>
+            <label id="quality-label">Запросить HLS<select id="quality"><option value="480">480p</option><option value="720">720p</option><option value="1080">1080p</option></select></label>
+            <label id="sandbox-label">Изоляция iframe<select id="sandbox"><option value="strict">Sandbox: без окон и верхней навигации</option><option value="popups">Sandbox: окна разрешены, навигация ограничена</option><option value="documented">Сравнение: без sandbox</option></select></label>
+            <p id="sandbox-hint" class="hint">Sandbox не убирает видеорекламу и может сломать плеер. Каждый режим — новый сеанс.</p>
+            <p id="sandbox-warning" class="notice danger" role="alert" hidden>Без sandbox внешний сайт может открывать окна, пытаться перенаправить страницу и вести трекинг. Не используйте этот режим первым тестом на личном iPhone. Сначала strict; сравнение без изоляции — только в отдельной чистой тестовой сессии после экспорта журнала.</p>
+            <label id="unrestricted-label" class="check-line" hidden><input id="unrestricted-consent" type="checkbox">Я экспортировал(а) журнал и понимаю: без sandbox возможны окна и попытки сменить страницу.</label>
+            <label id="clean-session-label" class="check-line" hidden><input id="clean-session-consent" type="checkbox">Использую отдельную чистую тестовую сессию после strict-пробы, а не первый тест на личном iPhone.</label>
+            <div class="divider"></div>
+            <div class="two"><label>Этап<select id="stage"><option value="E1">E1 · наличие / старт</option><option value="E2">E2 · реклама / управление</option></select></label><label>Объём просмотра<select id="watch-scope"><option value="smoke">Короткая проба</option><option value="full">Полный просмотр</option></select></label></div>
+            <label id="e1-label" hidden>Подтверждённый E1 для E2<select id="e1-record"><option value="">Нет подтверждённого E1</option></select></label>
+            <p id="e1-warning" class="notice danger" role="status" hidden></p>
+            <label>Устройство и браузер<select id="device"><option value="unknown">Указать вручную</option><option value="iphone-safari">iPhone · Safari</option><option value="iphone-pwa">iPhone · PWA с экрана «Домой»</option><option value="desktop-chrome">ПК · Chrome</option><option value="desktop-safari">Mac · Safari</option><option value="desktop-firefox">ПК · Firefox</option><option value="other">Другое (версия в примечании)</option></select></label>
+            <div class="two"><label>Страна сети<select id="country"><option value="unknown">Не указана</option><option value="RU">Россия</option><option value="other">Другая</option></select></label><label>Сеть<select id="network"><option value="unknown">Не указана</option><option value="home">Домашняя</option><option value="mobile">Мобильная</option><option value="other">Другая</option></select></label></div>
+            <label>Блокировщик / DNS-фильтр<select id="blocker"><option value="unknown">Неизвестно</option><option value="off">Выключен</option><option value="on">Включён (указать в примечании)</option></select></label>
+            <label class="check-line"><input id="access-consent" type="checkbox" required>Использую только контент, к которому имею право доступа. Ключи и частные данные не ввожу.</label>
+          </fieldset>
+          <button id="open-source" class="primary" type="submit">Открыть источник вручную</button>
+        </form>
+        <button id="new-session" class="secondary" type="button">Новый сеанс / изменить условия</button>
+        <p class="hint">Условия фиксируются при открытии. Для повтора после полного просмотра закройте PWA / вкладку и откройте заново: идентификатор сессии изменится.</p>
+      </section>
+      <div class="main-column">
+        <section class="panel" aria-labelledby="player-title">
+          <div class="section-head"><span class="step">02</span><h2 id="player-title">Источник и воспроизведение</h2></div>
+          <p id="message" class="notice" role="status" aria-live="polite">Выберите условия и откройте источник. До этого сторонние страницы и видео не загружаются.</p>
+          <div id="player" class="player"><p>Ручной запуск<br><span>Ни одного подтверждённого просмотра</span></p></div>
+          <p id="provenance" class="hint">Стенд не хранит фильмы и не проксирует медиатрафик.</p>
+          <div class="button-row"><button id="play" type="button" disabled>Play</button><button id="pause" type="button" disabled>Пауза</button><button id="seek" type="button" disabled>К 50%</button><button id="stop" type="button" disabled>Закрыть источник</button></div>
+          <p class="hint">Команды выше работают только с прямым HLS. В iframe используйте органы управления поставщика. Загрузка iframe не подтверждает наличие фильма.</p>
+          <details><summary>Технические события <span id="event-count">0</span></summary><p id="event-note" class="hint">Лог не доказывает отсутствие рекламы или просмотр основного видео.</p><pre id="events">Событий пока нет.</pre></details>
+        </section>
+        <section class="panel" aria-labelledby="observations-title">
+          <div class="section-head"><span class="step">03</span><h2 id="observations-title">Наблюдения этого сеанса</h2></div>
+          <p id="current-record" class="hint">Сначала откройте источник. Каждая попытка создаёт отдельную запись.</p>
+          <form id="observations" autocomplete="off"><fieldset id="observation-fields" disabled><legend class="sr-only">Ручные результаты</legend><div id="checks" class="observations-grid"></div><h3>Реклама и трекинг</h3><p class="hint">«Не наблюдалось» относится только к фактически просмотренному отрезку. Трекинг — отдельное поле; запрос аналитики сам по себе не является видеорекламой.</p><div id="ads" class="observations-grid"></div><h3>Измерения и детали</h3><div id="details" class="observations-grid"></div><label><span id="outcome-label">Итог E1: наличие и запуск</span><select id="outcome"><option>NOT_RUN</option><option>PASS</option><option>FAIL</option><option>INCONCLUSIVE</option></select></label></fieldset></form>
+          <p id="e2-assessment" class="notice" role="status" hidden></p>
+          <p id="consistency" class="notice" role="status" hidden></p>
+          <p class="hint">Изменения сохраняются на этом устройстве автоматически. Перед выходом или сравнением без sandbox экспортируйте JSON. Safari и PWA могут иметь отдельное хранилище.</p>
+        </section>
+      </div>
+    </div>
+    <section id="journal" class="panel journal" aria-labelledby="journal-title">
+      <div class="section-head"><span class="step">04</span><h2 id="journal-title">Локальный журнал <span id="record-count">0</span></h2></div>
+      <p>Результаты не отправляются в аналитику и не коммитятся в GitHub. Экспорт может содержать ваши примечания — проверьте их перед передачей.</p>
+      <div class="button-row"><button id="export-json" class="primary" type="button">Скачать JSON</button><button id="export-csv" type="button">Скачать CSV</button><button id="share-json" type="button">Поделиться JSON</button><button id="export-recovery" type="button" hidden>Копия для восстановления</button></div>
+      <div id="history" class="history"><p class="hint">Записей пока нет.</p></div>
+      <details><summary>Как проверить на iPhone</summary><ol><li>После одобренного PR включите GitHub Pages по инструкции в README. Дождитесь успешного Actions и откройте адрес из Settings → Pages.</li><li>В Safari: «Поделиться» → «На экран “Домой”». Запускайте Safari и установленный PWA раздельно.</li><li>E1: подтвердите точное произведение, язык, старт ≤30 с, 5 минут и seek к 50% с возобновлением ≤10 с.</li><li>E2: один фильм и один эпизод целиком, затем повтор в новой сессии. Домашняя и мобильная сети РФ — отдельные сеансы. Десктопный тест остаётся NOT_RUN до появления доступа к ПК.</li><li>Экспортируйте журнал через «Скачать JSON» или «Поделиться JSON». Компьютер и терминал для этого не нужны.</li></ol></details>
+    </section>
+    <footer><p>КАДР 3.3 · минимальный эксперимент, без утверждения архитектуры.</p><p>Независимый аудит кода и физические E1/E2 — отдельные этапы приёмки.</p></footer>
+  </main>
+</body>
+</html>

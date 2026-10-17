@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-17T05:14:56.261Z",
+  "environment": "Managed cloud Chromium, not a physical iPhone and not a Russian home/mobile network",
+  "purpose": "Real browser UI -> anonymous AniLiberty JSON -> validated HLS metadata. All media requests blocked to avoid playback / downloading. Not E1/E2.",
+  "status": "INCONCLUSIVE",
+  "playback": "NOT_RUN",
+  "browser": "154.0.8037.57",
+  "apiFailure": "net::ERR_CERT_AUTHORITY_INVALID",
+  "uiMessage": "Источник не подтвердился: сетевая ошибка или CORS. В этой среде ответ API прочитать не удалось."
+}
