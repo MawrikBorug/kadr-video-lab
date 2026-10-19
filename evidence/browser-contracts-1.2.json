@@ -1,0 +1,36 @@
+[
+  {
+    "name": "stellar",
+    "status": 200,
+    "chars": 11674,
+    "contractLines": [
+      "https://stellar.rip/en/watch/embed/tv/83867-1-1?theme=9B8CFF&title=true&poster=true&autoPlay=false&startAt=0&nextButton=true&autoNext=false",
+      "https://stellar.rip/{language}/watch/embed/tv/{tmdb_id}-{season}-{episode}",
+      "https://stellar.rip/{language}/watch/embed/tv/{tmdb_id}-{season}-{episode}",
+      "autoNext",
+      "Load the next episode at the end; enable autoplay too. autoNext=true with autoPlay=false is ignored.",
+      "?autoNext=true",
+      "autoNext=true is ignored while autoPlay=false, so contradictory URLs stay safe.",
+      "STELLAR_EMBED_READY",
+      "STELLAR_EMBED_INIT",
+      "    { type: \"STELLAR_EMBED_INIT\" },",
+      "  if (event.data?.type === \"STELLAR_EMBED_READY\") {",
+      "    src=\"https://stellar.rip/en/watch/embed/tv/83867-1-1\"",
+      "READY WHEN YOU ARE"
+    ]
+  },
+  {
+    "name": "vidrift",
+    "status": 200,
+    "chars": 4579,
+    "contractLines": [
+      "https://embed.vidrift.net/embed/tv/{tmdb_id}/{season}/{episode}"
+    ]
+  },
+  {
+    "name": "cinesrc",
+    "status": 200,
+    "chars": 273,
+    "contractLines": []
+  }
+]

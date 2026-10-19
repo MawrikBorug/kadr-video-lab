@@ -8,6 +8,17 @@ const dist = new URL('dist/', root);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(new URL('web/', root), dist, { recursive: true });
+let commit = process.env.GITHUB_SHA;
+if (!commit) {
+  try {
+    const head = (await readFile(new URL('.git/HEAD',root),'utf8')).trim();
+    commit = head.startsWith('ref: ') ? (await readFile(new URL('.git/'+head.slice(5),root),'utf8')).trim() : head;
+  } catch { commit = JSON.parse(await readFile(new URL('RELEASE.json',root),'utf8')).commit; }
+}
+if (!/^[a-f0-9]{40}$/.test(commit)) throw new Error('Build commit is missing or invalid');
+const builtAt = new Date().toISOString();
+await writeFile(new URL('build.js',dist),(await readFile(new URL('build.js',dist),'utf8')).replace('__COMMIT__',commit).replace('__BUILT_AT__',builtAt));
+await writeFile(new URL('build-info.json',dist),JSON.stringify({version:'1.2',commit,builtAt})+'\n');
 await mkdir(new URL('vendor/', dist), { recursive: true });
 await cp(new URL('node_modules/hls.js/dist/hls.mjs', root), new URL('vendor/hls.mjs', dist));
 await cp(new URL('node_modules/hls.js/LICENSE', root), new URL('vendor/hls.LICENSE', dist));

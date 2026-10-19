@@ -13,8 +13,9 @@ test('invalid IDs, IMDb substitution, script URLs and invented content types nev
   for(const episode of ['0','1.5','1/2','-1'])assert.throws(()=>buildRequest({...yap,type:'tv',episode}));
 });
 test('unconfirmed candidates have no executable endpoints',()=>{
-  for(const provider of ['stellar','mapple','ezvidapi','unknown'])assert.throws(()=>buildRequest({...yap,provider}),/Источник не подтвердился/);
-  assert.equal(Object.values(PROVIDERS).filter(p=>p.enabled).length,2);
+  for(const provider of ['ezvidapi','unknown'])assert.throws(()=>buildRequest({...yap,provider}));
+  assert.equal(buildRequest({...yap,provider:'mapple'}).url,'https://mapple.fun/watch/movie/693134');
+  assert.equal(Object.values(PROVIDERS).filter(p=>p.enabled).length,19);
 });
 test('sandbox comparison without isolation needs explicit acknowledgement',()=>{
   assert.throws(()=>buildRequest({...yap,sandbox:'documented'}));
@@ -25,7 +26,7 @@ test('sandbox comparison without isolation needs explicit acknowledgement',()=>{
 });
 test('AniLiberty uses release ID / alias and exact ordinal; no TMDB or season conversion',()=>{
   const input={provider:'aniliberty',namespace:'aniliberty',type:'tv',id:'sousou-no-frieren',episode:'12.5',quality:'480'};
-  assert.equal(buildRequest(input).url,'https://anilibria.top/api/v1/anime/releases/sousou-no-frieren');
+  assert.equal(buildRequest(input).url,'https://api.anilibria.app/api/v1/anime/releases/sousou-no-frieren');
   assert.throws(()=>buildRequest({...input,type:'movie'})); assert.throws(()=>buildRequest({...input,namespace:'tmdb'})); assert.throws(()=>buildRequest({...input,id:'https://evil.example'}));
 });
 test('HLS is used verbatim, preserving all advertising query flags',()=>{

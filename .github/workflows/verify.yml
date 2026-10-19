@@ -26,12 +26,13 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run build
+      - run: node scripts/check-public.mjs
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - run: npm run package
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: kadr-video-lab-3.3
-          path: artifacts/kadr-video-lab-3.3.zip
+          name: kadr-video-lab-1.2
+          path: artifacts/kadr-video-lab-1.2.zip
           retention-days: 30
           if-no-files-found: error

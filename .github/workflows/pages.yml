@@ -1,6 +1,6 @@
 name: Publish GitHub Pages
 
-# The owner merges the reviewed PR; PR branches are never deployed.
+# Only main is published; task authorization includes publishing the tested update.
 on:
   push:
     branches: [main]
@@ -31,6 +31,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run build
+      - run: node scripts/check-public.mjs
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
@@ -53,7 +54,7 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - name: Deploy reviewed main
+      - name: Deploy tested main
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5

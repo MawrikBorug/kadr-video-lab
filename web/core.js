@@ -1,4 +1,7 @@
-export const VERSION = 1;
+import {sanitize} from './security.js';
+import {BUILD} from './build.js';
+import {evidenceLevel} from './measurement.js';
+export const VERSION = 2;
 export const STORAGE_KEY = 'kadr.videoLab.v1';
 export const RESULTS = ['NOT_RUN', 'PASS', 'FAIL', 'INCONCLUSIVE'];
 export const AD_RESULTS = ['NOT_RUN', 'OBSERVED', 'NOT_OBSERVED', 'INCONCLUSIVE'];
@@ -8,16 +11,16 @@ export const CHECKS = {
   seek50: 'Seek к 50% и возобновление', pause: 'Пауза сработала', ended: 'Достигнут конец основного видео',
   fullNoAds: 'Полный просмотр без рекламы', eventsReceived: 'Получены допустимые события',
 };
-export const ADS = { preRoll: 'Pre-roll', midRoll: 'Mid-roll', overlay: 'Overlay / баннер', popup: 'Pop-up / новое окно', navigation: 'Изменение навигации' };
+export const ADS = { preRoll: 'Pre-roll', midRoll: 'Mid-roll', postRoll: 'Post-roll', overlay: 'Overlay / баннер', popup: 'Pop-up / новое окно', navigation: 'Изменение навигации' };
 export const DETAILS = { voice: 'Язык и студия озвучки', subtitles: 'Язык и вид субтитров', observedQuality: 'Фактическое качество', startSeconds: 'Старт, секунд', seekRecoverySeconds: 'Возобновление после seek, секунд', watchMinutes: 'Фактически наблюдали, минут (E2 smoke ≥30)', payment: 'Оплата / ключ / сервер / другое приложение', mediaHost: 'Конечный медиахост (если наблюдаем)', trackingEvidence: 'Наблюдение трекинга: домены и метод', controlNotes: 'Управление, PiP, обрыв, таймер, смена серии', notes: 'Наблюдения / ошибки / точная версия произведения' };
 
 export function makeRecord(config, environment, now = new Date().toISOString(), id = crypto.randomUUID()) {
-  return { id, createdAt: now, updatedAt: now, endedAt: null, status: 'NOT_RUN',
+  return { id, observationSchemaVersion:2, testId:id, attemptId:id, previousAttemptId:null, runId:null, build:BUILD, createdAt: now, createdAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'), updatedAt: now, endedAt: null, status: 'NOT_RUN',
     config: { ...config, e1RecordId: config.e1RecordId || null }, environment: { ...environment },
     checks: Object.fromEntries(Object.keys(CHECKS).map(key => [key, 'NOT_RUN'])),
     ads: Object.fromEntries(Object.keys(ADS).map(key => [key, 'NOT_RUN'])), tracking: 'NOT_RUN',
     details: Object.fromEntries(Object.keys(DETAILS).map(key => [key, ''])),
-    events: [], droppedEvents: 0, rejectedMessages: 0, technical: {},
+    events: [], droppedEvents: 0, rejectedMessages: 0, technical: {}, layers:{}, steps:[], manualConfirmations:[], adBreaks:[],
   };
 }
 
@@ -58,7 +61,8 @@ export function appendEvent(record, data, at = new Date().toISOString()) {
 }
 
 const finished = record => Number.isFinite(Date.parse(record.endedAt)) && Date.parse(record.endedAt) >= Date.parse(record.createdAt);
-const decisiveAds = record => Object.keys(ADS).every(key => ['OBSERVED', 'NOT_OBSERVED'].includes(record.ads[key]));
+const adKeys = record => record.observationSchemaVersion === 2 ? Object.keys(ADS) : Object.keys(ADS).filter(k => k !== 'postRoll');
+const decisiveAds = record => adKeys(record).every(key => ['OBSERVED', 'NOT_OBSERVED'].includes(record.ads[key]));
 const E2_CHECKS = ['pageOpened', 'exactTitle', 'videoStarted', 'pause'];
 
 export function sameSubject(a, b) {
@@ -82,8 +86,10 @@ export function adFreeIssues(record, records = []) {
   const issues = [];
   if (record.config.watchScope !== 'full' || record.checks.ended !== 'PASS' || !finished(record)) issues.push('Полный просмотр без рекламы требует режима полного просмотра, подтверждённого конца основного видео и завершения сеанса кнопкой «Закрыть источник».');
   if (['pageOpened', 'exactTitle', 'videoStarted'].some(key => record.checks[key] !== 'PASS')) issues.push('Для вывода без рекламы подтвердите открытие, точное полное произведение и фактический старт.');
-  if (Object.keys(ADS).some(key => record.ads[key] !== 'NOT_OBSERVED')) issues.push('Для вывода без рекламы нужны все пять рекламных категорий «не наблюдалось»; пустые и неопределённые отметки не подходят.');
+  if (adKeys(record).some(key => record.ads[key] !== 'NOT_OBSERVED')) issues.push('Для вывода без рекламы нужны все рекламные категории «не наблюдалось»; пустые и неопределённые отметки не подходят.');
   if (record.technical.blocked) issues.push('Контракт источника не подтверждён.');
+  if (record.ads.postRoll === 'OBSERVED' || record.adBreaks?.length) issues.push('Зафиксирована реклама, включая журнал отдельных вставок.');
+  if (record.technical.interrupted) issues.push('Прерванный сеанс не подтверждает полный просмотр без рекламы.');
   return [...issues, ...e2PrerequisiteIssues(record, records)];
 }
 
@@ -118,7 +124,7 @@ export function assessRecord(record, records = []) {
       : E2_CHECKS.every(key => record.checks[key] === 'PASS') && decisiveAds(record) && watchComplete ? 'PASS' : 'INCONCLUSIVE';
     if (record.technical.blocked) probeStatus = 'INCONCLUSIVE';
   }
-  const adObserved = Object.keys(ADS).some(key => record.ads[key] === 'OBSERVED');
+  const adObserved = Object.keys(ADS).some(key => record.ads[key] === 'OBSERVED') || Boolean(record.adBreaks?.length);
   const adFreeSessionStatus = adObserved || record.checks.fullNoAds === 'FAIL' ? 'FAIL'
     : record.checks.fullNoAds === 'PASS' && adFreeIssues(record, records).length === 0 ? 'PASS'
     : record.checks.fullNoAds === 'NOT_RUN' && Object.keys(ADS).every(key => record.ads[key] === 'NOT_RUN') ? 'NOT_RUN' : 'INCONCLUSIVE';
@@ -142,8 +148,11 @@ function preparedRecords(records) {
   return copies;
 }
 
-export function exportJSON(records, now = new Date().toISOString()) {
-  return JSON.stringify({ schemaVersion: VERSION, assessmentVersion: 2, exportedAt: now, notice: 'Ручные результаты и технические события разделены. probeStatus — завершённость пробы наблюдений, не отсутствие рекламы. E2 PASS — полный сеанс без рекламы и базовый контроль с основанием E1; adFreeSessionStatus относится только к одному ручному сеансу, не поставщику в целом. Для вывода по выборке нужны фильм, эпизод и повтор в новой сессии. Пользовательские отметки не доказывают реальный просмотр.', records: preparedRecords(records) }, null, 2);
+export function exportJSON(records, now = new Date().toISOString(), runs = []) {
+  return JSON.stringify(sanitize({ schemaVersion: VERSION, assessmentVersion: 2, specVersion:'1.2', build:BUILD, exportedAt: now,
+    exportedAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'),
+    notice:'Ручные подтверждения, native-события, каталог и iframe разделены. Выполненная диагностика не доказывает просмотр всех фильмов. L4/L5 автоматически не присваиваются. Исследование и облачные/физические опыты не объединяются.',
+    records:preparedRecords(records).map(r=>({...r,testId:r.testId||r.id,attemptId:r.attemptId||r.id,evidenceLevel:evidenceLevel(r)})),runs }),null,2);
 }
 
 export function csvCell(value) {
@@ -152,33 +161,55 @@ export function csvCell(value) {
   return `"${text.replaceAll('"', '""')}"`;
 }
 
-export function exportCSV(records) {
-  const columns = ['id', 'createdAt', 'updatedAt', 'endedAt', 'status', 'statusMeaning', 'probeStatus', 'adFreeSessionStatus', 'e1RecordId', 'eligibilityIssues', 'acceptanceIssues', 'config', 'environment', ...Object.keys(CHECKS).map(key => `check.${key}`), ...Object.keys(ADS).map(key => `ad.${key}`), 'tracking', ...Object.keys(DETAILS), 'technical', 'events', 'droppedEvents', 'rejectedMessages'];
-  const rows = preparedRecords(records).map(record => [record.id, record.createdAt, record.updatedAt, record.endedAt, record.status, record.assessment.statusMeaning, record.assessment.probeStatus, record.assessment.adFreeSessionStatus, record.assessment.e1RecordId, JSON.stringify(record.assessment.eligibilityIssues), JSON.stringify(record.assessment.acceptanceIssues), JSON.stringify(record.config), JSON.stringify(record.environment), ...Object.keys(CHECKS).map(key => record.checks[key]), ...Object.keys(ADS).map(key => record.ads[key]), record.tracking, ...Object.keys(DETAILS).map(key => record.details[key]), JSON.stringify(record.technical), JSON.stringify(record.events), record.droppedEvents, record.rejectedMessages]);
-  return '\uFEFF' + [columns, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
+export function exportCSV(records, runs = []) {
+  const columns = ['id','testId','attemptId','previousAttemptId','runId','buildCommit','createdAtMsk','refId','mode','upstream','canonicalId','year','season','episode','queueStatus','evidenceLevel','layers','steps','measurement','manualConfirmations','adBreaks','runProfile','runState','createdAt', 'updatedAt', 'endedAt', 'status', 'statusMeaning', 'probeStatus', 'adFreeSessionStatus', 'e1RecordId', 'eligibilityIssues', 'acceptanceIssues', 'config', 'environment', ...Object.keys(CHECKS).map(key => `check.${key}`), ...Object.keys(ADS).map(key => `ad.${key}`), 'tracking', ...Object.keys(DETAILS), 'technical', 'events', 'droppedEvents', 'rejectedMessages'];
+  const json=v=>JSON.stringify(sanitize(v??null));
+  const rows=preparedRecords(records).map(r=>{
+    const run=runs.find(x=>x.runId===r.runId);
+    return [r.id,r.testId||r.id,r.attemptId||r.id,r.previousAttemptId,r.runId,r.build?.commit,r.createdAtMsk,r.config.refId,r.config.mode,r.config.upstream,r.config.canonicalId,r.config.year,r.config.season,r.config.episode,r.queueStatus,evidenceLevel(r),json(r.layers),json(r.steps),json(r.measurement),json(r.manualConfirmations),json(r.adBreaks),json(run?.profile),run?.status,r.createdAt,r.updatedAt,r.endedAt,r.status,r.assessment.statusMeaning,r.assessment.probeStatus,r.assessment.adFreeSessionStatus,r.assessment.e1RecordId,json(r.assessment.eligibilityIssues),json(r.assessment.acceptanceIssues),json(r.config),json(r.environment),...Object.keys(CHECKS).map(k=>r.checks[k]),...Object.keys(ADS).map(k=>r.ads[k]),r.tracking,...Object.keys(DETAILS).map(k=>r.details[k]),json(r.technical),json(r.events),r.droppedEvents,r.rejectedMessages];
+  });
+  // Include pending/skipped queue entries even when they have no playback record.
+  for(const run of runs)for(const item of run.queue)if(!records.some(r=>r.runId===run.runId&&r.testId===item.testId)){
+    const values={id:item.testId,testId:item.testId,runId:run.runId,buildCommit:run.build?.commit,refId:item.refId,mode:item.config.mode,upstream:item.upstream,canonicalId:item.config.canonicalId,year:item.config.year,season:item.config.season,episode:item.config.episode,queueStatus:item.status,config:json(item.config),steps:json(item.attempts),technical:json(item.reason),runProfile:json(run.profile),runState:run.status,environment:json(run.environment)};
+    rows.push(columns.map(k=>values[k]??''));
+  }
+  return '\uFEFF'+[columns,...rows].map(row=>row.map(v=>csvCell(sanitize(v))).join(',')).join('\r\n')+'\r\n';
 }
 
 export function loadJournal(storage) {
   try {
     const raw = storage.getItem(STORAGE_KEY);
-    if (raw === null) return { records: [], error: null, raw: null };
+    if (raw === null) return { records: [], runs:[], error: null, raw: null };
     const data = JSON.parse(raw);
-    if (data.schemaVersion !== VERSION || !Array.isArray(data.records) || data.records.length > 240) throw new Error('Неизвестный формат журнала');
+    if (![1,VERSION].includes(data.schemaVersion) || !Array.isArray(data.records) || data.records.length > 5000) throw new Error('Неизвестный формат журнала');
     for (const r of data.records) {
       if (!isObject(r) || typeof r.id !== 'string' || typeof r.createdAt !== 'string' || !RESULTS.includes(r.status) || !isObject(r.config) || !isObject(r.environment) || !isObject(r.technical) || !isObject(r.details) || !isObject(r.checks) || !isObject(r.ads) || !Array.isArray(r.events) || r.events.length > 400 || !Number.isInteger(r.droppedEvents) || !Number.isInteger(r.rejectedMessages)) throw new Error('Повреждённая запись журнала');
+      r.ads.postRoll ??= 'NOT_RUN';
       r.details.watchMinutes ??= ''; // Additive migration of the original schema-1 journal.
       if (r.config.e1RecordId != null && typeof r.config.e1RecordId !== 'string') throw new Error('Повреждённая ссылка E1');
       if (Object.keys(CHECKS).some(key => !RESULTS.includes(r.checks[key])) || Object.keys(ADS).some(key => !AD_RESULTS.includes(r.ads[key])) || !AD_RESULTS.includes(r.tracking) || Object.keys(DETAILS).some(key => typeof r.details[key] !== 'string' || r.details[key].length > 2000)) throw new Error('Повреждённые наблюдения журнала');
     }
-    return { records: preparedRecords(data.records), error: null, raw };
+    if (data.runs !== undefined && (!Array.isArray(data.runs) || data.runs.some(run => typeof run.runId !== 'string' || !Array.isArray(run.queue) || run.queue.length > 5000 || run.queue.some(item => typeof item.testId !== 'string' || !Array.isArray(item.attempts) || !isObject(item.config))))) throw new Error('Повреждённая очередь');
+    return { records: preparedRecords(data.records), runs:data.runs || [], error: null, raw };
   } catch (error) {
     let raw = null;
     try { raw = storage.getItem(STORAGE_KEY); } catch { /* storage itself is unavailable */ }
-    return { records: [], error: `Журнал не прочитан: ${error.message}. Исходные данные не перезаписываются. Экспортируйте восстановительную копию.`, raw };
+    return { records: [], runs:[], error: `Журнал не прочитан: ${error.message}. Исходные данные не перезаписываются. Экспортируйте восстановительную копию.`, raw };
   }
 }
 
-export function saveJournal(storage, records) {
-  try { storage.setItem(STORAGE_KEY, JSON.stringify({ schemaVersion: VERSION, records: preparedRecords(records) })); return null; }
+export function saveJournal(storage, records, runs = []) {
+  try { storage.setItem(STORAGE_KEY, JSON.stringify(sanitize({ schemaVersion: VERSION, records: preparedRecords(records), runs }))); return null; }
   catch { return 'Не удалось сохранить журнал на устройстве. Текущие данные остаются в памяти: экспортируйте JSON до закрытия страницы.'; }
+}
+
+export function mergeExports(existing, incoming) {
+  if(!incoming || ![1,VERSION].includes(incoming.schemaVersion) || !Array.isArray(incoming.records)) throw new Error('Неизвестный формат импорта.');
+  const checked=loadJournal({getItem:()=>JSON.stringify(incoming)});
+  if(checked.error) throw new Error(checked.error);
+  const records=new Map(existing.records.map(r=>[r.id,r]));
+  for(const r of checked.records){const old=records.get(r.id);if(!old||Date.parse(r.updatedAt)>Date.parse(old.updatedAt))records.set(r.id,r);}
+  const runs=new Map((existing.runs||[]).map(r=>[r.runId,r]));
+  for(const r of checked.runs){const old=runs.get(r.runId);if(!old||Date.parse(r.updatedAt)>Date.parse(old.updatedAt))runs.set(r.runId,r);}
+  return {records:[...records.values()],runs:[...runs.values()]};
 }

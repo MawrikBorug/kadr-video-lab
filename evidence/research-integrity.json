@@ -1,0 +1,22 @@
+{
+  "sourceSha256": "eafdc3e87864a8ccef79a6ef9c87b4a5e129f3286583bdb84a42b6e5bd9b8f87",
+  "lampacCommit": "b7ec8e2f1b9bf6fc9a5620d09740eac8f0aed6f3",
+  "providerCount": 125,
+  "idSets": "C01–C35, X01–X32, L001–L058",
+  "sheetProviderRowsMatched": 125,
+  "sheetIdentityRowsMatched": 14,
+  "adapters": 70,
+  "httpProbes": 443,
+  "browserAttempts": 1,
+  "coverageStates": 1750,
+  "researchStatuses": {
+    "нужен собственный доступ": 16,
+    "исключён владельцем": 3,
+    "требуется идентификация": 73,
+    "готов к пробе": 19,
+    "только инфраструктура": 13,
+    "доказан блокер конкретного режима": 1
+  },
+  "result": "PASS",
+  "scope": "source integrity, not playback"
+}

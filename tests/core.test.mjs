@@ -40,7 +40,7 @@ test('event log excludes payloads, URLs and secrets; buffer has explicit loss co
 test('JSON export round trips Cyrillic, quotes, newlines, observations and events', () => {
   const r=record(); r.ads.midRoll='OBSERVED'; r.tracking='INCONCLUSIVE'; appendEvent(r,{type:'seeked',currentTime:10});
   const data=JSON.parse(exportJSON([r],'2026-10-17T01:00:00Z'));
-  assert.equal(data.schemaVersion,1); assert.equal(data.assessmentVersion,2); assert.deepEqual(data.records.map(({assessment,...raw})=>raw),[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
+  assert.equal(data.schemaVersion,2); assert.equal(data.assessmentVersion,2); assert.deepEqual(data.records.map(({assessment,evidenceLevel,...raw})=>raw),[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
 });
 function parseCSV(text) {
   const rows=[]; let row=[], value='', quoted=false;
@@ -67,7 +67,7 @@ test('persistent journal round trip and quota failure preserve in-memory records
   assert.match(saveJournal(failing,records),/экспортируйте JSON/); assert.equal(JSON.parse(exportJSON(records)).records.length,1);
 });
 test('corrupt, unknown-version and invalid-observation storage is recoverable and not rewritten', () => {
-  for(const raw of ['{broken',JSON.stringify({schemaVersion:2,records:[]}),JSON.stringify({schemaVersion:1,records:[{...record(),checks:{}}]})]) {
+  for(const raw of ['{broken',JSON.stringify({schemaVersion:99,records:[]}),JSON.stringify({schemaVersion:1,records:[{...record(),checks:{}}]})]) {
     let writes=0; const result=loadJournal({getItem:()=>raw,setItem:()=>writes++}); assert.ok(result.error); assert.equal(result.raw,raw); assert.equal(writes,0);
   }
   assert.ok(loadJournal(undefined).error);

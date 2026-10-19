@@ -6,7 +6,7 @@ import { passedE1, completedE2 } from './fixtures.mjs';
 test('audit #1: original E2 smoke / blank-ad exploit is rejected even with valid E1', () => {
   const e1=passedE1(), e2=completedE2(e1); e2.config.watchScope='smoke'; e2.checks.fullNoAds='NOT_RUN';
   for(const key of Object.keys(e2.ads))e2.ads[key]='NOT_RUN';
-  assert.ok(resultIssues(e2,[e1,e2]).some(text=>text.includes('пять рекламных')));
+  assert.ok(resultIssues(e2,[e1,e2]).some(text=>text.includes('рекламные категории')));
   reconcileRecord(e2,[e1,e2]); assert.equal(e2.status,'INCONCLUSIVE'); assert.notEqual(e2.assessment.adFreeSessionStatus,'PASS'); assert.notEqual(e2.assessment.probeStatus,'PASS');
 });
 test('a completed smoke observation may pass its probe, never the full ad-free E2 verdict', () => {
