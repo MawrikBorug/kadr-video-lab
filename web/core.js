@@ -88,6 +88,7 @@ export function adFreeIssues(record, records = []) {
   if (['pageOpened', 'exactTitle', 'videoStarted'].some(key => record.checks[key] !== 'PASS')) issues.push('Для вывода без рекламы подтвердите открытие, точное полное произведение и фактический старт.');
   if (adKeys(record).some(key => record.ads[key] !== 'NOT_OBSERVED')) issues.push('Для вывода без рекламы нужны все рекламные категории «не наблюдалось»; пустые и неопределённые отметки не подходят.');
   if (record.technical.blocked) issues.push('Контракт источника не подтверждён.');
+  if (record.measurement && !(record.measurement.ended === true && record.measurement.coverage >= .9 && record.measurement.completed === true)) issues.push('Наблюдаемый native-счётчик не подтверждает конец и 90% уникальных интервалов основного видео.');
   if (record.ads.postRoll === 'OBSERVED' || record.adBreaks?.length) issues.push('Зафиксирована реклама, включая журнал отдельных вставок.');
   if (record.technical.interrupted) issues.push('Прерванный сеанс не подтверждает полный просмотр без рекламы.');
   return [...issues, ...e2PrerequisiteIssues(record, records)];

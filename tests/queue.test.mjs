@@ -115,3 +115,7 @@ test('Mikai anime metadata does not prove an episode absent from the response',(
  const data={ok:true,result:{anime:{ids:{mal:52299},year:2024,titles:'Fixture'},releases:[{episodes:[{number:1,sources:[]}]}]}};
  const normalized=parseCatalog('mikai',data,c);assert.equal(normalized.identity,'episode-not-returned');assert.equal(normalized.episodeSelection.returned,false);assert.equal(normalized.variants.length,0);
 });
+test('manual full-session marks cannot override measured seek-to-end coverage on native video',()=>{
+ const e1=passedE1(),r=completedE2(e1);r.measurement={ended:true,coverage:.2,completed:false};
+ const out=JSON.parse(exportJSON([e1,r]));assert.equal(out.records[1].status,'INCONCLUSIVE');assert.equal(out.records[1].checks.fullNoAds,'INCONCLUSIVE');
+});
