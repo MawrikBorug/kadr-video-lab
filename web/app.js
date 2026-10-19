@@ -313,7 +313,18 @@ function waitForManual(record,ctx){
 }
 async function waitForNative(record,ctx){
   const rt=runtime;rt.setState=ctx.setState;let began=performance.now();let lastProgress=performance.now(),lastWatch=0;
-  try{await rt.video.play();}catch{ctx.setState('awaiting-user');message('Нужно касание для запуска со звуком. Нажмите Play. Звук автоматически не отключается.');}
+  let startTimer,startAbort;
+  try{
+    await Promise.race([rt.video.play(),new Promise((_resolve,reject)=>{
+      startTimer=setTimeout(()=>reject(new LabError('timeout','Запуск media не завершился за 20 секунд.')),20000);
+      startAbort=()=>reject(new LabError('interrupted','Запуск media прерван.'));
+      if(ctx.signal.aborted)startAbort();else ctx.signal.addEventListener('abort',startAbort,{once:true});
+    })]);
+  }catch(error){
+    if(ctx.signal.aborted){record.queueStatus=ctx.run.status==='cancelled'?'cancelled':ctx.item.status==='skipped'?'skipped':'interrupted';record.technical.interrupted=record.queueStatus;record.technical.interruptionReason=ctx.item.reason||ctx.run.interruption;record.endedAt=new Date().toISOString();dispose();persist();throw new LabError('interrupted','Опыт прерван.');}
+    if(error.name!=='NotAllowedError')throw rt.failure||error;
+    ctx.setState('awaiting-user');message('Нужно касание для запуска со звуком. Нажмите Play. Звук автоматически не отключается.');
+  }finally{clearTimeout(startTimer);if(startAbort)ctx.signal.removeEventListener('abort',startAbort);}
   return new Promise((resolve,reject)=>{
     const finish=(error)=>{clearInterval(timer);ctx.signal.removeEventListener('abort',abort);if(error)reject(error);else resolve({watchSeconds:record.measurement.watchSeconds,coverage:record.measurement.coverage,completed:record.measurement.completed,evidenceLevel:evidenceLevel(record)});};
     const abort=()=>{record.queueStatus=ctx.run.status==='cancelled'?'cancelled':ctx.item.status==='skipped'?'skipped':'interrupted';record.technical.interrupted=record.queueStatus;record.technical.interruptionReason=ctx.item.reason||ctx.run.interruption;record.endedAt=new Date().toISOString();dispose();persist();finish(new LabError('interrupted','Опыт прерван.'));};
@@ -357,6 +368,7 @@ async function openConfig(config,ctx=null){
   dispose();current=makeRecord({...config,refId:PROVIDERS[config.provider]?.refId||ctx?.item?.refId,upstream:ctx?.item?.upstream||PROVIDERS[config.provider]?.origin||PROVIDERS[config.provider]?.source,upstreamId:config.id},ctx?.run.environment||readEnvironment());
   const record=current;if(ctx){record.runId=ctx.run.runId;record.testId=ctx.item.testId;record.attemptId=ctx.attempt.attemptId;record.previousAttemptId=ctx.attempt.previousAttemptId;record.queueStatus='running';const previous=records.find(r=>r.attemptId===record.previousAttemptId);if(previous&&ctx.item.attempts.length<=3)record.technical.resumePosition=previous.technical.restorePosition??previous.technical.position??0;ctx.attempt.recordId=record.id;}
   records.push(record);const token=generation;
+  if(ctx){const publishState=ctx.setState;ctx={...ctx,setState:state=>{if(ctx.signal.aborted)return;record.queueStatus=state;record.steps.push({name:'state',status:state,at:new Date().toISOString()});publishState(state);}};}
   runtime={controller:new AbortController(),openedAt:performance.now(),iframe:null,video:null,hls:null,attempt:ctx?.attempt,setState:ctx?.setState};
   const rt=runtime;
   $('api-results').replaceChildren();$('main-video-confirmed').checked=false;$('ru-audio').value='unknown';$('measurement-summary').textContent='';
@@ -403,7 +415,7 @@ async function openConfig(config,ctx=null){
     if(generation!==token){if(ctx)throw error;return {recordId:record.id,error:'interrupted'};}
     record.queueStatus=error.code||'app-error';record.status='INCONCLUSIVE';record.technical.apiError=request?.kind==='catalog';record.technical.error={code:error.code||'app-error',httpStatus:error.httpStatus??null,appStatus:error.appStatus??null};
     if(!request)record.technical.blocked=error.code||'unconfirmed-contract';step(record,'attempt','error',{code:error.code,httpStatus:error.httpStatus,appStatus:error.appStatus});record.endedAt=new Date().toISOString();message(error.message,true);persist();renderCurrent();
-    if(ctx)throw error;return {recordId:record.id,error:error.code};
+    if(ctx){if(runtime===rt)dispose();throw error;}return {recordId:record.id,error:error.code};
   }
 }
 $('setup-form').addEventListener('submit',async event=>{event.preventDefault();if(current)return;try{await openConfig(readConfig());}catch(error){message(error.message,true);}});

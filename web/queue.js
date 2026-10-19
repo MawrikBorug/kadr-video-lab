@@ -67,7 +67,7 @@ export class QueueRunner{
    const at=new Date().toISOString(),previous=item.attempts.at(-1);
    const attempt={attemptId:uid(),testId:item.testId,previousAttemptId:previous?.attemptId||null,startedAt:at,startedAtMsk:nowMSK(at),status:'running',steps:[],recordId:null};
    item.attempts.push(attempt);item.status='running';this.changed();
-   const setState=(state)=>{if(this.controller?.signal.aborted)return;item.status=state;run.status=state;this.changed();};
+   const setState=(state)=>{if(this.controller?.signal.aborted)return;attempt.steps.push({name:'state',status:state,at:new Date().toISOString()});item.status=state;run.status=state;this.changed();};
    try{
     const result=await this.execute(item,attempt,{signal:this.controller.signal,run,setState});
     if(!this.controller.signal.aborted){attempt.status='completed';item.status='completed';attempt.result=result;run.circuits[item.modeKey]={failures:0};}

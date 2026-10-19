@@ -46,6 +46,14 @@ test('sound autoplay rejection pauses at a user action and never mutes to fabric
  await expect(page.locator('#batch-status')).toContainText('Нужно касание');expect(await page.locator('video').evaluate(v=>v.muted)).toBe(false);
  const before=await journal(page);expect(before.records[0].measurement.watchSeconds).toBe(0);expect(before.records[0].checks.videoStarted).toBe('NOT_RUN');
  await page.click('#batch-cancel');release();await expect(page.locator('#batch-status')).toContainText('Отменена');
+ const cancelled=await json(page);expect(cancelled.runs[0].queue[0].attempts[0].steps.some(s=>s.status==='awaiting-user')).toBe(true);expect(cancelled.records[0].steps.some(s=>s.status==='awaiting-user')).toBe(true);
+});
+test('pause aborts a pending native play promise and leaves the queue resumable',async({page})=>{
+ await page.addInitScript(()=>{let calls=0;HTMLMediaElement.prototype.play=function(){return ++calls===1?new Promise(()=>{}):Promise.reject(new DOMException('Fixture needs tap','NotAllowedError'));};});
+ let release;const gate=new Promise(r=>release=r);await page.route('https://download.blender.org/**',async r=>{await gate;try{await r.abort();}catch{}});
+ await boot(page);await choose(page,['blender:media'],['blender']);await page.click('#batch-start');await expect(page.locator('video')).toHaveCount(1);await page.click('#batch-pause');await expect(page.locator('#batch-start')).toBeEnabled();
+ await page.click('#batch-start');await expect(page.locator('#batch-status')).toContainText('Нужно касание');const data=await journal(page);expect(data.runs[0].queue[0].attempts).toHaveLength(2);expect(data.records[0].queueStatus).toBe('interrupted');
+ await page.click('#batch-cancel');release();
 });
 test('manual provider, ID, season and fractional anime ordinal remain independent; API candidates require confirmation',async({page})=>{
  await page.route('https://api.filmix.tv/api-fx/list**',r=>r.fulfill({json:{status:'ok',items:[{id:170881,title:'Дюна: Часть вторая',year:2024},{id:1,title:'Другая Дюна',year:1984}]}}));
