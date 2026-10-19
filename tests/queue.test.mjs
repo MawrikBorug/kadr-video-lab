@@ -119,3 +119,6 @@ test('manual full-session marks cannot override measured seek-to-end coverage on
  const e1=passedE1(),r=completedE2(e1);r.measurement={ended:true,coverage:.2,completed:false};
  const out=JSON.parse(exportJSON([e1,r]));assert.equal(out.records[1].status,'INCONCLUSIVE');assert.equal(out.records[1].checks.fullNoAds,'INCONCLUSIVE');
 });
+test('a manual main-video boundary cannot create native media evidence without observed progress',()=>{
+ const m=newMeasurement();m.mainVideo=true;const r={measurement:m,layers:{mainVideo:{status:'observed'}}};assert.equal(evidenceLevel(r),'L0');m.watchSeconds=1;assert.equal(evidenceLevel(r),'L3');
+});

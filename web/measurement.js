@@ -42,7 +42,7 @@ export function sampleMeasurement(m, { position, duration, now, visible, playing
 export function evidenceLevel(record) {
   const m = record.measurement;
   // L4/L5 are never inferred from a fast run, a browser UA, iframe load or elapsed wall time.
-  if (m?.mainVideo && record.layers?.mainVideo?.status === 'observed') return 'L3';
+  if (m?.mainVideo && m.watchSeconds > 0 && record.layers?.mainVideo?.status === 'observed') return 'L3';
   if (record.layers?.identity?.status === 'matched') return 'L2';
   if (record.layers?.catalog?.status === 'observed') return 'L1';
   return 'L0';
