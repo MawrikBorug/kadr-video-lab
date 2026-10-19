@@ -38,8 +38,9 @@ export function parseCatalog(provider,d,c){
  if(provider==='mikai'){
   const r=d.result;if(d.ok!==true||!r?.anime||!Array.isArray(r.releases))fail('invalid-response','Mikai: ожидается ok/result.anime/releases.');
   const id=r.anime.ids?.mal??r.anime.ids?.myanimelist,variants=[];
+  const episodeFound=r.releases.some(release=>(release.episodes||[]).some(ep=>Number(ep.number)===Number(c.episode)));
   for(const release of r.releases)for(const ep of release.episodes||[])if(Number(ep.number)===Number(c.episode))for(const s of ep.sources||[])if(!excludedBranch(s.provider)&&typeof s.embedUrl==='string')variants.push({kind:release.kind,teams:(release.teams||[]).map(t=>typeof t==='string'?t:{id:t.id,name:t.name,slug:t.slug}),episode:Number(ep.number),provider:s.provider,embedOrigin:(()=>{try{return new URL(s.embedUrl).origin;}catch{return null;}})(),hasEmbed:true,language:'unknown-UA-oriented',releaseId:release.id});
-  return {title:r.anime.titles,year:r.anime.year,identity:String(id)===c.id?'matched':'needs-confirmation',variants,licensed:r.licensed,limit:'Mikai и команды релизов. UA не RU; разрешение медиа upstream проверяется отдельно.'};
+  return {title:r.anime.titles,year:r.anime.year,identity:String(id)===c.id&&(!c.year||Number(r.anime.year)===Number(c.year))?(episodeFound?'matched':'episode-not-returned'):'needs-confirmation',episodeSelection:{requested:Number(c.episode),returned:episodeFound},variants,licensed:r.licensed,limit:'Mikai и команды релизов. UA не RU; разрешение медиа upstream проверяется отдельно.'};
  }
  if(provider==='primesrc'){
   if(!d.info||!Array.isArray(d.servers))fail('invalid-response','PrimeSrc: нет info/servers.');

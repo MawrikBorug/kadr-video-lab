@@ -105,3 +105,13 @@ test('an ad reported without a known boundary preserves uncertain evidence and d
  const m=newMeasurement();m.intervals=[[0,20]];m.uniqueSeconds=20;m.watchSeconds=20;
  excludeUncertainAdWindow(m,'2026-10-19T00:00:00Z');assert.equal(m.watchSeconds,0);assert.equal(m.uniqueSeconds,0);assert.equal(m.mainVideo,false);assert.deepEqual(m.uncertainAdWindows[0].intervals,[[0,20]]);
 });
+test('transport controls cannot be cross-labelled as the other control object',()=>{
+ const list=previewQueue(modes.filter(m=>['apple:media','blender:media'].includes(m.key)),[{key:'apple',title:'BipBop',type:'control'},{key:'blender',title:'Sintel',type:'control'}]);
+ assert.equal(list.filter(i=>i.status==='pending').length,2);assert.equal(list.filter(i=>i.status==='skipped').length,2);
+ assert.ok(list.filter(i=>i.status==='pending').every(i=>i.config.provider===i.config.sampleKey));
+});
+test('Mikai anime metadata does not prove an episode absent from the response',()=>{
+ const c=configForSample('mikai','catalog',samples.find(s=>s.key==='solo'),{episode:'1.5'});
+ const data={ok:true,result:{anime:{ids:{mal:52299},year:2024,titles:'Fixture'},releases:[{episodes:[{number:1,sources:[]}]}]}};
+ const normalized=parseCatalog('mikai',data,c);assert.equal(normalized.identity,'episode-not-returned');assert.equal(normalized.episodeSelection.returned,false);assert.equal(normalized.variants.length,0);
+});

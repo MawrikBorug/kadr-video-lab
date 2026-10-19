@@ -19,6 +19,7 @@ export function previewQueue(modes,subjects,settings={}){
   if(seen.has(key))continue;seen.add(key);
   let issue=mode.issue;
   if(!issue && ((PROVIDERS[c.provider]?.types?.includes('control')) !== (sample.type==='control')))issue={code:'unsupported-type',reason:'Контроль транспорта — отдельный тестовый объект; его успех не переносится на N14.'};
+  if(!issue&&PROVIDERS[c.provider]?.namespace==='control'&&sample.key!==c.provider&&sample.control!==c.provider)issue={code:'unsupported-type',reason:'Контрольный объект не соответствует этому транспорту: Apple BipBop и Blender Sintel не взаимозаменяемы.'};
   if(!issue&&['aniliberty','mikai','animeon'].includes(c.provider)&&settings.season&&Number(settings.season)!==Number(sample.season||1))issue={code:'no-address',reason:'Для этого сезона нужен отдельный ID релиза/профильная нумерация; прежний релиз не преобразуется автоматически.'};
   if(!issue)try{buildRequest(c);}catch(e){issue={code:e.code||'invalid-config',reason:e.message};}
   result.push({config:c,modeKey:mode.key,refId:mode.refId,upstream:PROVIDERS[c.provider]?.origin||mode.refId,status:issue?'skipped':'pending',reason:issue||null});
