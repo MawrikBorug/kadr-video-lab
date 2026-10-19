@@ -15,6 +15,7 @@ const results=[];
 try{
  await page.goto(base,{waitUntil:'domcontentloaded',timeout:30000});
  await page.waitForFunction(()=>document.querySelectorAll('#sample option').length===18,{timeout:15000});
+ await page.waitForFunction(()=>document.querySelector('#build-info')?.textContent.includes('commit'),null,{timeout:15000});
  const build=await page.locator('#build-info').innerText();
  if(process.env.EXPECTED_COMMIT&&!build.includes(process.env.EXPECTED_COMMIT))throw new Error('Published commit does not match expected commit');
  await page.selectOption('#device','desktop-chrome');await page.fill('#environment-notes','Automated cloud QA: UI confirmations are scripted, not physical iPhone observations');await page.check('#access-consent');
