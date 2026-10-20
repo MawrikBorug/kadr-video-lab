@@ -1,9 +1,10 @@
+// Archived adapter regression harness: explicit opt-in, never the primary selection.
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 const journal=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.videoLab.v1')));
 const prime={info:{title:'Fixture Dune',imdb_id:'tt15239678',tmdb_id:'tt15239678'},servers:[{name:'Fixture Filemoon',audio_language:'en'}]};
 test.beforeEach(async({page})=>{await page.route('**/*',route=>route.request().url().startsWith('http://127.0.0.1:4173/')?route.continue():route.abort());});
-async function boot(page){await page.goto('./');await expect(page.locator('#registry-count')).toContainText('125');await expect(page.locator('#sample option')).toHaveCount(18);await page.check('#access-consent');await page.evaluate(()=>document.querySelectorAll('#batch > details').forEach(d=>d.open=true));}
+async function boot(page){await page.goto('./?archive=1');await expect(page.locator('#registry-count')).toContainText('125');await expect(page.locator('#sample option')).toHaveCount(18);await page.check('#access-consent');await page.evaluate(()=>document.querySelectorAll('#batch > details').forEach(d=>d.open=true));}
 async function choose(page,modes,subjects){for(const key of modes)await page.check(`input[name="batch-mode"][value="${key}"]`);for(const key of subjects)await page.check(`input[name="batch-subject"][value="${key}"]`);await page.click('#batch-create');}
 async function json(page){const waiting=page.waitForEvent('download');await page.click('#export-json');const file=await waiting;return JSON.parse(await readFile(await file.path(),'utf8'));}
 test('phone builds a mixed queue, sees missing IDs, saves partial export and requires iframe confirmation',async({page})=>{

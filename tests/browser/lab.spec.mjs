@@ -1,3 +1,4 @@
+// Archived adapter regression harness: explicit opt-in, never the primary selection.
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { passedE1, completedE2 } from '../fixtures.mjs';
@@ -8,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   // All external traffic is denied unless a test explicitly provides a fixture.
   await page.route('**/*', route => route.request().url().startsWith('http://127.0.0.1:4173/') ? route.continue() : route.abort());
 });
-async function boot(page) { await page.goto('./'); await expect(page.locator('#sample option')).toHaveCount(18); }
+async function boot(page) { await page.goto('./?archive=1'); await expect(page.locator('#sample option')).toHaveCount(18); }
 async function chooseYap(page) { await page.selectOption('#provider','yapgrid'); await page.selectOption('#sample','dune'); await page.check('#access-consent'); }
 async function chooseBlocked(page) { await page.selectOption('#provider','ezvidapi'); await page.check('#access-consent'); await page.click('#open-source'); await expect(page.locator('#message')).toContainText('Источник не подтвердился'); }
 async function jsonDownload(page) {
@@ -17,7 +18,7 @@ async function jsonDownload(page) {
 
 test('mobile UI loads without external calls; blocked source is explicit and exported',async({page})=>{
   const errors=[]; page.on('pageerror',error=>errors.push(error.message)); const external=[]; page.on('request',request=>{if(request.url().startsWith('https://'))external.push(request.url());});
-  await boot(page); await expect(page.locator('h1')).toContainText('Фиксируем факты'); expect(external).toEqual([]);
+  await boot(page); await expect(page.locator('h1')).toContainText('Проверяем свой доступ'); expect(external).toEqual([]);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await chooseBlocked(page); await expect(page.locator('iframe,video')).toHaveCount(0);
   const data=await jsonDownload(page); expect(data.records).toHaveLength(1); expect(data.records[0].status).toBe('INCONCLUSIVE'); expect(data.records[0].checks.videoStarted).toBe('NOT_RUN'); expect(data.records[0].technical.blocked).toBe('unknown-contract');
@@ -32,7 +33,7 @@ test('real iframe boundary keeps sandbox and rejects even correctly sourced undo
   await expect(page.locator('#message')).toContainText('событие загрузки iframe');
   await expect.poll(async()=> (await journal(page)).records[0].rejectedMessages).toBeGreaterThan(0);
   expect((await journal(page)).records[0].checks.videoStarted).toBe('NOT_RUN');
-  await page.frameLocator('iframe').locator('#try').click(); expect(context.pages()).toHaveLength(1); await expect(page).toHaveURL(/\/kadr-video-lab\/$/);
+  await page.frameLocator('iframe').locator('#try').click(); expect(context.pages()).toHaveLength(1); await expect(page).toHaveURL(/\/kadr-video-lab\/\?archive=1$/);
   const data=await jsonDownload(page); expect(data.records[0].events.some(e=>e.channel==='postMessage')).toBe(false);
 });
 

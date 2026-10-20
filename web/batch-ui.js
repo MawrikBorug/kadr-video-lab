@@ -1,16 +1,17 @@
+import {ACTIVE_PROVIDERS,SELECTION_EDITION,archiveDiagnostic} from './active-set.js';
 import {availableModes,previewQueue,createRun,QueueRunner,retryItems,queueSummary,PROFILES} from './queue.js';
 import {BUILD} from './build.js';
 const $=id=>document.getElementById(id);
 const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
 const names={ready:'Готова к явному запуску',running:'Выполняется',completed:'Диагностика завершена',paused:'Пауза',interrupted:'Прервана',cancelled:'Отменена','awaiting-user':'Нужно касание для звука','awaiting-manual':'Нужно ручное подтверждение',pending:'Ожидает',failed:'Ошибка',timeout:'Тайм-аут','auth-required':'Нужен доступ','rate-limited':'Лимит / Retry-After',skipped:'Пропущено'};
 export function initBatchUI({registry,samples,records,runs,execute,persist,environment,notice,onRunChange}){
- const modes=availableModes(registry);let selectedRun=runs.at(-1)||null;let preview=[];
+ const archival=archiveDiagnostic();const modes=availableModes(archival?registry:[]).filter(m=>archival||ACTIVE_PROVIDERS.includes(m.provider)&&m.mode==='embed');let selectedRun=runs.at(-1)||null;let preview=[];
  const runner=new QueueRunner({execute,onChange:()=>{persist();render();onRunChange?.();}});
  for(const m of modes){const label=node('label'),input=node('input');input.type='checkbox';input.value=m.key;input.name='batch-mode';label.className='check-line';label.append(input,document.createTextNode(m.label+(m.issue?` · ${m.issue.code}`:'')));$('batch-modes').append(label);}
  const blockers=modes.filter(m=>m.issue&&['auth-required','owner-access','manual-partner-approval'].includes(m.issue.code)).map(m=>`${m.refId} · ${m.label}: ${m.issue.reason}`);
- for(const p of registry)for(const b of p.stageReview?.blockedModes||[])blockers.push(`${p.id} · ${p.name} · ${b.method}: ${b.reason}`);
+ if(archival)for(const p of registry)for(const b of p.stageReview?.blockedModes||[])blockers.push(`${p.id} · ${p.name} · ${b.method}: ${b.reason}`);
  $('batch-access-blockers').replaceChildren(...blockers.map(text=>node('li',text)));
- for(const s of samples){const label=node('label'),input=node('input');input.type='checkbox';input.value=s.key;input.name='batch-subject';label.className='check-line';label.append(input,document.createTextNode(`${s.title}${s.year?` (${s.year})`:''}${s.type==='tv'?` · S${s.season}E${s.episode}`:''}`));$('batch-subjects').append(label);}
+ for(const s of samples.filter(s=>archival||s.type!=='control')){const label=node('label'),input=node('input');input.type='checkbox';input.value=s.key;input.name='batch-subject';label.className='check-line';label.append(input,document.createTextNode(`${s.title}${s.year?` (${s.year})`:''}${s.type==='tv'?` · S${s.season}E${s.episode}`:''}`));$('batch-subjects').append(label);}
  const checked=name=>[...document.querySelectorAll(`input[name="${name}"]:checked`)].map(n=>n.value);
  function makePreview(){
   const selected=modes.filter(m=>checked('batch-mode').includes(m.key));
@@ -37,23 +38,23 @@ export function initBatchUI({registry,samples,records,runs,execute,persist,envir
  };
  $('batch-run-select').onchange=()=>{if(runner.busy)return;selectedRun=runs.find(r=>r.runId===$('batch-run-select').value);render();};
  $('batch-start').onclick=()=>{
-  if(!selectedRun)return;if(!$('access-consent').checked){notice('Подтвердите право доступа в параметрах сеанса.',true);return;}
+  if(!selectedRun)return;if(selectedRun.selectionEdition!==SELECTION_EDITION){notice('Старая очередь сохранена в архиве. Создайте новую очередь Videoseed.',true);return;}if(!$('access-consent').checked){notice('Подтвердите право доступа в параметрах сеанса.',true);return;}
   for(const item of selectedRun.queue)item.config.accessAcknowledged=true;
   runner.start(selectedRun,{environment:environment()}).catch(e=>notice(e.message,true));
  };
  $('batch-pause').onclick=()=>runner.stop('user-pause');
  $('batch-cancel').onclick=()=>{if(selectedRun){runner.run=selectedRun;runner.cancel();}};
  $('batch-skip').onclick=()=>{if(!$('batch-skip-reason').value.trim()){notice('Укажите причину пропуска.',true);return;}runner.skip($('batch-skip-reason').value);};
- $('batch-retry').onclick=()=>{if(!selectedRun||runner.busy)return;retryItems(selectedRun,checked('batch-retry-item'));persist();render();notice('Выбранные ошибки подготовлены к новому запуску. Attempt ID будет новым.');};
+ $('batch-retry').onclick=()=>{if(!selectedRun||runner.busy||selectedRun.selectionEdition!==SELECTION_EDITION)return;retryItems(selectedRun,checked('batch-retry-item'));persist();render();notice('Выбранные ошибки подготовлены к новому запуску. Attempt ID будет новым.');};
  function render(){
   const id=selectedRun?.runId;
   $('batch-run-select').replaceChildren(...runs.map(r=>{const o=node('option',`${r.createdAt} · ${names[r.status]||r.status} · ${r.runId.slice(0,8)}`);o.value=r.runId;return o;}));
   $('batch-run-select').value=id||'';$('batch-run-select').disabled=runner.busy;
-  const summary=queueSummary(selectedRun);$('batch-status').textContent=selectedRun?`${names[selectedRun.status]||selectedRun.status}. ${JSON.stringify(summary.counts)}. ${summary.notice}`:'Сохранённых очередей пока нет.';
-  $('batch-start').disabled=!selectedRun||runner.busy||['completed','cancelled'].includes(selectedRun.status);
+  const summary=queueSummary(selectedRun);$('batch-status').textContent=selectedRun?`${selectedRun.selectionEdition!==SELECTION_EDITION?'Архивная очередь: запуск отключён. ':''}${names[selectedRun.status]||selectedRun.status}. ${JSON.stringify(summary.counts)}. ${summary.notice}`:'Сохранённых очередей пока нет.';
+  $('batch-start').disabled=!selectedRun||selectedRun.selectionEdition!==SELECTION_EDITION||runner.busy||['completed','cancelled'].includes(selectedRun.status);
   $('batch-pause').disabled=!runner.busy;$('batch-skip').disabled=!runner.busy;
   $('batch-cancel').disabled=!selectedRun||['completed','cancelled'].includes(selectedRun.status);
-  $('batch-retry').disabled=!selectedRun||runner.busy;
+  $('batch-retry').disabled=!selectedRun||runner.busy||selectedRun.selectionEdition!==SELECTION_EDITION;
   $('batch-results').replaceChildren(...(selectedRun?.queue||[]).map(item=>{
    const div=node('details'),summary=node('summary',`${item.refId} · ${item.config.mode} · ${item.config.title} · ${names[item.status]||item.status} · попыток ${item.attempts.length}`);div.append(summary);
    if(['failed','timeout','auth-required','rate-limited','interrupted','cancelled','skipped'].includes(item.status)){const label=node('label','Повторить этот опыт '),input=node('input');input.type='checkbox';input.name='batch-retry-item';input.value=item.testId;label.append(input);div.append(label);}

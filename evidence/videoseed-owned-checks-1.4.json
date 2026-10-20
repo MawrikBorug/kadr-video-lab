@@ -1,0 +1,89 @@
+{
+  "version": "1.4",
+  "environment": "cloud-executor, not owner iPhone",
+  "dateUTC": "2026-10-20T04:51:59.956115+00:00",
+  "ownCredentialsUsed": true,
+  "credentialValuesPublished": false,
+  "cabinet": {
+    "source": "two owner screenshots",
+    "contentKey": "separate private API key",
+    "playerToken": "separate token in provider embed template",
+    "template": "https://tv-1-kinoserial.net/embed/%id%/?token=%token%",
+    "accountStatus": {
+      "value": "awaiting moderation",
+      "source": "owner chat message",
+      "automaticMeasurement": false
+    }
+  },
+  "checks": [
+    {
+      "endpoint": "https://api.videoseed.tv/apiv2.php",
+      "credentialVersion": "screenshot-content-key",
+      "operation": "token-only",
+      "httpStatus": 200,
+      "application": {
+        "status": "error",
+        "error_info": "invalid token"
+      }
+    },
+    {
+      "endpoint": "https://api.videoseed.tv/apiv2.php",
+      "credentialVersion": "screenshot-content-key",
+      "operation": "movie-by-kp",
+      "httpStatus": 200,
+      "application": {
+        "status": "error",
+        "error_info": "invalid token"
+      }
+    },
+    {
+      "endpoint": "https://api.videoseed.tv/apiv2.php",
+      "credentialVersion": "owner-followup-value",
+      "operation": "movie-search-title-year",
+      "httpStatus": 200,
+      "application": {
+        "status": "error",
+        "error_info": "invalid token"
+      }
+    },
+    {
+      "endpoint": "https://api.videoseed.tv/apiv2.php",
+      "credentialVersion": "owner-followup-value",
+      "operation": "movie-by-kp",
+      "httpStatus": 200,
+      "application": {
+        "status": "error",
+        "error_info": "invalid token"
+      }
+    }
+  ],
+  "playerHostRoot": {
+    "url": "https://tv-1-kinoserial.net",
+    "httpStatus": 503,
+    "scope": "root only, not a title embed"
+  },
+  "backend": {
+    "operation": "GET /v2/teams/team_PwVHMmmfar8ToiLs2VNuA49I",
+    "scope": "korotkowwww-4729",
+    "httpStatus": 403,
+    "deployed": false,
+    "bypassAttempted": false
+  },
+  "chain": {
+    "catalog": "auth-rejected",
+    "exactTitleAndYear": "NOT_RUN",
+    "variants": "NOT_RUN",
+    "seasonEpisode": "NOT_RUN",
+    "officialPlayer": "NOT_RUN",
+    "mainVideo": "NOT_RUN",
+    "russianAudio": "NOT_RUN",
+    "ads": "NOT_RUN",
+    "seek": "NOT_RUN",
+    "restore": "NOT_RUN",
+    "quality": "NOT_RUN",
+    "subtitles": "NOT_RUN"
+  },
+  "currentDocumentation": "cabinet login/moderation dependency; not obtained",
+  "preparedAdapter": "gated with VIDEOSEED_CONTRACT_CONFIRMED; old research contract only",
+  "noCircumvention": true
+}

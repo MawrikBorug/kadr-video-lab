@@ -30,7 +30,8 @@ for(const [key,refId,name,url,category] of SITE_PROVIDERS)PROVIDERS[key]={name:n
 PROVIDERS.collaps={...frame('Collaps / Rewall','X04','https://api.luxembd.ws','collaps'),namespace:'kp',limitation:'В исследовании HTTP 410 для сети US. Это не отказ в РФ и не отсутствие фильма. Точную серию подтверждает наблюдатель.'};
 PROVIDERS.mikai.modes=['catalog','embed'];
 PROVIDERS.kodik={...api('Kodik · свой доступ','X02','kp',['catalog','embed'],['movie','tv'],'https://kodik-api.com/','Поиск своим token на закрытом сервере; штатный iframe из выдачи, без kodikres.','Выдача бесплатного токена не подтверждена; серверный контур ожидает подключения.'),requiresBackend:true};
-export const MODE_NAMES={site:'Внешняя вкладка · ручной поиск',media:'Media / контроль',catalog:'Каталог / варианты',variants:'FilmixTV video-links',episodes:'AnimeON перевод / эпизод',embed:'Штатный iframe',online:'Online · нужен доступ',unknown:'Ожидается контракт'};
+PROVIDERS.videoseed={...api('Videoseed · свой доступ','X08','kp',['search','embed'],['movie','tv'],'https://videoseed.tv/','Ключ базы используется только закрытым сервером. Отдельный player token предназначен для штатного embed.','Каталог и iframe не подтверждают основное видео. Сезон и эпизод подтверждаются в плеере.'),kind:'videoseed',requiresBackend:false};
+export const MODE_NAMES={search:'Поиск в собственном каталоге',site:'Внешняя вкладка · ручной поиск',media:'Media / контроль',catalog:'Каталог / варианты',variants:'FilmixTV video-links',episodes:'AnimeON перевод / эпизод',embed:'Штатный iframe',online:'Online · нужен доступ',unknown:'Ожидается контракт'};
 export class LabError extends Error {constructor(code,message,extra={}){super(message);this.name='LabError';this.code=code;Object.assign(this,extra);}}
 export const excludedBranch=name=>/(?:youtube|rutube|vkmovie|vkvideo|vk[_ -]?video|lumex)/i.test(String(name));
 const fail=(code,message)=>{throw new LabError(code,message);};
@@ -46,6 +47,17 @@ export function buildRequest(c){
  const p=PROVIDERS[c.provider];if(!p?.enabled)fail('unknown-contract','Источник не подтвердился: актуальный публичный контракт недоступен.');
  const mode=c.mode||p.modes[0],issue=modeIssue(p,mode);if(issue)fail(issue.code,issue.reason);
  if(!p.modes.includes(mode))fail('unknown-contract','Режим не поддержан этим поставщиком.');
+ if(c.provider==='videoseed'){
+  if(!['movie','tv'].includes(c.type))fail('unsupported-type','Videoseed: выберите фильм или сериал / аниме.');
+  if(c.type==='tv'&&(!/^[1-9]\d{0,2}$/.test(String(c.season))||!/^[1-9]\d{0,2}$/.test(String(c.episode))))fail('invalid-id','Для Videoseed нужны целые номера сезона и эпизода от 1 до 999.');
+  if(mode==='embed'&&c.namespace==='videoseed'){
+   if(!/^\d{1,10}$/.test(String(c.id)))fail('no-address','Нужен ID Videoseed из кабинета.');
+   return {kind:'videoseed-direct',mode};
+  }
+  if(!p.backendEndpoint)fail('auth-required','Поиск Videoseed ожидает закрытый backend: Vercel вернул 403 scope. Ключ базы в браузер не передаётся. Для прямой пробы выберите систему ID Videoseed.');
+  if(c.id&&!['kp','tmdb','imdb'].includes(c.namespace))fail('no-address','Для поиска выберите KP, TMDB или IMDb.');
+  return {kind:'videoseed-search',url:p.backendEndpoint,mode};
+ }
  if(['apple','blender'].includes(c.provider))return {kind:p.kind,url:c.provider==='apple'?'https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8':'https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4',mode,mainVideo:true};
  if(p.kind==='external')return {kind:'external',url:p.url,origin:p.origin,mode};
  const id=String(c.id??'').trim();if(!p.types.includes(c.type))fail('unsupported-type','Неподдерживаемый тип. TV route не угадывается.');
@@ -93,7 +105,7 @@ export function buildRequest(c){
  return {kind:'iframe',url:p.origin+path,origin:p.origin,sandbox:SANDBOX[c.sandbox],mode};
 }
 export function configForSample(provider,mode,sample,settings={}){
- const namespace=PROVIDERS[provider]?.namespace||'unknown',id=namespace==='control'?provider:sample[namespace];
+ const namespace=provider==='videoseed'&&sample.videoseed?'videoseed':PROVIDERS[provider]?.namespace||'unknown',id=namespace==='control'?provider:sample[namespace];
  return {provider,mode,sampleKey:sample.key,canonicalId:sample.canonicalId||null,title:sample.title,searchTitle:sample.title,year:sample.year||null,category:sample.category,type:sample.type,namespace,id:id?String(id):'',season:String(sample.season||1),episode:String(sample.episode||1),quality:'480',sandbox:'strict',stage:'E1',watchScope:'smoke',canonical:{kp:sample.kp||null,tmdb:sample.tmdb||null,imdb:sample.imdb||null,mal:sample.mal||null,year:sample.year||null},...settings};
 }
 export function selectEpisode(r,ordinal,quality){

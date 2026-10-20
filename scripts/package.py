@@ -6,7 +6,7 @@ if not (root / 'dist/index.html').is_file():
     raise SystemExit('Сначала выполните npm run build (в GitHub Actions это делается автоматически).')
 out = root / 'artifacts'
 out.mkdir(exist_ok=True)
-archive = out / 'kadr-video-lab-1.3.zip'
+archive = out / 'kadr-video-lab-1.4.zip'
 folders = ['web', 'api', 'scripts', 'tests', 'server', 'docs', 'evidence', 'protocol', '.github', 'dist']
 files = ['README.md', 'vercel.json', 'package.json', 'package-lock.json', 'playwright.config.mjs', '.gitignore']
 def add(bundle,file):
@@ -14,7 +14,7 @@ def add(bundle,file):
 with ZipFile(archive, 'w', ZIP_DEFLATED) as bundle:
     for name in folders:
         for file in sorted((root / name).rglob('*')):
-            if file.is_file() and '__pycache__' not in file.parts:
+            if file.is_file() and '__pycache__' not in file.parts and not file.name.startswith('.env') and file.suffix not in ['.pem','.key']:
                 add(bundle,file)
     for name in files:
         add(bundle,root / name)

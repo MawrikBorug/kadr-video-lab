@@ -1,7 +1,8 @@
+// Archived adapter regression harness: explicit opt-in, never the primary selection.
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 const journal=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.videoLab.v1')));
-async function boot(page){await page.goto('./');await expect(page.locator('#build-info')).toContainText('commit');await page.check('#access-consent');}
+async function boot(page){await page.goto('./?archive=1');await expect(page.locator('#build-info')).toContainText('commit');await page.check('#access-consent');}
 async function manual(page,provider='vidlink'){await page.selectOption('#provider',provider);await page.selectOption('#sample','dune');await page.click('#open-source');}
 async function batch(page,modes,subjects,profile='quick'){
  await page.evaluate(()=>document.querySelectorAll('#batch > details').forEach(d=>d.open=true));

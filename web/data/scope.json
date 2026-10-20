@@ -6039,5 +6039,20 @@
         "https://primesrc.me/api/v1/list_servers"
       ]
     }
-  ]
+  ],
+  "currentSelection": {
+    "version": "1.4",
+    "primary": [
+      "Videoseed"
+    ],
+    "preparedButBlocked": [
+      "Videoseed: moderation, own API rejection, Vercel 403"
+    ],
+    "readyLibraryPlaybackConnections": 0,
+    "technicalControls": [
+      "Apple HLS",
+      "Blender MP4"
+    ],
+    "historicalCountsBelow": "1.3 research stage, not current active UI"
+  }
 }

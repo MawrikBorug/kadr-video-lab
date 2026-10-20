@@ -1,3 +1,4 @@
+import {SELECTION_EDITION} from './active-set.js';
 import {PROVIDERS,MODE_NAMES,buildRequest,configForSample,modeIssue} from './providers.js';
 export const PROFILES={quick:{name:'Быстрая диагностика',minimumSeconds:0,defaultSeconds:20},five:{name:'Не менее пяти минут main video',minimumSeconds:300,defaultSeconds:300},full:{name:'Полный сеанс',minimumSeconds:0,defaultSeconds:14400}};
 export const TERMINAL=['completed','failed','timeout','auth-required','rate-limited','skipped','cancelled'];
@@ -34,7 +35,7 @@ export function createRun(preview,{profile='quick',maxSeconds,environment={},bui
  maxSeconds=Number(maxSeconds??PROFILES[profile].defaultSeconds);
  if(!Number.isFinite(maxSeconds)||maxSeconds<Math.max(1,PROFILES[profile].minimumSeconds)||maxSeconds>14400)throw new Error('Предел профиля: 1–14400 секунд; пятиминутный профиль требует ≥300.');
  const at=new Date().toISOString();
- return {schemaVersion:2,runId:uid(),specVersion:'1.3',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20',build,createdAt:at,createdAtMsk:nowMSK(at),updatedAt:at,environment,profile:{id:profile,maxSeconds,minimumSeconds:PROFILES[profile].minimumSeconds,concurrency:1,requestTimeoutSeconds:20,maxAutoRetries:1,spacingMs:1100},status:'ready',cursor:0,circuits:{},queue:preview.map(p=>({...p,testId:uid(),attempts:[]}))};
+ return {selectionEdition:SELECTION_EDITION,schemaVersion:2,runId:uid(),specVersion:'1.4',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20',build,createdAt:at,createdAtMsk:nowMSK(at),updatedAt:at,environment,profile:{id:profile,maxSeconds,minimumSeconds:PROFILES[profile].minimumSeconds,concurrency:1,requestTimeoutSeconds:20,maxAutoRetries:1,spacingMs:1100},status:'ready',cursor:0,circuits:{},queue:preview.map(p=>({...p,testId:uid(),attempts:[]}))};
 }
 export function recoverRuns(runs){
  for(const run of runs){
@@ -59,6 +60,7 @@ export class QueueRunner{
  constructor({execute,onChange=()=>{}}){this.execute=execute;this.onChange=onChange;this.busy=false;}
  changed(){this.run.updatedAt=new Date().toISOString();this.onChange(this.run);}
  async start(run,{environment}={}){
+  if(run.selectionEdition!==SELECTION_EDITION)throw new Error('Архивная очередь: создайте новый запуск текущей редакции. История сохранена.');
   if(this.busy)return;if(run.status==='cancelled')return;
   this.busy=true;this.run=run;this.environment=structuredClone(environment||run.environment);run.status='running';this.changed();
   try{for(let i=0;i<run.queue.length&&run.status==='running';i++){

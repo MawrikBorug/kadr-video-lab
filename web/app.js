@@ -10,6 +10,9 @@ import {recoverRuns} from './queue.js';
 import {initBatchUI} from './batch-ui.js';
 import {initPhoneUI} from './phone-ui.js';
 import {privateSearch} from './backend.js';
+import {ACTIVE_PROVIDERS,TECHNICAL_PROVIDERS,archiveDiagnostic} from './active-set.js';
+import {videoseedFrame,videoseedSearch,PLAYER_ORIGIN} from './videoseed.js';
+import {protectValue} from './security.js';
 
 const $ = id => document.getElementById(id);
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
@@ -56,9 +59,10 @@ function download(text, filename, type) {
   document.body.append(anchor); anchor.click(); anchor.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
-const filename = extension => `kadr-1.3-${new Date().toISOString().replaceAll(':', '-')}.${extension}`;
+const filename = extension => `kadr-1.4-${new Date().toISOString().replaceAll(':', '-')}.${extension}`;
 
 for (const [key, provider] of Object.entries(PROVIDERS)) {
+  if(!archiveDiagnostic()&&![...ACTIVE_PROVIDERS,...TECHNICAL_PROVIDERS].includes(key))continue;
   const option = el('option', `${provider.name}${provider.enabled ? '' : ' · не подтверждён'}`);
   option.value = key; $('provider').append(option);
 }
@@ -75,7 +79,7 @@ function providerInfo() {
   const isFrame=$('provider-mode').value==='embed';
   $('quality-label').hidden=p.kind!=='hls';$('sandbox-label').hidden=!isFrame;$('sandbox-hint').hidden=!isFrame;
   $('id-hint').textContent=p.namespace==='aniliberty'?'Другой сезон требует ID отдельного релиза. Ordinal не округляется.':`Точная система ID: ${p.namespace}. Неизвестный ID не заменяется другим фильмом.`;
-  $('content-id').required=p.enabled&&p.kind!=='external'&&!['control','filmix'].includes(p.namespace);
+  $('content-id').required=p.enabled&&p.kind!=='external'&&!['control','filmix'].includes(p.namespace)&&$('provider').value!=='videoseed';
   $('open-source').textContent=issue?'Зафиксировать блокер режима':'Открыть источник вручную';
   const unsafe=isFrame&&$('sandbox').value==='documented';for(const id of ['unrestricted-label','clean-session-label','sandbox-warning'])$(id).hidden=!unsafe;
 }
@@ -90,7 +94,7 @@ function applySample() {
   $('season').value=config.season;$('episode').value=config.episode;
   providerInfo();updateE1Options();
 }
-$('provider').value='aniliberty';refreshModes();
+$('provider').value=archiveDiagnostic()?'aniliberty':'videoseed';refreshModes();
 $('provider').addEventListener('change',()=>{
   refreshModes();$('namespace').value=PROVIDERS[$('provider').value].namespace;
   $('unrestricted-consent').checked=false;$('clean-session-consent').checked=false;$('sandbox').value='strict';
@@ -222,6 +226,7 @@ function readConfig() {
   const sample=samples.find(s=>s.key===$('sample').value),provider=$('provider').value;
   const base=sample?configForSample(provider,$('provider-mode').value,sample):{};
   const config={...base,provider,mode:$('provider-mode').value,refId:PROVIDERS[provider]?.refId,sampleKey:sample?.key||'custom',category:sample?.category||'custom',title:$('title').value.trim(),searchTitle:sample?.title||$('title').value.trim(),year:Number($('release-year').value)||null,type:$('type').value,namespace:$('namespace').value,id:$('content-id').value.trim(),season:$('season').value,episode:$('episode').value,quality:$('quality').value,sandbox:$('sandbox').value,unrestrictedConsent:$('unrestricted-consent').checked,cleanSessionConsent:$('clean-session-consent').checked,accessAcknowledged:$('access-consent').checked,stage:$('stage').value,watchScope:$('watch-scope').value,e1RecordId:$('stage').value==='E2'?$('e1-record').value||null:null,translationId:$('translation-id').value,playerId:$('upstream-player-id').value};
+  if(provider==='videoseed'){config.searchTitle=config.title;}
   if(base.id!==config.id||base.namespace!==config.namespace){config.canonicalId=null;config.canonical={year:config.year};config.sampleKey='custom';config.searchTitle=config.title;}
   return config;
 }
@@ -254,7 +259,7 @@ function closeSource() {
 $('stop').addEventListener('click', () => { batchUI?.pause('source-closed'); closeSource(); message('Источник закрыт. Ручные наблюдения можно дописать; новый запуск создаст другой сеанс.'); });
 $('new-session').addEventListener('click', () => {
   batchUI?.pause('manual-new-session');
-  closeSource(); current = null; $('sandbox').value = 'strict'; $('unrestricted-consent').checked = false; $('clean-session-consent').checked = false; providerInfo(); renderCurrent();
+  closeSource(); current = null;if(!archiveDiagnostic()){for(const o of [...$('provider').options])if(o.dataset.archived)o.remove();$('provider').value='videoseed';refreshModes();$('namespace').value='kp';} $('sandbox').value = 'strict'; $('unrestricted-consent').checked = false; $('clean-session-consent').checked = false; providerInfo(); renderCurrent();
   message('Укажите условия новой попытки. Предыдущая запись осталась в журнале.');
   $('provider').focus();
 });
@@ -411,7 +416,7 @@ async function openConfig(config,ctx=null,previous=null,selectedFrame=null){
   if(ctx){ctx.signal.addEventListener('abort',()=>rt.controller.abort(),{once:true});if(ctx.signal.aborted)rt.controller.abort();}
   let request;
   try{
-    request=selectedFrame||buildRequest(config);step(record,'request','requested',{origin:new URL(request.url).origin,mode:request.mode});
+    request=selectedFrame||buildRequest(config);if(request.kind==='videoseed-direct')request=videoseedFrame(config,$('videoseed-player-token').value);step(record,'request','requested',{origin:new URL(request.url).origin,mode:request.mode});
     message('Запрос источника… Каталог, точность ID и основной старт проверяются отдельно.');
     if(request.kind==='external'||config.launchExternal){mountExternal(request,record,token);if(ctx)await waitForManual(record,ctx);
     }else if(request.kind==='iframe'){
@@ -419,7 +424,13 @@ async function openConfig(config,ctx=null,previous=null,selectedFrame=null){
       persist();if(ctx)await waitForManual(record,ctx);
     }else{
       let stream;
-      if(request.kind==='backend'){
+      if(request.kind==='videoseed-search'){
+        const data=await videoseedSearch(config,{endpoint:request.url,accessToken:$('adapter-access').value,signal:rt.controller.signal});
+        if(generation!==token||rt.controller.signal.aborted)throw new LabError('interrupted','Опыт прерван.');
+        record.layers.catalog={status:'observed',source:'own-authorized-api'};
+        renderVideoseedResults(data,$('api-results'),(work,choice)=>{if(current!==record||generation!==token)return;const frame=checkedVideoseedChoice(choice,config);const {embedURL,...variant}=choice;record.technical.selectedVariant=sanitize(variant);record.config.selectedWork={id:work.id,title:work.title,year:work.year,kp:work.kp,imdb:work.imdb,tmdb:work.tmdb,season:choice.season,episode:choice.episode};record.config.upstream=frame.origin;record.config.upstreamId=frame.videoId;record.config.videoseedWorkId=work.id;confirm('identity.videoseed',record.config.selectedWork);record.layers.identity={status:'matched-manual',source:'manual'};record.layers.variants={status:'selected-manual',source:'own-authorized-api'};mountFrame(frame,record,config,token);for(const b of $('api-results').querySelectorAll('button'))b.disabled=true;persist();});
+        if(ctx)await waitForManual(record,ctx);
+      }else if(request.kind==='backend'){
         const data=await privateSearch(config,{endpoint:request.url,accessToken:$('adapter-access').value,signal:rt.controller.signal});
         if(generation!==token||rt.controller.signal.aborted)throw new LabError('interrupted','Опыт прерван.');
         record.layers.catalog={status:'observed',source:'own-authorized-api'};record.technical.authorizedChoices=data.choices.map(({embedURL,...x})=>x);
@@ -543,32 +554,79 @@ $('registry-search').oninput=renderRegistry;
 async function beginRetry(diagnostic=false,external=false){
  if(!current){message('Сначала выберите опыт.',true);return;}
  const selectedFrame=diagnostic&&runtime?.iframe?{kind:'iframe',url:runtime.iframe.src,origin:runtime.origin,sandbox:diagnostic?null:'allow-scripts allow-same-origin',mode:current.config.mode}:null;
- if(diagnostic&&!selectedFrame&&!(PROVIDERS[current.config.provider]?.kind==='iframe'||current.config.provider==='primesrc'&&current.config.mode==='embed')){message('Этот опыт не использует iframe.',true);return;}
+ if(diagnostic&&!selectedFrame&&!(PROVIDERS[current.config.provider]?.kind==='iframe'||current.config.provider==='videoseed'||current.config.provider==='primesrc'&&current.config.mode==='embed')){message('Этот опыт не использует iframe.',true);return;}
  const previous=current;batchUI?.pause('new-attempt-after-condition-change');
  while(batchUI?.runner.busy)await new Promise(r=>setTimeout(r,20));
  closeSource();const config={...previous.config,sandbox:diagnostic?'documented':'strict',unrestrictedConsent:diagnostic,cleanSessionConsent:false,diagnosticConsentVersion:diagnostic?2:undefined,launchExternal:external,diagnosticConfirmedAt:diagnostic?new Date().toISOString():undefined};
  $('diagnostic-panel').hidden=true;await openConfig(config,null,previous,selectedFrame);
 }
+function checkedVideoseedChoice(choice,config){
+ let u;try{u=new URL(choice.embedURL);}catch{throw new LabError('invalid-response','Не получен штатный URL Videoseed.');}
+ if(u.origin!==PLAYER_ORIGIN||u.username||u.password||u.port||!/^\/embed\/\d+\/?$/.test(u.pathname))throw new LabError('unknown-contract','Новый адрес плеера требует проверки контракта.');
+ const checked=videoseedFrame({...config,namespace:'videoseed',id:u.pathname.split('/').filter(Boolean).pop()},u.searchParams.get('token'));protectValue(u.searchParams.get('token'));
+ if(config.type==='tv'&&(Number(choice.season)!==Number(config.season)||Number(choice.episode)!==Number(config.episode)))throw new LabError('no-address','Вариант не соответствует запрошенным сезону и эпизоду.');
+ return {...checked,url:u.href};
+}
+function renderVideoseedResults(data,parent,choose){
+ parent.replaceChildren();
+ if(!data.results.length){parent.append(el('p','В этом ответе нет совпадений. Это не проверка всей библиотеки.'));return;}
+ for(const work of data.results){
+  const d=el('details');d.open=true;d.append(el('summary',`${work.title} (${work.year??'год не установлен'}) · Videoseed ${work.id}`));
+  d.append(el('p',`KP ${work.kp||'—'} · IMDb ${work.imdb||'—'} · TMDB ${work.tmdb||'—'}`));
+  if(work.availableSeasons?.length)d.append(el('p',`Сезоны в ответе: ${work.availableSeasons.join(', ')}. Для другого сезона / эпизода измените S/E в параметрах сеанса и повторите поиск.`));
+  d.append(el('p','Озвучка и качество из каталога ещё не подтверждены просмотром. При выборе подтвердите точное название, год и серию.','hint'));
+  for(const choice of work.choices||[]){
+   const b=el('button',`${choice.translation||'Озвучка не указана'}${choice.season?` · S${choice.season}E${choice.episode}`:''} · подтвердить произведение и открыть`);b.type='button';
+   b.onclick=()=>{try{choose(work,choice);}catch(e){message(e.message,true);}};d.append(b);
+  }
+  if(!work.choices?.length)d.append(el('p','Для выбранных S/E не получен проверенный штатный iframe. Просмотр не проводился.'));
+  parent.append(d);
+ }
+}
+$('videoseed-player-token').addEventListener('input',()=>protectValue($('videoseed-player-token').value));
+$('adapter-access').addEventListener('input',()=>protectValue($('adapter-access').value));
+$('videoseed-forget').onclick=()=>{batchUI?.pause('player-token-cleared');closeSource();$('videoseed-player-token').value='';message('Player token очищен; источник закрыт.');};
+for(const key of TECHNICAL_PROVIDERS)$('technical-'+key).onclick=()=>{
+ batchUI?.pause('technical-control');closeSource();current=null;$('provider').value=key;refreshModes();$('sample').value=key;applySample();renderCurrent();message('Контроль подготовлен. Укажите условия и нажмите «Открыть источник вручную».');
+};
+$('videoseed-search').onclick=async()=>{
+ const query=$('videoseed-query').value.trim();if(!query){message('Введите название для поиска.',true);return;}
+ const b=$('videoseed-search');b.disabled=true;$('videoseed-results').replaceChildren();$('videoseed-search-status').textContent='Запрос каталога…';
+ const config={provider:'videoseed',searchTitle:query,title:query,year:Number($('videoseed-year').value)||null,type:$('videoseed-type').value,namespace:'kp',season:$('season').value,episode:$('episode').value};
+ try{
+  const data=await videoseedSearch(config,{endpoint:PROVIDERS.videoseed.backendEndpoint,accessToken:$('adapter-access').value,signal:AbortSignal.timeout(20000)});
+  $('videoseed-search-status').textContent=`Получено произведений: ${data.results.length}. Выберите точное название, год и вариант.`;
+  renderVideoseedResults(data,$('videoseed-results'),(work,choice)=>{
+   if(!$('access-consent').checked){message('Подтвердите право доступа в параметрах сеанса.',true);return;}
+   const selected={...config,mode:'embed',id:work.id,namespace:'videoseed',title:work.title,year:work.year,searchTitle:work.title,type:work.type||config.type,season:String(choice.season||1),episode:String(choice.episode||1),canonical:{kp:work.kp,imdb:work.imdb,tmdb:work.tmdb,year:work.year},sandbox:'strict',accessAcknowledged:true,stage:'E1',watchScope:'smoke',quality:'480',sampleKey:'custom'};
+   const frame=checkedVideoseedChoice(choice,selected);batchUI?.pause('manual-search-selection');
+   openConfig(selected,null,null,frame).then(()=>{if(current){current.config.upstreamId=frame.videoId;current.config.videoseedWorkId=work.id;current.layers.catalog={status:'observed',source:'own-authorized-api'};current.layers.identity={status:'matched-manual',source:'manual'};current.technical.selectedVariant=sanitize({...choice,embedURL:undefined});confirm('identity.videoseed',{id:work.id,title:work.title,year:work.year,season:choice.season,episode:choice.episode});persist();}for(const b of $('videoseed-results').querySelectorAll('button'))b.disabled=true;}).catch(e=>message(e.message,true));
+  });
+ }catch(e){$('videoseed-search-status').textContent=e.message;}finally{b.disabled=false;}
+};
 async function boot() {
   try {
     const response = await fetch('./data/samples.json'); if (!response.ok) throw new Error(); samples = await response.json(); samples.push({key:'apple',title:'Apple BipBop HLS',type:'control',category:'control'},{key:'blender',title:'Sintel trailer © Blender Foundation · CC BY 3.0',type:'control',category:'control'},{key:'archive-sintel',title:'Sintel (2010) · метаданные Internet Archive',type:'control',category:'control-data',year:2010,archive:'Sintel'});
-    for (const sample of samples) { const option = el('option', `${sample.title}${sample.year?` (${sample.year})`:''}`); option.value = sample.key; $('sample').append(option); }
+    if(!archiveDiagnostic()){for(const o of [...$('namespace').options])if(!['videoseed','kp','tmdb','imdb','control'].includes(o.value))o.remove();$('translation-id').closest('div').hidden=true;}
+    for (const sample of samples.filter(s=>archiveDiagnostic()||s.key!=='archive-sintel')) { const option = el('option', `${sample.title}${sample.year?` (${sample.year})`:''}`); option.value = sample.key; $('sample').append(option); }
   } catch { message('Выборка не загрузилась. Можно ввести документированный ID вручную.', true); }
   try {const r=await fetch('./data/registry.json');if(!r.ok)throw new Error();registry=await r.json();renderRegistry();}catch{message('Реестр не загрузился. Готовые режимы и ручной ID доступны.',true);}
-  try{const r=await fetch('./data/backend.json');const b=await r.json();if(b.endpoint&&new URL(b.endpoint).protocol==='https:'){PROVIDERS.kodik.backendEndpoint=b.endpoint;$('adapter-password-label').hidden=false;$('adapter-access').disabled=false;$('backend-state').textContent='Закрытый endpoint подключён; пароль лаборатории хранится только в памяти вкладки.';}}catch{}
+  try{const r=await fetch('./data/backend.json');const b=await r.json();if(b.endpoint&&new URL(b.endpoint).origin==='https://kadr-video-lab-adapter.vercel.app'){PROVIDERS.kodik.backendEndpoint=b.endpoint;PROVIDERS.videoseed.backendEndpoint=b.endpoint;$('adapter-password-label').hidden=false;$('adapter-access').disabled=false;$('backend-state').textContent='Закрытый endpoint подключён; пароль лаборатории хранится только в памяти вкладки.';}}catch{}
+  $('videoseed-access-state').textContent=PROVIDERS.videoseed.backendEndpoint?'Закрытый сервер подключён. Введите пароль лаборатории в разделе серверных доступов. Ключ базы хранится на сервере.':'Доступ Videoseed ожидает модерации (сообщение владельца). Оба проверенных ключа базы отклонены API: invalid token. Поиск также ожидает закрытый сервер: Vercel 403 scope. Просмотр Videoseed не подтверждён. Прямая проба подготовлена для активированного доступа.';
   batchUI=initBatchUI({registry,samples,records,runs,execute:(item,attempt,ctx)=>openConfig(item.config,{...ctx,item,attempt}),persist,environment:readEnvironment,notice:message});
   initPhoneUI({applyConditions:env=>{batchUI?.pause('environment-changed-for-next-attempt');nextConditions=env;message('Новые условия сохранены для следующих попыток. Старые записи не изменены.');},retry:()=>beginRetry().catch(e=>message(e.message,true)),diagnostic:external=>beginRetry(true,external).catch(e=>message(e.message,true)),current:()=>current,notice:message});
   $('build-info').textContent=`Стенд ${BUILD.version} · commit ${BUILD.commit} · сборка ${BUILD.builtAt}. Физический iPhone/РФ не проверены исполнителем.`;
   if (current) {
     const config = current.config; const env = current.environment;
+    if(![...$('provider').options].some(o=>o.value===config.provider)){const o=el('option',`Архив · ${PROVIDERS[config.provider]?.name||config.provider}`);o.value=config.provider;o.disabled=true;o.dataset.archived='true';$('provider').append(o);}
     for (const [id, key] of [['provider','provider'], ['sample','sampleKey'], ['title','title'], ['type','type'], ['namespace','namespace'], ['content-id','id'], ['season','season'], ['episode','episode'], ['quality','quality'], ['sandbox','sandbox'], ['stage','stage'], ['watch-scope','watchScope']]) if (config[key] !== undefined) $(id).value = config[key];
     for (const key of ['device','country','network','blocker']) if (env[key] !== undefined) $(key).value = env[key];
-    if (!PROVIDERS[$('provider').value]) $('provider').value = 'aniliberty';
+    if (!PROVIDERS[$('provider').value]) $('provider').value = 'videoseed';
     refreshModes();$('provider-mode').value=config.mode||PROVIDERS[$('provider').value].modes[0];$('release-year').value=config.year||'';
     $('access-consent').checked = Boolean(config.accessAcknowledged);
     providerInfo(); renderCurrent();
     message('Журнал восстановлен. Источник автоматически не открывается. Допишите наблюдения или создайте новый сеанс для повторного запуска.');
-  } else { $('sample').value = samples.some(item => item.key === 'dandadan') ? 'dandadan' : 'custom'; applySample(); providerInfo(); renderCurrent(); }
+  } else { $('sample').value = samples.some(item => item.key === (archiveDiagnostic()?'dandadan':'dune')) ? (archiveDiagnostic()?'dandadan':'dune') : 'custom'; applySample(); providerInfo(); renderCurrent(); }
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').then(reg=>{const show=()=>{if(reg.waiting)$('update-app').hidden=false;};show();reg.addEventListener('updatefound',()=>reg.installing?.addEventListener('statechange',show));$('update-app').onclick=()=>{interrupt('app-update');reg.waiting?.postMessage({type:'SKIP_WAITING'});navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload(),{once:true});};}).catch(() => { $('offline').hidden = false; $('offline').textContent = 'Офлайн-оболочка не установилась. Онлайн-стенд доступен; экспортируйте журнал перед закрытием.'; });
 }
 boot();

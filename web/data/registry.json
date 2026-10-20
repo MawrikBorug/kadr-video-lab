@@ -102,6 +102,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -187,6 +193,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Спецификация подтверждает B2B, но base URL и схема playback выдаются партнёру; открытая страница фильма не является этим API",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -290,6 +302,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -365,6 +383,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Нужна конкретная библиотека/вуз и entitlements всех 4–5 зрителей; бесплатность библиотеке не подтверждена",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -446,6 +470,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. API каталога/заимствования требует перехода в Hoopla; внешний медиаплеер этим контрактом не предоставлен",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -533,6 +563,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Нет канального допуска и delivery specification для КАДРа; бесплатный план автора не выдаёт права каналу",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -589,6 +625,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "исключён владельцем"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Исключено владельцем, включая переименованные подключения.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -645,6 +687,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "исключён владельцем"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Исключено владельцем, включая переименованные подключения.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -699,6 +747,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "исключён владельцем"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Исключено владельцем, включая переименованные подключения.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -786,6 +840,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -894,6 +954,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "native-transport-observed-main-unconfirmed",
+      "reason": "Старые native playing/timeupdate сохранены: транспорт воспроизводился. Граница основного видео, длительность без перемоток и русский звук не подтверждены. Каталог отдельно подтверждён. Это частичное испытание, не отсутствие всех технических наблюдений.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -972,6 +1038,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Vimeo — hosting, SDK документирован; старый demo 404. Нет действующего разрешённого test video ID, N14-каталог не предоставлен.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1058,6 +1130,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1135,6 +1213,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. PeerTube — распределённый hosting, SDK документирован. Не предоставлены разрешённый instance и UUID нужного объекта.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1195,6 +1279,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1259,6 +1349,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1319,6 +1415,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1379,6 +1481,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1439,6 +1547,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1499,6 +1613,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1569,6 +1689,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1629,6 +1755,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1714,6 +1846,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1813,6 +1951,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1920,6 +2064,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Publisher API требует Bearer; подтверждённый в исследовании партнёрский допуск. Текущие /register и /login не дали самостоятельной регистрации; /partners 404. Автоматическая выдача не доказана.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -1979,6 +2129,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Lumex: владелец запретил углубление и подключение.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2081,6 +2237,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2180,6 +2342,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "manual-skip",
+      "reason": "Пропущено владельцем: Playback error; Playback blocked  This player cannot be loaded inside a restricted (sandboxed) frame. Please use iframe without sandbox attribute. Это причина пропуска, а не подтверждение просмотра.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2278,6 +2446,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "manual-skip",
+      "reason": "Пропущено владельцем: Please disable sandbox. Это причина пропуска, а не подтверждение просмотра.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2374,6 +2548,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "main-video-confirmed-manual",
+      "reason": "Основное видео вручную подтверждено для конкретного варианта. Вывод не распространяется на весь сервис.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2434,6 +2614,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2494,6 +2680,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2552,6 +2744,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2627,6 +2825,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены SPA; первый script оказался аналитикой, TV grammar и управление не подтверждены",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2693,6 +2897,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Хранилище, протокол или инфраструктура без собственной онлайн-фильмотеки. Торренты и доставка из Google Drive исключены из этапа.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2769,6 +2979,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Исторический и новый запрос /api/players редиректят на speedtest.selectel.ru/1GB; прочитан только ограниченный фрагмент, это не API и не видео. /api,/docs дают 404 Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2873,6 +3089,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Поиск и выдача штатного Kodik iframe подготовлены на сервере, но собственный token и подтверждённая автоматическая бесплатная выдача отсутствуют. kodik.biz сейчас недоступен.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -2981,6 +3203,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Официальная форма требует 300 посетителей/сутки за неделю, домен и статистику; отправка заявки и индивидуальный допуск исключены.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3099,6 +3327,12 @@
         }
       ],
       "originalResearchStatus": "доказан блокер конкретного режима"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "manual-skip",
+      "reason": "Пропущено владельцем: Реклама. Это причина пропуска, а не подтверждение просмотра.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3188,6 +3422,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Официальная страница: только сайты от 1000 посетителей/сутки, подключение через заявку/контакт. Исключено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3261,6 +3501,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. VideoCDN/Lumex связь не удостоверена. В текущем SHA нет самостоятельного VideoCDN; новый каталог под этим именем не заявляется Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3339,6 +3585,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. В текущем коде VOD VideoDB не равен AI-сервису docs.videodb.io. Извлечение/перенос Chrome cookies не выполнялись",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3422,6 +3674,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": true,
+      "phoneState": "own-access-blocked",
+      "reason": "Владелец сообщил ожидание модерации. Оба предоставленных значения ключа базы отклонены известным API (invalid token в HTTP 200). Шаблон embed и отдельный player token прочитаны со скриншотов. Актуальная документация кабинета недоступна; Vercel scope 403. Каталог/варианты/штатный iframe/видео собственным доступом не подтверждены.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3540,6 +3798,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3627,6 +3891,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3705,6 +3975,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Не отдельная фильмотека. Публичный embed берётся только из свежего ответа Mikai для точного релиза/эпизода; API MoonAnime требует отдельного ключа и не объявлен готовым.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3781,6 +4057,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. FanCDN Service.cs обращается к fanserial.me, /engine/ajax/msearch.php и /film.php?kp=…&key=… . key из страницы не является собственным developer API key",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3854,6 +4136,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Самостоятельного адаптера под этим точным именем в обследованных 70 каталогах нет. Не приравнен к CDNvideohub или VideoDB по сходству названия Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3908,6 +4196,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Самостоятельного адаптера под этим точным именем в обследованных 70 каталогах нет. Не приравнен к CDNvideohub или VideoDB по сходству названия",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -3985,6 +4279,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Код Zetflix использует сайт/плееры и сессионные данные. ZetflixDB имеет другой endpoint и заимствует настройки VideoDB, не доказан дублем Zetflix Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4064,6 +4364,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Оператор и публичный playback-контракт требуют установления",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4150,6 +4456,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4268,6 +4580,12 @@
         }
       ],
       "originalResearchStatus": "нужен собственный доступ"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4354,6 +4672,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4432,6 +4756,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Поиск сайта и внешний Ashdi/Tortuga в коде; это зависимости, не самостоятельные резервные upstream",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4525,6 +4855,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "preparatory-only",
+      "reason": "Сохранены предварительные записи/каталог или блокер контракта. Основное видео не подтверждено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4603,6 +4939,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "diagnostic-only",
+      "reason": "Загрузка iframe или диагностическое сообщение не подтверждает просмотр основного видео.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4700,6 +5042,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "preparatory-only",
+      "reason": "Сохранены предварительные записи/каталог или блокер контракта. Основное видео не подтверждено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4784,6 +5132,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "preparatory-only",
+      "reason": "Сохранены предварительные записи/каталог или блокер контракта. Основное видео не подтверждено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4883,6 +5237,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -4966,6 +5326,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5049,6 +5415,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5161,6 +5533,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "preparatory-only",
+      "reason": "Сохранены предварительные записи/каталог или блокер контракта. Основное видео не подтверждено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5234,6 +5612,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. vidsrc.hair дал 503. Не отождествлён с адаптером VidSrc на vidsrc.pm или другими VidSrc Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5316,6 +5700,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5421,6 +5811,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "preparatory-only",
+      "reason": "Сохранены предварительные записи/каталог или блокер контракта. Основное видео не подтверждено.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5495,6 +5891,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Landing доступен; публичный JS asset вернул 503. Не отождествлён с vidfast.vc у HydraFlix",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5582,6 +5984,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5666,6 +6074,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5750,6 +6164,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5837,6 +6257,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -5913,6 +6339,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. AnimeLib: API/HTTP с ключом или аккаунтом по коду; в коде streamproxy=true; есть авторизация/ключ в коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6025,6 +6457,12 @@
         }
       ],
       "originalResearchStatus": "готов к пробе"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6109,6 +6547,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6193,6 +6637,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6277,6 +6727,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6354,6 +6810,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Не отдельная фильмотека. Публичный embed берётся только из свежего ответа Mikai для точного релиза/эпизода; API MoonAnime требует отдельного ключа и не объявлен готовым.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6452,6 +6914,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6550,6 +7018,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6648,6 +7122,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6746,6 +7226,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6844,6 +7330,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -6942,6 +7434,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7040,6 +7538,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7138,6 +7642,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7236,6 +7746,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Реализованы конкретные ограниченные подключения; доступность видео проверяется по каждому произведению и попытке.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7312,6 +7828,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. AsiaGe: API/HTTP с ключом или аккаунтом по коду; есть авторизация/ключ в коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7396,6 +7918,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7480,6 +8008,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7556,6 +8090,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. GetsTV: API/HTTP с ключом или аккаунтом по коду; есть авторизация/ключ в коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7646,6 +8186,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлена внешняя ручная проба. Оператор заявляет автоматический VIP-тест на 24 часа после регистрации; форма: email, пароль, повтор и согласие. Тест не активирован исполнителем. Платные тарифы после теста исключены.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7733,6 +8279,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7809,6 +8361,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. SakhTV: API/HTTP с ключом или аккаунтом по коду; есть авторизация/ключ в коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7885,6 +8443,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. iRemux перенаправляет на Kladum — загрузки с Облака Mail.Ru и VIP; это файловая доставка, не текущий онлайн-плеер.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -7961,6 +8525,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. CDNvideohub: Публичные HTTP/HTML/JSON вызовы по коду; официальный внешний контракт не установлен; в коде streamproxy=true; обязательный key не обнаружен в изученном коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8038,6 +8608,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. FlixCDN: Разбор HTML/JS в браузерном процессе; есть браузерный процесс; в коде streamproxy=true; обязательный key не обнаружен в изученном коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8114,6 +8690,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Gencit: Публичные HTTP/HTML/JSON вызовы по коду; официальный внешний контракт не установлен; в коде streamproxy=true; обязательный key не обнаружен в изученном коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8198,6 +8780,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8282,6 +8870,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8367,6 +8961,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8451,6 +9051,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8535,6 +9141,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8611,6 +9223,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. VeoVeo: API/HTTP с ключом или аккаунтом по коду; есть авторизация/ключ в коде. Живой landing/поиск учтён отдельно; работоспособность извлечения не заявляется Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8672,6 +9290,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Собственный endpoint 54243ba5.obrut.show; updateCurrentConf наследует настройки VideoDB, не Zetflix. Имя не доказывает один каталог/оператора",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8756,6 +9380,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8815,6 +9445,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "только инфраструктура"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Нет собственного search/catalog/base URL. Это парсер готового iframe, не подтверждённый самостоятельный поставщик и не автоматически HDVB",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8874,6 +9510,12 @@
       ],
       "checks": [],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Не отдельная фильмотека. Публичный embed берётся только из свежего ответа Mikai для точного релиза/эпизода; API MoonAnime требует отдельного ключа и не объявлен готовым.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -8958,6 +9600,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14. В облачной проверке есть сетевой/HTTP-блокер; телефонный результат неизвестен. Это не отказ всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9042,6 +9690,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Подготовлен ручной переход на известный зрительский сайт из исследования с возвратом к связанному опыту. Это не API/iframe/media и не доказательство каталога N14.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9117,6 +9771,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Не отдельная фильмотека. Публичный embed берётся только из свежего ответа Mikai для точного релиза/эпизода; API MoonAnime требует отдельного ключа и не объявлен готовым.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9190,6 +9850,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9263,6 +9929,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9336,6 +10008,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9409,6 +10087,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9480,6 +10164,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9551,6 +10241,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9622,6 +10318,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9693,6 +10395,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9764,6 +10472,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9835,6 +10549,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9906,6 +10626,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -9977,6 +10703,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -10048,6 +10780,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -10119,6 +10857,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   },
   {
@@ -10190,6 +10934,12 @@
         }
       ],
       "originalResearchStatus": "требуется идентификация"
+    },
+    "cleanup14": {
+      "active": false,
+      "phoneState": "no-phone-attempt",
+      "reason": "В исходном телефонном журнале нет опыта этого направления. Получены только упоминания и варианты; разрешение извлекать медиассылки не следует из имени Адресная проверка известного первоисточника имеет сетевой/HTTP-блокер; статус и URL приложены. Это не вывод об отсутствии всей библиотеки.",
+      "archiveDoesNotMeanPermanentFailure": true
     }
   }
 ]

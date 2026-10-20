@@ -12,7 +12,7 @@ export const CHECKS = {
   fullNoAds: 'Полный просмотр без рекламы', eventsReceived: 'Получены допустимые события',
 };
 export const ADS = { preRoll: 'Pre-roll', midRoll: 'Mid-roll', postRoll: 'Post-roll', overlay: 'Overlay / баннер', popup: 'Pop-up / новое окно', navigation: 'Изменение навигации' };
-export const DETAILS = { voice: 'Язык и студия озвучки', subtitles: 'Язык и вид субтитров', observedQuality: 'Фактическое качество', audioAlternatives:'Другие доступные звуковые дорожки (если видны)', qualityAlternatives:'Доступные варианты качества (если видны)', startSeconds: 'Старт, секунд', seekRecoverySeconds: 'Возобновление после seek, секунд', watchMinutes: 'Фактически наблюдали, минут (E2 smoke ≥30)', payment: 'Оплата / ключ / сервер / другое приложение', mediaHost: 'Конечный медиахост (если наблюдаем)', trackingEvidence: 'Наблюдение трекинга: домены и метод', controlNotes: 'Управление, PiP, обрыв, таймер, смена серии', notes: 'Наблюдения / ошибки / точная версия произведения' };
+export const DETAILS = { voice: 'Язык и студия озвучки', subtitles: 'Язык и вид субтитров', observedQuality: 'Фактическое качество', audioAlternatives:'Другие доступные звуковые дорожки (если видны)', qualityAlternatives:'Доступные варианты качества (если видны)', startSeconds: 'Старт, секунд', seekRecoverySeconds: 'Возобновление после seek, секунд', watchMinutes: 'Фактически наблюдали, минут (E2 smoke ≥30)', payment: 'Оплата / ключ / сервер / другое приложение', mediaHost: 'Конечный медиахост (если наблюдаем)', trackingEvidence: 'Наблюдение трекинга: домены и метод', restoreResult:'Восстановление: позиция до/после, продолжился ли просмотр (ручное наблюдение)', availableCommands:'Доступные команды / события плеера и источник сведений', controlNotes: 'Управление, PiP, обрыв, таймер, смена серии', notes: 'Наблюдения / ошибки / точная версия произведения' };
 
 export function makeRecord(config, environment, now = new Date().toISOString(), id = crypto.randomUUID()) {
   return { id, observationSchemaVersion:2, testId:id, attemptId:id, previousAttemptId:null, runId:null, build:BUILD, createdAt: now, createdAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'), updatedAt: now, endedAt: null, status: 'NOT_RUN',
@@ -150,7 +150,7 @@ function preparedRecords(records) {
 }
 
 export function exportJSON(records, now = new Date().toISOString(), runs = []) {
-  return JSON.stringify(sanitize({ schemaVersion: VERSION, assessmentVersion: 2, specVersion:'1.3',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20', build:BUILD, exportedAt: now,
+  return JSON.stringify(sanitize({ schemaVersion: VERSION, assessmentVersion: 2, specVersion:'1.4',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20', build:BUILD, exportedAt: now,
     exportedAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'),
     notice:'Ручные подтверждения, native-события, каталог и iframe разделены. Выполненная диагностика не доказывает просмотр всех фильмов. L4/L5 автоматически не присваиваются. Исследование и облачные/физические опыты не объединяются.',
     records:preparedRecords(records).map(r=>({...r,testId:r.testId||r.id,attemptId:r.attemptId||r.id,evidenceLevel:evidenceLevel(r),evidence:evidenceSummary(r)})),runs }),null,2);
