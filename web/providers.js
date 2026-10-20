@@ -1,3 +1,5 @@
+import {SITE_PROVIDERS} from './site-providers.js';
+import {EXTRA_FRAMES,RESEARCH_SHA,extraPath} from './extra-providers.js';
 export const SANDBOX = Object.freeze({strict:'allow-scripts allow-same-origin',popups:'allow-scripts allow-same-origin allow-popups',documented:null});
 const frame=(name,refId,origin,grammar='slash',types=['movie','tv'])=>({name,refId,origin,grammar,types,kind:'iframe',enabled:true,namespace:'tmdb',modes:['embed'],source:origin,gate:'Штатный iframe',live:'HTML не подтверждает основное видео',description:'Точная адресация TMDB. Слои и ручные подтверждения сохраняются раздельно.',limitation:'Parent pause/seek не подтверждены. Реклама, русский звук и физический iPhone не измерены.'});
 const api=(name,refId,namespace,modes,types,source,description,limitation)=>({name,refId,namespace,modes,types,source,description,limitation,kind:'catalog',enabled:true,gate:'Каталог / варианты отдельно от media',live:'Анонимный режим; неизвестное не означает «нет»'});
@@ -23,13 +25,19 @@ export const PROVIDERS={
  cinezo:frame('Cinezo','X30','https://player.cinezo.live'),
  ezvidapi:{name:'ezvidapi',refId:'X24',kind:'unconfirmed',enabled:false,modes:['unknown'],namespace:'tmdb',source:'https://ezvidapi.com/',gate:'Неизвестен контракт',live:'API не установлен',description:'Исторический ID сохранён.',limitation:'Нужны официальный endpoint и условия.'},
 };
-export const MODE_NAMES={media:'Media / контроль',catalog:'Каталог / варианты',variants:'FilmixTV video-links',episodes:'AnimeON перевод / эпизод',embed:'Штатный iframe',online:'Online · нужен доступ',unknown:'Ожидается контракт'};
+for(const f of EXTRA_FRAMES)PROVIDERS[f.key]={...frame(f.name,f.refId,f.origin,f.grammar),source:f.source||`https://github.com/lampac-nextgen/lampac/blob/${RESEARCH_SHA}/Modules/OnlineENG/${f.adapter}/Controller.cs`,description:'Точный iframe route из исследования; запуск штатной страницы. Извлечение потока и black_magic не используются.',limitation:'Новый телефонный опыт: доступность, sandbox, звук и реклама неизвестны. Домены с похожими именами не объединены.'};
+for(const [key,refId,name,url,category] of SITE_PROVIDERS)PROVIDERS[key]={name:name+' · внешний сайт',refId,source:url,origin:new URL(url).origin,url,kind:'external',enabled:true,modes:['site'],namespace:'kp',types:['movie','tv'],category,gate:'Ручной переход на сайт',live:'Страница / поиск вручную; не API и не media',description:'Откройте сайт, найдите точное произведение и S/E, вернитесь и запишите результат.',limitation:'Плеер вне стенда. Нет автоматического измерения, pause/seek или закрытия вкладки. Доступность конкретного фильма и дорожек неизвестна.'};
+PROVIDERS.collaps={...frame('Collaps / Rewall','X04','https://api.luxembd.ws','collaps'),namespace:'kp',limitation:'В исследовании HTTP 410 для сети US. Это не отказ в РФ и не отсутствие фильма. Точную серию подтверждает наблюдатель.'};
+PROVIDERS.mikai.modes=['catalog','embed'];
+PROVIDERS.kodik={...api('Kodik · свой доступ','X02','kp',['catalog','embed'],['movie','tv'],'https://kodik-api.com/','Поиск своим token на закрытом сервере; штатный iframe из выдачи, без kodikres.','Выдача бесплатного токена не подтверждена; серверный контур ожидает подключения.'),requiresBackend:true};
+export const MODE_NAMES={site:'Внешняя вкладка · ручной поиск',media:'Media / контроль',catalog:'Каталог / варианты',variants:'FilmixTV video-links',episodes:'AnimeON перевод / эпизод',embed:'Штатный iframe',online:'Online · нужен доступ',unknown:'Ожидается контракт'};
 export class LabError extends Error {constructor(code,message,extra={}){super(message);this.name='LabError';this.code=code;Object.assign(this,extra);}}
 export const excludedBranch=name=>/(?:youtube|rutube|vkmovie|vkvideo|vk[_ -]?video|lumex)/i.test(String(name));
 const fail=(code,message)=>{throw new LabError(code,message);};
 const numeric=v=>/^[1-9]\d{0,9}$/.test(String(v));
 export function modeIssue(p,mode){
  if(!p?.enabled)return {code:'unknown-contract',reason:p?.limitation||'Неизвестен контракт'};
+ if(p.requiresBackend&&!p.backendEndpoint)return {code:'auth-required',reason:'Нужен свой доступ и подключённый закрытый серверный адаптер. Ключ не вводится в клиентский JSON.'};
  if(p.handshakeBlocked)return {code:'unknown-contract',reason:p.limitation};
  if(p.refId==='X18'&&mode==='online')return {code:'auth-required',reason:'Нужен свой VoKino token и закрытый серверный адаптер. Бесплатные условия не подтверждены.'};
  return null;
@@ -39,6 +47,7 @@ export function buildRequest(c){
  const mode=c.mode||p.modes[0],issue=modeIssue(p,mode);if(issue)fail(issue.code,issue.reason);
  if(!p.modes.includes(mode))fail('unknown-contract','Режим не поддержан этим поставщиком.');
  if(['apple','blender'].includes(c.provider))return {kind:p.kind,url:c.provider==='apple'?'https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8':'https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4',mode,mainVideo:true};
+ if(p.kind==='external')return {kind:'external',url:p.url,origin:p.origin,mode};
  const id=String(c.id??'').trim();if(!p.types.includes(c.type))fail('unsupported-type','Неподдерживаемый тип. TV route не угадывается.');
  if(c.type==='tv'){
   const anime=['aniliberty','mikai','animeon'].includes(c.provider);
@@ -59,6 +68,7 @@ export function buildRequest(c){
   return {kind:'catalog',url:'https://archive.org/metadata/Sintel',mode};
  }
  if(c.namespace!==p.namespace||!numeric(id))fail('no-address',`Нужен точный ${p.namespace.toUpperCase()} ID. Неизвестный ID не заменяется другим фильмом.`);
+ if(c.provider==='kodik')return {kind:'backend',url:p.backendEndpoint,mode};
  if(c.provider==='mikai')return {kind:'catalog',url:`https://api.mikai.me/public/v1/anime/mal:${id}/player`,mode};
  if(c.provider==='filmix')return {kind:'catalog',url:`https://api.filmix.tv/api-fx/post/${id}/video-links`,mode};
  if(c.provider==='vokino')return {kind:'catalog',url:`https://api.vokino.org/v2/view/${id}`,mode};
@@ -73,9 +83,10 @@ export function buildRequest(c){
  if(c.provider==='primesrc'&&mode==='catalog')return {kind:'catalog',url:`${p.origin}/api/v1/list_servers?type=${type}&tmdb=${id}${type==='tv'?`&season=${c.season}&episode=${c.episode}`:''}`,mode};
  if(!(c.sandbox in SANDBOX))fail('invalid-config','Неизвестный режим sandbox.');
  if(c.sandbox==='documented'&&!c.unrestrictedConsent)fail('needs-action','Для режима без sandbox подтвердите предупреждение об окнах и навигации.');
- if(c.sandbox==='documented'&&!c.cleanSessionConsent)fail('needs-action','Нужна отдельная чистая тестовая сессия после strict-пробы.');
- let path=`/embed/${suffix}`;
+ if(c.sandbox==='documented'&&c.diagnosticConsentVersion!==2&&!c.cleanSessionConsent)fail('needs-action','Нужна отдельная чистая тестовая сессия после strict-пробы.');
+ let path=extraPath(p.grammar,c)||`/embed/${suffix}`;
  if(p.grammar==='plain')path=`/${suffix}`;
+ if(p.grammar==='collaps')path=`/embed/kp/${id}`; // TV selection is manual in the operator player; no guessed S/E query.
  if(p.grammar==='query')path=`/embed/${query}`;
  if(p.grammar==='mapple')path=type==='movie'?`/watch/movie/${id}`:`/watch/tv/${id}-${c.season}-${c.episode}`;
  if(p.grammar==='stellar')path=(type==='movie'?`/en/watch/embed/movie/${id}`:`/en/watch/embed/tv/${id}-${c.season}-${c.episode}`)+'?autoPlay=false&autoNext=false';

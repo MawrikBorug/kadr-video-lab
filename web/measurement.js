@@ -47,3 +47,28 @@ export function evidenceLevel(record) {
   if (record.layers?.catalog?.status === 'observed') return 'L1';
   return 'L0';
 }
+
+// The ladder describes technical evidence. A manual observation is a separate,
+// useful result even when the cross-origin player exposes no trustworthy media API.
+export function evidenceSummary(record) {
+  const level=evidenceLevel(record),layer=record.layers?.mainVideo;
+  const latest=(record.manualConfirmations||[]).filter(x=>x.field==='mainVideo').at(-1);
+  const manual=latest ? latest.value===true : layer?.status==='observed-manual'&&layer.source==='manual';
+  return {modelVersion:2,technicalLevel:level,manualMainVideo:manual,
+    mainVideoSource:manual?'manual-observer':layer?.status==='observed'?'native-events':'unconfirmed',
+    summary:manual?`Основное видео подтверждено вручную; технический уровень ${level}`:`Технический уровень ${level}; ручное подтверждение основного видео отсутствует`,
+    scope:'this-attempt-only',automaticFullSession:false};
+}
+
+export function requestRestore(measurement,position,source='manual-command',at=new Date().toISOString()) {
+  measurement.last=null;
+  measurement.commands.restore={status:'requested',position,source,requestedAt:at,completed:false,playbackResumed:false};
+}
+export function observeRestore(measurement,{position,seeking,event,at=new Date().toISOString()}) {
+  const r=measurement.commands?.restore;if(!r)return false;
+  if(r.status==='requested'&&!seeking&&Math.abs(position-r.position)<=.35&&['seeked','position-readback'].includes(event)) {
+    Object.assign(r,{status:'observed',completed:true,observedAt:at,observedPosition:position,confirmationSource:'native-'+event});return true;
+  }
+  if(r.completed&&event==='progress'&&position>r.observedPosition+.2){r.playbackResumed=true;r.resumedAt??=at;return true;}
+  return false;
+}

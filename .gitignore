@@ -9,3 +9,6 @@ playwright-report/
 *.pem
 *.key
 .DS_Store
+
+backend-public/
+.vercel/

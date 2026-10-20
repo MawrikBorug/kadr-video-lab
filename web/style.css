@@ -9,3 +9,7 @@
 #batch-results { max-height: 28rem; overflow: auto; }
 #registry { max-height: 35rem; overflow: auto; }
 input[type=file] { max-width: 100%; }
+
+.player.external {aspect-ratio:auto;min-height:14rem;padding:1rem;display:block;}
+.player.external a {display:block;padding:1rem;color:#c5eee4;text-decoration:underline;}
+.player.external label {color:#edf4f1;}

@@ -1,6 +1,6 @@
 import {sanitize} from './security.js';
 import {BUILD} from './build.js';
-import {evidenceLevel} from './measurement.js';
+import {evidenceLevel,evidenceSummary} from './measurement.js';
 export const VERSION = 2;
 export const STORAGE_KEY = 'kadr.videoLab.v1';
 export const RESULTS = ['NOT_RUN', 'PASS', 'FAIL', 'INCONCLUSIVE'];
@@ -12,7 +12,7 @@ export const CHECKS = {
   fullNoAds: 'Полный просмотр без рекламы', eventsReceived: 'Получены допустимые события',
 };
 export const ADS = { preRoll: 'Pre-roll', midRoll: 'Mid-roll', postRoll: 'Post-roll', overlay: 'Overlay / баннер', popup: 'Pop-up / новое окно', navigation: 'Изменение навигации' };
-export const DETAILS = { voice: 'Язык и студия озвучки', subtitles: 'Язык и вид субтитров', observedQuality: 'Фактическое качество', startSeconds: 'Старт, секунд', seekRecoverySeconds: 'Возобновление после seek, секунд', watchMinutes: 'Фактически наблюдали, минут (E2 smoke ≥30)', payment: 'Оплата / ключ / сервер / другое приложение', mediaHost: 'Конечный медиахост (если наблюдаем)', trackingEvidence: 'Наблюдение трекинга: домены и метод', controlNotes: 'Управление, PiP, обрыв, таймер, смена серии', notes: 'Наблюдения / ошибки / точная версия произведения' };
+export const DETAILS = { voice: 'Язык и студия озвучки', subtitles: 'Язык и вид субтитров', observedQuality: 'Фактическое качество', audioAlternatives:'Другие доступные звуковые дорожки (если видны)', qualityAlternatives:'Доступные варианты качества (если видны)', startSeconds: 'Старт, секунд', seekRecoverySeconds: 'Возобновление после seek, секунд', watchMinutes: 'Фактически наблюдали, минут (E2 smoke ≥30)', payment: 'Оплата / ключ / сервер / другое приложение', mediaHost: 'Конечный медиахост (если наблюдаем)', trackingEvidence: 'Наблюдение трекинга: домены и метод', controlNotes: 'Управление, PiP, обрыв, таймер, смена серии', notes: 'Наблюдения / ошибки / точная версия произведения' };
 
 export function makeRecord(config, environment, now = new Date().toISOString(), id = crypto.randomUUID()) {
   return { id, observationSchemaVersion:2, testId:id, attemptId:id, previousAttemptId:null, runId:null, build:BUILD, createdAt: now, createdAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'), updatedAt: now, endedAt: null, status: 'NOT_RUN',
@@ -150,10 +150,10 @@ function preparedRecords(records) {
 }
 
 export function exportJSON(records, now = new Date().toISOString(), runs = []) {
-  return JSON.stringify(sanitize({ schemaVersion: VERSION, assessmentVersion: 2, specVersion:'1.2', build:BUILD, exportedAt: now,
+  return JSON.stringify(sanitize({ schemaVersion: VERSION, assessmentVersion: 2, specVersion:'1.3',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20', build:BUILD, exportedAt: now,
     exportedAtMsk:new Date(Date.parse(now)+10800000).toISOString().replace('Z','+03:00'),
     notice:'Ручные подтверждения, native-события, каталог и iframe разделены. Выполненная диагностика не доказывает просмотр всех фильмов. L4/L5 автоматически не присваиваются. Исследование и облачные/физические опыты не объединяются.',
-    records:preparedRecords(records).map(r=>({...r,testId:r.testId||r.id,attemptId:r.attemptId||r.id,evidenceLevel:evidenceLevel(r)})),runs }),null,2);
+    records:preparedRecords(records).map(r=>({...r,testId:r.testId||r.id,attemptId:r.attemptId||r.id,evidenceLevel:evidenceLevel(r),evidence:evidenceSummary(r)})),runs }),null,2);
 }
 
 export function csvCell(value) {
@@ -174,6 +174,8 @@ export function exportCSV(records, runs = []) {
     const values={id:item.testId,testId:item.testId,runId:run.runId,buildCommit:run.build?.commit,refId:item.refId,mode:item.config.mode,upstream:item.upstream,canonicalId:item.config.canonicalId,year:item.config.year,season:item.config.season,episode:item.config.episode,queueStatus:item.status,config:json(item.config),steps:json(item.attempts),technical:json(item.reason),runProfile:json(run.profile),runState:run.status,environment:json(run.environment)};
     rows.push(columns.map(k=>values[k]??''));
   }
+  columns.push('technicalEvidenceLevel','manualMainVideo','evidenceSummary');
+  for(let i=0;i<rows.length;i++){const r=records.find(r=>r.id===rows[i][0]);const e=r?evidenceSummary(r):null;rows[i].push(e?.technicalLevel??'',e?.manualMainVideo??'',e?.summary??'');}
   return '\uFEFF'+[columns,...rows].map(row=>row.map(v=>csvCell(sanitize(v))).join(',')).join('\r\n')+'\r\n';
 }
 
@@ -186,7 +188,7 @@ export function loadJournal(storage) {
     for (const r of data.records) {
       if (!isObject(r) || typeof r.id !== 'string' || typeof r.createdAt !== 'string' || !RESULTS.includes(r.status) || !isObject(r.config) || !isObject(r.environment) || !isObject(r.technical) || !isObject(r.details) || !isObject(r.checks) || !isObject(r.ads) || !Array.isArray(r.events) || r.events.length > 400 || !Number.isInteger(r.droppedEvents) || !Number.isInteger(r.rejectedMessages)) throw new Error('Повреждённая запись журнала');
       r.ads.postRoll ??= 'NOT_RUN';
-      r.details.watchMinutes ??= ''; // Additive migration of the original schema-1 journal.
+      for(const key of Object.keys(DETAILS))r.details[key]??=''; // Additive migration of the original schema-1 journal.
       if (r.config.e1RecordId != null && typeof r.config.e1RecordId !== 'string') throw new Error('Повреждённая ссылка E1');
       if (Object.keys(CHECKS).some(key => !RESULTS.includes(r.checks[key])) || Object.keys(ADS).some(key => !AD_RESULTS.includes(r.ads[key])) || !AD_RESULTS.includes(r.tracking) || Object.keys(DETAILS).some(key => typeof r.details[key] !== 'string' || r.details[key].length > 2000)) throw new Error('Повреждённые наблюдения журнала');
     }

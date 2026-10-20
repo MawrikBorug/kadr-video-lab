@@ -15,7 +15,7 @@ test('invalid IDs, IMDb substitution, script URLs and invented content types nev
 test('unconfirmed candidates have no executable endpoints',()=>{
   for(const provider of ['ezvidapi','unknown'])assert.throws(()=>buildRequest({...yap,provider}));
   assert.equal(buildRequest({...yap,provider:'mapple'}).url,'https://mapple.fun/watch/movie/693134');
-  assert.equal(Object.values(PROVIDERS).filter(p=>p.enabled).length,19);
+  assert.equal(Object.values(PROVIDERS).filter(p=>p.enabled&&p.kind!=='external'&&!p.requiresBackend).length,30);
 });
 test('sandbox comparison without isolation needs explicit acknowledgement',()=>{
   assert.throws(()=>buildRequest({...yap,sandbox:'documented'}));

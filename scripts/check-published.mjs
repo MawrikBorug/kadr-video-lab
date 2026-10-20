@@ -14,13 +14,13 @@ async function read(relative) {
   return response.text();
 }
 const html = await read('./');
-assert.ok(html.includes('КАДР 1.2 — лаборатория видео') && html.includes('id="export-json"'), 'Wrong page or incomplete deployment.');
+assert.ok(html.includes('КАДР 1.3 — лаборатория видео') && html.includes('id="export-json"'), 'Wrong page or incomplete deployment.');
 const manifest = JSON.parse(await read('manifest.webmanifest'));
 assert.equal(manifest.start_url, './'); assert.equal(manifest.scope, './');
 const worker = await read('sw.js'); assert.ok(worker.includes('kadr-lab-') && !worker.includes('__BUILD_ID__'));
 const samples = JSON.parse(await read('data/samples.json')); assert.equal(samples.length, 14);
 assert.ok((await read('app.js')).includes('jsonExport()'));
-const build=JSON.parse(await read('build-info.json'));assert.equal(build.commit,process.env.GITHUB_SHA);assert.equal(build.version,'1.2');const registry=JSON.parse(await read('data/registry.json'));assert.equal(registry.length,125);
+const build=JSON.parse(await read('build-info.json'));assert.equal(build.commit,process.env.GITHUB_SHA);assert.equal(build.version,'1.3');const registry=JSON.parse(await read('data/registry.json'));assert.equal(registry.length,125);
 const result = `Verified public static assets: ${base.href}\nCommit: ${process.env.GITHUB_SHA || 'unknown'}\nChecked: ${new Date().toISOString()}\nPhysical iPhone / RU playback and advertising remain NOT_RUN.\n`;
 console.log(result);
 if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, result);

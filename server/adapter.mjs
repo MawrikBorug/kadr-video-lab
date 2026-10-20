@@ -1,6 +1,7 @@
 // Optional server-only component. Never copied into dist, never accepts arbitrary URLs.
 import {createHash,timingSafeEqual} from 'node:crypto';
 import {applicationError} from '../web/catalog.js';
+import {kodikChoices} from './playback.mjs';
 const digest=s=>createHash('sha256').update(String(s)).digest();
 const reply=(status,body,origin)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json','cache-control':'no-store','access-control-allow-origin':origin,'vary':'Origin'}});
 export function createAdapter({env=process.env,fetcher=fetch,clock=Date.now}={}){
@@ -16,7 +17,8 @@ export function createAdapter({env=process.env,fetcher=fetch,clock=Date.now}={})
   if(day!==today){day=today;daily=0;}if(minute!==currentMinute){minute=currentMinute;minCount=0;}
   if(busy||daily>=100||minCount>=10)return reply(429,{code:'lab-budget-limit',retryAfter:60},origin);
   let b;try{const raw=await request.text();if(raw.length>4096)throw new Error();b=JSON.parse(raw);}catch{return reply(400,{code:'invalid-request'},origin);}
-  if(!b||Object.keys(b).some(k=>!['provider','operation','id','title','type'].includes(k)))return reply(400,{code:'unexpected-field'},origin);
+  if(!b||Object.keys(b).some(k=>!['provider','operation','id','title','type','season','episode'].includes(k)))return reply(400,{code:'unexpected-field'},origin);
+  if((b.season!==undefined&&!/^[1-9]\d{0,2}$/.test(String(b.season)))||(b.episode!==undefined&&!/^[1-9]\d{0,2}$/.test(String(b.episode))))return reply(400,{code:'invalid-episode'},origin);
   let url,secret;
   if(b.provider==='vokino'&&b.operation==='online'&&/^[1-9]\d{0,9}$/.test(String(b.id))){
    secret=env.VOKINO_API_TOKEN;url=new URL('https://api.vokino.org/v2/online/vokino/'+b.id);
@@ -36,8 +38,13 @@ export function createAdapter({env=process.env,fetcher=fetch,clock=Date.now}={})
    const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}
    const body=JSON.parse(new TextDecoder().decode(bytes)),error=applicationError(body);
    if(error)return reply(error.code==='auth-required'?403:502,{code:error.code,appStatus:error.appStatus??null,upstreamStatus:200},origin);
-   // A strict summary avoids leaking even secrets hidden under unexpected response keys.
-   return reply(200,{provider:b.provider,operation:b.operation,upstreamStatus:200,receivedJSON:true,resultCount:Array.isArray(body.results)?body.results.length:Array.isArray(body)?body.length:null,mediaSessionConfirmed:false},origin);
+   const result={provider:b.provider,operation:b.operation,upstreamStatus:200,receivedJSON:true,resultCount:Array.isArray(body.results)?body.results.length:Array.isArray(body)?body.length:null,mediaSessionConfirmed:false};
+   if(b.provider==='kodik')result.choices=kodikChoices(body,b).filter(c=>!c.embedURL.includes(secret));
+   else result.playbackBlocker='Successful authorized response schema has not been observed; no playback URL is invented.';
+   // Upstream text can echo a credential. Redact every configured secret even
+   // inside an otherwise allowed title; response schemas alone are insufficient.
+   let output=JSON.stringify(result);for(const key of ['VOKINO_API_TOKEN','KODIK_API_KEY','VIDEOSEED_API_TOKEN','KADR_ADAPTER_ACCESS_TOKEN'])if(env[key])output=output.split(env[key]).join('[redacted]');
+   return reply(200,JSON.parse(output),origin);
   }catch{return reply(502,{code:'upstream-unavailable'},origin);}finally{busy=false;}
  };
 }

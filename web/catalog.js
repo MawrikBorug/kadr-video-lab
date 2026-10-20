@@ -67,3 +67,16 @@ export function parseCatalog(provider,d,c){
  }
  fail('unknown-contract','Нет распознавателя ответа этого режима.');
 }
+
+export function mikaiEmbedChoices(d,c){
+ const summary=parseCatalog('mikai',d,c);
+ if(summary.identity!=='matched')throw new LabError('identity-unconfirmed','Mikai: точные MAL, год и эпизод не подтверждены ответом.');
+ const result=[];
+ for(const release of d.result.releases)for(const ep of release.episodes||[])if(Number(ep.number)===Number(c.episode))for(const s of ep.sources||[]){
+  if(excludedBranch(s.provider)||typeof s.embedUrl!=='string'||s.embedUrl.length>4096)continue;
+  let u;try{u=new URL(s.embedUrl);}catch{continue;}
+  if(u.protocol!=='https:'||u.username||u.password||u.port||!['ashdi.vip','moonanime.art','fenixplay.xyz','tortuga.tw'].includes(u.hostname))continue;
+  result.push({url:u.href,origin:u.origin,provider:s.provider,releaseId:release.id,kind:release.kind,teams:(release.teams||[]).map(t=>typeof t==='string'?t:t.name).filter(Boolean),episode:Number(ep.number)});
+ }
+ return result;
+}

@@ -40,7 +40,7 @@ test('event log excludes payloads, URLs and secrets; buffer has explicit loss co
 test('JSON export round trips Cyrillic, quotes, newlines, observations and events', () => {
   const r=record(); r.ads.midRoll='OBSERVED'; r.tracking='INCONCLUSIVE'; appendEvent(r,{type:'seeked',currentTime:10});
   const data=JSON.parse(exportJSON([r],'2026-10-17T01:00:00Z'));
-  assert.equal(data.schemaVersion,2); assert.equal(data.assessmentVersion,2); assert.deepEqual(data.records.map(({assessment,evidenceLevel,...raw})=>raw),[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
+  assert.equal(data.schemaVersion,2); assert.equal(data.assessmentVersion,2); assert.deepEqual(data.records.map(({assessment,evidenceLevel,evidence,...raw})=>raw),[r]); assert.equal(data.exportedAt,'2026-10-17T01:00:00Z');
 });
 function parseCSV(text) {
   const rows=[]; let row=[], value='', quoted=false;

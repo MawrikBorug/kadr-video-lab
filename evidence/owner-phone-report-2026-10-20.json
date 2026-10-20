@@ -1,0 +1,18 @@
+{
+  "source": "owner-message-in-this-conversation",
+  "underlyingExportAvailable": false,
+  "testedCommit": "833cbb213db49a66b3b57b11a90107fefee5dd2d",
+  "automaticallyMeasuredByDeveloper": false,
+  "environmentReported": "iPhone Safari",
+  "observationsReported": [
+    "Apple HLS and Blender MP4 played",
+    "Queue interrupted after hiding page",
+    "Blender restored about 14.77 seconds; pause/play/seek50 and progress worked; history retained",
+    "restore.completed remained false",
+    "VidAPI and VidLink displayed sandbox incompatibility",
+    "VidZee played Dune Part Two with VPN; English audio; no Russian audio in the viewed variant",
+    "VidZee manual main-video confirmation retained; exported technical evidenceLevel L0",
+    "VPN remained unknown in journal"
+  ],
+  "scopeLimit": "This is the owner report, not an imported journal, automatic measurement, global library/audio verdict or confirmation of the new build."
+}

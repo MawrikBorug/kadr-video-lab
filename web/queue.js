@@ -8,7 +8,7 @@ export function availableModes(registry=[]){
  for(const [provider,p] of Object.entries(PROVIDERS))for(const mode of p.modes){const issue=modeIssue(p,mode);modes.push({key:`${provider}:${mode}`,provider,mode,refId:p.refId,label:`${p.refId} · ${p.name} · ${MODE_NAMES[mode]}`,issue,priority:['apple','blender'].indexOf(provider)>=0?0:mode==='catalog'?1:2});}
  for(const p of registry)if(!Object.values(PROVIDERS).some(v=>v.refId===p.id)){
   const excluded=['excluded','out-of-scope'].includes(p.workingStatus),auth=p.status==='нужен собственный доступ';
-  modes.push({key:`${p.providerKey}:unknown`,provider:p.providerKey,mode:'unknown',refId:p.id,label:`${p.id} · ${p.name}`,priority:3,issue:{code:excluded?'excluded':auth?'auth-required':p.status==='только инфраструктура'?'infrastructure':'unknown-contract',reason:p.id==='C26'?'Lumex вне текущей работы':p.id==='X32'?'VidFast: маршрут не установлен':p.id==='C12'?'Vimeo: старый demo недоступен, нужен свой разрешённый объект':p.id==='C14'?'PeerTube: нужен конкретный разрешённый UUID':p.reason,next:p.next}});
+  modes.push({key:`${p.providerKey}:unknown`,provider:p.providerKey,mode:'unknown',refId:p.id,label:`${p.id} · ${p.name}`,priority:3,issue:{code:p.stageReview?({excluded:'excluded',partner:'manual-partner-approval',owner:'owner-access',infrastructure:'infrastructure',technical:'technical-blocker',upstream:'shared-upstream',unconfirmed:'unknown-contract'}[p.stageReview.outcome]||'unknown-contract'):excluded?'excluded':auth?'auth-required':p.status==='только инфраструктура'?'infrastructure':'unknown-contract',reason:p.stageReview?.reason|| (p.id==='C26'?'Lumex вне текущей работы':p.id==='X32'?'VidFast: маршрут не установлен':p.id==='C12'?'Vimeo: старый demo недоступен, нужен свой разрешённый объект':p.id==='C14'?'PeerTube: нужен конкретный разрешённый UUID':p.reason),next:p.stageReview?.nextAction||p.next}});
  }
  return modes;
 }
@@ -20,6 +20,8 @@ export function previewQueue(modes,subjects,settings={}){
   let issue=mode.issue;
   if(!issue && ((PROVIDERS[c.provider]?.types?.includes('control')) !== (sample.type==='control')))issue={code:'unsupported-type',reason:'Контроль транспорта — отдельный тестовый объект; его успех не переносится на N14.'};
   if(!issue&&PROVIDERS[c.provider]?.namespace==='control'&&sample.key!==c.provider&&sample.control!==c.provider)issue={code:'unsupported-type',reason:'Контрольный объект не соответствует этому транспорту: Apple BipBop и Blender Sintel не взаимозаменяемы.'};
+  if(!issue&&PROVIDERS[c.provider]?.category==='anime'&&sample.category!=='anime')issue={code:'unsupported-category',reason:'Аниме-сайт: выберите аниме, а не игровой фильм или сериал.'};
+  if(!issue&&PROVIDERS[c.provider]?.category==='own-series'&&sample.canonicalId)issue={code:'unsupported-category',reason:'The Chosen: каталог собственного сериала; нужен его ручной эпизод, N14 не подставляется.'};
   if(!issue&&['aniliberty','mikai','animeon'].includes(c.provider)&&settings.season&&Number(settings.season)!==Number(sample.season||1))issue={code:'no-address',reason:'Для этого сезона нужен отдельный ID релиза/профильная нумерация; прежний релиз не преобразуется автоматически.'};
   if(!issue)try{buildRequest(c);}catch(e){issue={code:e.code||'invalid-config',reason:e.message};}
   result.push({config:c,modeKey:mode.key,refId:mode.refId,upstream:PROVIDERS[c.provider]?.origin||mode.refId,status:issue?'skipped':'pending',reason:issue||null});
@@ -32,7 +34,7 @@ export function createRun(preview,{profile='quick',maxSeconds,environment={},bui
  maxSeconds=Number(maxSeconds??PROFILES[profile].defaultSeconds);
  if(!Number.isFinite(maxSeconds)||maxSeconds<Math.max(1,PROFILES[profile].minimumSeconds)||maxSeconds>14400)throw new Error('Предел профиля: 1–14400 секунд; пятиминутный профиль требует ≥300.');
  const at=new Date().toISOString();
- return {schemaVersion:2,runId:uid(),specVersion:'1.2',build,createdAt:at,createdAtMsk:nowMSK(at),updatedAt:at,environment,profile:{id:profile,maxSeconds,minimumSeconds:PROFILES[profile].minimumSeconds,concurrency:1,requestTimeoutSeconds:20,maxAutoRetries:1,spacingMs:1100},status:'ready',cursor:0,circuits:{},queue:preview.map(p=>({...p,testId:uid(),attempts:[]}))};
+ return {schemaVersion:2,runId:uid(),specVersion:'1.3',sourceSpecVersion:'1.2',scopeEdition:'2026-10-20',build,createdAt:at,createdAtMsk:nowMSK(at),updatedAt:at,environment,profile:{id:profile,maxSeconds,minimumSeconds:PROFILES[profile].minimumSeconds,concurrency:1,requestTimeoutSeconds:20,maxAutoRetries:1,spacingMs:1100},status:'ready',cursor:0,circuits:{},queue:preview.map(p=>({...p,testId:uid(),attempts:[]}))};
 }
 export function recoverRuns(runs){
  for(const run of runs){
@@ -43,7 +45,7 @@ export function recoverRuns(runs){
  }return runs;
 }
 export function retryItems(run,testIds){
- const ids=new Set(testIds);for(const item of run.queue)if(ids.has(item.testId)&&['failed','timeout','auth-required','rate-limited','interrupted','cancelled'].includes(item.status)){
+ const ids=new Set(testIds);for(const item of run.queue)if(ids.has(item.testId)&&['failed','timeout','auth-required','rate-limited','interrupted','cancelled','skipped'].includes(item.status)){
   if(item.notBefore&&Date.parse(item.notBefore)>Date.now())continue;
   item.status='pending';item.reason=null;delete run.circuits[item.modeKey];
  }run.status='paused';return run;
@@ -56,9 +58,9 @@ const delay=(ms,signal)=>new Promise((resolve,reject)=>{const done=()=>{clearTim
 export class QueueRunner{
  constructor({execute,onChange=()=>{}}){this.execute=execute;this.onChange=onChange;this.busy=false;}
  changed(){this.run.updatedAt=new Date().toISOString();this.onChange(this.run);}
- async start(run){
+ async start(run,{environment}={}){
   if(this.busy)return;if(run.status==='cancelled')return;
-  this.busy=true;this.run=run;run.status='running';this.changed();
+  this.busy=true;this.run=run;this.environment=structuredClone(environment||run.environment);run.status='running';this.changed();
   try{for(let i=0;i<run.queue.length&&run.status==='running';i++){
    const item=run.queue[i];if(!['pending','interrupted'].includes(item.status))continue;
    run.cursor=i;
@@ -66,7 +68,7 @@ export class QueueRunner{
    const circuit=run.circuits[item.modeKey];if(circuit?.open){item.status='skipped';item.reason={code:'mode-stopped',reason:`Режим остановлен после ${circuit.code}; другие режимы продолжаются.`};this.changed();continue;}
    this.item=item;this.controller=new AbortController();
    const at=new Date().toISOString(),previous=item.attempts.at(-1);
-   const attempt={attemptId:uid(),testId:item.testId,previousAttemptId:previous?.attemptId||null,startedAt:at,startedAtMsk:nowMSK(at),status:'running',steps:[],recordId:null};
+   const attempt={attemptId:uid(),testId:item.testId,previousAttemptId:previous?.attemptId||null,startedAt:at,startedAtMsk:nowMSK(at),environment:structuredClone(this.environment),config:structuredClone(item.config),status:'running',steps:[],recordId:null};
    item.attempts.push(attempt);item.status='running';this.changed();
    const setState=(state)=>{if(this.controller?.signal.aborted)return;attempt.steps.push({name:'state',status:state,at:new Date().toISOString()});item.status=state;run.status=state;this.changed();};
    try{
@@ -77,7 +79,8 @@ export class QueueRunner{
      const code=error.code||'app-error';item.status=['timeout','auth-required','rate-limited'].includes(code)?code:'failed';attempt.status=item.status;
      attempt.error={code,message:error.message,httpStatus:error.httpStatus??null,appStatus:error.appStatus??null,retryAfter:error.retryAfter??null};
      if(error.retryAfter)item.notBefore=new Date(Date.now()+error.retryAfter*1000).toISOString();
-     const failures=(run.circuits[item.modeKey]?.failures||0)+1;run.circuits[item.modeKey]={failures,code,open:['auth-required','rate-limited'].includes(code)||failures>=2};
+     const connectionFailure=['auth-required','rate-limited','lab-sandbox','provider-refusal','paid','manual-partner-approval','network-or-cors','network-error','timeout','invalid-response','unknown-contract'].includes(code);
+     const failures=(run.circuits[item.modeKey]?.failures||0)+(connectionFailure?1:0);run.circuits[item.modeKey]={failures,code,open:['auth-required','rate-limited','lab-sandbox','provider-refusal','paid','manual-partner-approval'].includes(code)||failures>=2};
      // One bounded retry for transient errors; auth/403/geo and 429 are never retried automatically.
      if(['network-or-cors','timeout'].includes(code)&&item.attempts.length<=run.profile.maxAutoRetries&&!run.circuits[item.modeKey].open){item.status='pending';i--;}
     }
