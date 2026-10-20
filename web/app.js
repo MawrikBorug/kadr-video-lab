@@ -435,7 +435,7 @@ async function openConfig(config,ctx=null,previous=null,selectedFrame=null){
           const choices=mikaiEmbedChoices(data,config);
           for(const choice of choices){
             const button=el('button',`${choice.provider} · ${choice.kind} · ${choice.teams.join(', ')} · E${choice.episode}: открыть iframe`);button.type='button';
-            button.onclick=()=>{if(current!==record||generation!==token)return;const {url,...meta}=choice;confirm('variant.mikai',meta);record.config.upstream=choice.origin;record.config.upstreamId=String(choice.releaseId);record.technical.selectedVariant=meta;mountFrame({url,origin:choice.origin,sandbox:'allow-scripts allow-same-origin'},record,config,token);};$('api-results').append(button);
+            button.onclick=()=>{if(current!==record||generation!==token)return;const {url,...meta}=choice;confirm('variant.mikai',meta);record.config.upstream=choice.origin;record.config.upstreamId=String(choice.releaseId);record.technical.selectedVariant=meta;mountFrame({url,origin:choice.origin,sandbox:'allow-scripts allow-same-origin'},record,config,token);for(const b of $('api-results').querySelectorAll('button'))b.disabled=true;message('Выбранный вариант закреплён за этой попыткой. Для другого upstream / релиза нажмите «Повторить опыт / выбрать другой вариант».');};$('api-results').append(button);
           }
           if(!choices.length)throw new LabError('empty-result','Нет разрешённого известного embed для этого эпизода. Другие названия не подставляются.');
           message('Выберите релиз / upstream, затем запустите плеер. Дорожка UA не считается RU; подпись релиза не заменяет прослушивание.');
@@ -542,7 +542,7 @@ $('registry-search').oninput=renderRegistry;
 
 async function beginRetry(diagnostic=false,external=false){
  if(!current){message('Сначала выберите опыт.',true);return;}
- const selectedFrame=runtime?.iframe?{kind:'iframe',url:runtime.iframe.src,origin:runtime.origin,sandbox:diagnostic?null:'allow-scripts allow-same-origin',mode:current.config.mode}:null;
+ const selectedFrame=diagnostic&&runtime?.iframe?{kind:'iframe',url:runtime.iframe.src,origin:runtime.origin,sandbox:diagnostic?null:'allow-scripts allow-same-origin',mode:current.config.mode}:null;
  if(diagnostic&&!selectedFrame&&!(PROVIDERS[current.config.provider]?.kind==='iframe'||current.config.provider==='primesrc'&&current.config.mode==='embed')){message('Этот опыт не использует iframe.',true);return;}
  const previous=current;batchUI?.pause('new-attempt-after-condition-change');
  while(batchUI?.runner.busy)await new Promise(r=>setTimeout(r,20));
