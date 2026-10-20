@@ -524,7 +524,7 @@ $('export-recovery').addEventListener('click', () => download(loaded.raw || '', 
 $('share-json').addEventListener('click', async () => {
   const file = new File([jsonExport()], filename('json'), { type: 'application/json' });
   if (!navigator.canShare?.({ files: [file] })) { download(jsonExport(), file.name, 'application/json'); message('Файловый Share недоступен: JSON подготовлен как загрузка. Сохраните его в «Файлы».'); return; }
-  try { await navigator.share({ files: [file], title: 'КАДР 1.3: журнал испытаний' }); }
+  try { await navigator.share({ files: [file], title: 'КАДР 1.4: журнал испытаний' }); }
   catch (error) { if (error.name !== 'AbortError') message('Не удалось передать файл. Используйте «Скачать JSON».', true); }
 });
 
