@@ -313,7 +313,7 @@ function mountExternal(request,record,token){
  const rt=runtime;rt.externalSession=true;record.technical.delivery='external-window-manual';
  const box=el('div'),title=el('p',`Найдите: ${record.config.title} (${record.config.year||'год не указан'})${record.config.type==='tv'?` S${record.config.season}E${record.config.episode}`:''}. Внешняя вкладка не измеряется автоматически.`),link=el('a','Открыть сайт / плеер в отдельной вкладке ↗');
  link.href=request.url;link.target='_blank';link.rel='noopener noreferrer';link.className='external-launch';
- link.onclick=event=>{if(current!==record||generation!==token){event.preventDefault();return;}if(record.technical.externalLaunchedAt&&record.technical.externalClosed?.confirmed!==true){event.preventDefault();message('Внешняя вкладка уже открывалась. Закройте её перед повторным запуском.',true);return;}record.technical.externalClosed={confirmed:false,source:'manual-action'};record.technical.externalLaunchedAt=new Date().toISOString();log(record,{type:'external-window-open-requested-not-playback-proof',channel:'manual-action',origin:request.origin});};
+ link.onclick=event=>{if(current!==record||generation!==token){event.preventDefault();return;}if(record.technical.externalLaunchedAt&&record.technical.externalClosed?.confirmed!==true){event.preventDefault();message('Внешняя вкладка уже открывалась. Закройте её перед повторным запуском.',true);return;}record.technical.externalClosed={confirmed:false,source:'manual-action'};closed.checked=false;record.technical.externalLaunchedAt=new Date().toISOString();log(record,{type:'external-window-open-requested-not-playback-proof',channel:'manual-action',origin:request.origin});};
  const label=el('label','Закрыл(а) внешний плеер перед следующим опытом '),closed=el('input');closed.type='checkbox';closed.id='external-closed';label.prepend(closed);closed.onchange=()=>{if(current===record){record.technical.externalClosed={confirmed:closed.checked,source:'manual',at:new Date().toISOString()};persist();}};
  box.append(title,link,label);$('player').replaceChildren(box);$('player').classList.add('external');
  for(const id of ['play','pause','seek'])$(id).disabled=true;
@@ -336,7 +336,7 @@ function waitForManual(record,ctx){
   return new Promise((resolve,reject)=>{
     const abort=()=>{record.queueStatus=ctx.run.status==='cancelled'?'cancelled':ctx.item.status==='skipped'?'skipped':'interrupted';record.technical.interrupted=record.queueStatus;record.technical.interruptionReason=ctx.item.reason||ctx.run.interruption;record.endedAt=new Date().toISOString();dispose();persist();reject(new LabError('interrupted','Опыт прерван.'));};
     ctx.signal.addEventListener('abort',abort,{once:true});
-    runtime.manualResolve=()=>{if(runtime?.externalSession&&record.technical.externalClosed?.confirmed!==true){message('Перед следующим опытом закройте внешний плеер и подтвердите это на стенде.',true);return;}$('complete-current').disabled=true;const diagnosis=record.technical.manualDiagnosis;
+    runtime.manualResolve=()=>{if(runtime?.externalSession&&record.technical.externalLaunchedAt&&record.technical.externalClosed?.confirmed!==true){message('Перед следующим опытом закройте внешний плеер и подтвердите это на стенде.',true);return;}$('complete-current').disabled=true;const diagnosis=record.technical.manualDiagnosis;
       if((!diagnosis||diagnosis.code==='none')&&(record.config.mode==='embed'||runtime?.iframe||runtime?.externalSession)){
        const profile=ctx.run.profile.id,manual=evidenceSummary(record).manualMainVideo,minutes=Number(record.details.watchMinutes);
        if(profile==='five'&&(!manual||minutes<5)){message('Профиль 5 минут: подтвердите основное видео и укажите не менее 5 фактически просмотренных минут; либо сохраните блокер.',true);$('complete-current').disabled=false;return;}
@@ -393,14 +393,14 @@ function renderCatalog(summary,record,config,token){
 async function followup(config,record,token){
   const rt=runtime;try{const request=buildRequest(config);step(record,config.mode,'requested');const {data,http}=await fetchJSON(request.url,{signal:rt.controller.signal});if(generation!==token||current!==record)return;const summary=parseCatalog(config.provider,data,config);record.technical.followup=sanitize(summary);step(record,config.mode,'observed',{http});$('api-results').append(el('pre',JSON.stringify(sanitize(summary),null,2)));message('Ответ выбранного варианта сохранён отдельно от основного видео.');}catch(error){if(generation!==token)return;record.technical.followupError={code:error.code,httpStatus:error.httpStatus};step(record,config.mode,'error',{code:error.code,httpStatus:error.httpStatus});message(error.message,true);}
 }
-async function openConfig(config,ctx=null,previous=null){
+async function openConfig(config,ctx=null,previous=null,selectedFrame=null){
   if(!config.accessAcknowledged)throw new LabError('needs-action','Подтвердите право доступа к тестируемому контенту.');
   if(records.length>=5000)throw new LabError('storage-limit','Лимит 5000 записей: экспортируйте журнал. Старые записи не перезаписываются.');
   // Correctable form validation must not lock the form in an incomplete session.
   if(PROVIDERS[config.provider]?.enabled&&!modeIssue(PROVIDERS[config.provider],config.mode))buildRequest(config);
   if(runtime)closeSource();
   dispose();current=makeRecord({...config,refId:PROVIDERS[config.provider]?.refId||ctx?.item?.refId,upstream:ctx?.item?.upstream||PROVIDERS[config.provider]?.origin||PROVIDERS[config.provider]?.source,upstreamId:config.id},ctx?.attempt?.environment||ctx?.run.environment||readEnvironment());
-  const record=current;if(previous){record.testId=previous.testId||previous.id;record.previousAttemptId=previous.attemptId||previous.id;record.technical.previousRecordId=previous.id;record.technical.retryReason=config.diagnosticConsentVersion===2?'explicit-sandbox-diagnostic':'manual-condition-change';}if(ctx){record.runId=ctx.run.runId;record.testId=ctx.item.testId;record.attemptId=ctx.attempt.attemptId;record.previousAttemptId=ctx.attempt.previousAttemptId;record.queueStatus='running';const previous=records.find(r=>r.attemptId===record.previousAttemptId);if(previous&&ctx.item.attempts.length<=3)record.technical.resumePosition=previous.technical.restorePosition??previous.technical.position??0;ctx.attempt.recordId=record.id;}
+  const record=current;if(selectedFrame){record.config.upstream=selectedFrame.origin;record.config.upstreamId=previous?.config.upstreamId||config.id;record.technical.diagnosticInput={source:'selected-iframe-in-memory',origin:selectedFrame.origin,previousRecordId:previous?.id};}if(previous){record.testId=previous.testId||previous.id;record.previousAttemptId=previous.attemptId||previous.id;record.technical.previousRecordId=previous.id;record.technical.retryReason=config.diagnosticConsentVersion===2?'explicit-sandbox-diagnostic':'manual-condition-change';}if(ctx){record.runId=ctx.run.runId;record.testId=ctx.item.testId;record.attemptId=ctx.attempt.attemptId;record.previousAttemptId=ctx.attempt.previousAttemptId;record.queueStatus='running';const previous=records.find(r=>r.attemptId===record.previousAttemptId);if(previous&&ctx.item.attempts.length<=3)record.technical.resumePosition=previous.technical.restorePosition??previous.technical.position??0;ctx.attempt.recordId=record.id;}
   records.push(record);const token=generation;
   if(ctx){const publishState=ctx.setState;ctx={...ctx,setState:state=>{if(ctx.signal.aborted)return;record.queueStatus=state;record.steps.push({name:'state',status:state,at:new Date().toISOString()});publishState(state);}};}
   runtime={controller:new AbortController(),openedAt:performance.now(),iframe:null,video:null,hls:null,attempt:ctx?.attempt,setState:ctx?.setState};
@@ -411,7 +411,7 @@ async function openConfig(config,ctx=null,previous=null){
   if(ctx){ctx.signal.addEventListener('abort',()=>rt.controller.abort(),{once:true});if(ctx.signal.aborted)rt.controller.abort();}
   let request;
   try{
-    request=buildRequest(config);step(record,'request','requested',{origin:new URL(request.url).origin,mode:request.mode});
+    request=selectedFrame||buildRequest(config);step(record,'request','requested',{origin:new URL(request.url).origin,mode:request.mode});
     message('Запрос источника… Каталог, точность ID и основной старт проверяются отдельно.');
     if(request.kind==='external'||config.launchExternal){mountExternal(request,record,token);if(ctx)await waitForManual(record,ctx);
     }else if(request.kind==='iframe'){
@@ -542,11 +542,12 @@ $('registry-search').oninput=renderRegistry;
 
 async function beginRetry(diagnostic=false,external=false){
  if(!current){message('Сначала выберите опыт.',true);return;}
- if(diagnostic&&!(PROVIDERS[current.config.provider]?.kind==='iframe'||current.config.provider==='primesrc'&&current.config.mode==='embed')){message('Этот опыт не использует iframe.',true);return;}
+ const selectedFrame=runtime?.iframe?{kind:'iframe',url:runtime.iframe.src,origin:runtime.origin,sandbox:diagnostic?null:'allow-scripts allow-same-origin',mode:current.config.mode}:null;
+ if(diagnostic&&!selectedFrame&&!(PROVIDERS[current.config.provider]?.kind==='iframe'||current.config.provider==='primesrc'&&current.config.mode==='embed')){message('Этот опыт не использует iframe.',true);return;}
  const previous=current;batchUI?.pause('new-attempt-after-condition-change');
  while(batchUI?.runner.busy)await new Promise(r=>setTimeout(r,20));
  closeSource();const config={...previous.config,sandbox:diagnostic?'documented':'strict',unrestrictedConsent:diagnostic,cleanSessionConsent:false,diagnosticConsentVersion:diagnostic?2:undefined,launchExternal:external,diagnosticConfirmedAt:diagnostic?new Date().toISOString():undefined};
- $('diagnostic-panel').hidden=true;await openConfig(config,null,previous);
+ $('diagnostic-panel').hidden=true;await openConfig(config,null,previous,selectedFrame);
 }
 async function boot() {
   try {
