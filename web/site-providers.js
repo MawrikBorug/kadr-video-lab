@@ -1,6 +1,10 @@
 // Public viewer sites observed in the research. This is an explicit manual
 // handoff, not an invented API, a direct media integration or proof of a title.
 export const SITE_PROVIDERS=[
+ ['siteanimeon','L006','AnimeON · внешний сайт','https://animeon.club/','anime'],
+ ['siteanimego','L004','AnimeGo · проверка с телефона','https://animego.me/','anime'],
+ ['siterezka','L025','Rezka · проверка с телефона','https://rezka.ag/'],
+ ['siteuafilm','L041','UAFilm · проверка с телефона','https://uafilm.me/'],
  ['siteiptv','L024','IPTV.ONLINE · бесплатный тест 24 часа','https://iptv.online/','self-trial'],
  ['sitetvigle','C01','Tvigle · зрительский сайт','https://www.tvigle.ru/'],
  ['siteplex','C03','Plex · зрительский сайт','https://watch.plex.tv/'],
