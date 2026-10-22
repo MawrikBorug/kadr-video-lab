@@ -1,11 +1,17 @@
 import assert from 'node:assert/strict';
-import {readFile,readdir} from 'node:fs/promises';
-const forbidden=['CANARY_PRIVATE_VALUE','FIXTURE_PRIVATE_UPSTREAM_VALUE','fixture-lab-password'];
-async function walk(path){for(const item of await readdir(path,{withFileTypes:true})){const full=path+'/'+item.name;if(item.isDirectory())await walk(full);else{
- assert.ok(!/\.env|\.pem$|\.key$|adapter\.mjs$|start\.mjs$/.test(full),'Server or secret file in public build');
- if(/\.(?:js|json|html|md|txt|csv)$/.test(full)){const text=await readFile(full,'utf8');for(const secret of forbidden)assert.ok(!text.includes(secret),'Credential canary in public build');}
-}}}
-await walk('dist');
-const index=await readFile('dist/index.html','utf8');assert.ok(!index.includes("connect-src *")&&!index.includes("frame-src *"));
-const build=JSON.parse(await readFile('dist/build-info.json'));assert.match(build.commit,/^[a-f0-9]{40}$/);
-console.log('Public build scan PASS: finite origins, no server files or credential canaries.');
+import {readFile, readdir} from 'node:fs/promises';
+const allowed = new Set(['index.html','harness.mjs','collector.mjs','lift-api.mjs','journal.mjs','legacy.mjs','config.js','build.js','build-info.json','style.css','sw.js','manifest.webmanifest','.nojekyll','icons']);
+for (const item of await readdir('dist')) assert.ok(allowed.has(item), `Unexpected public asset: ${item}`);
+for (const item of await readdir('dist')) {
+  if (item === 'icons') continue;
+  const text = await readFile(`dist/${item}`, 'utf8');
+  assert.ok(!/embed\.liftw\.ws\/embed\/movie\/3637\?/.test(text), 'Signed iframe in build');
+  assert.ok(!/videoseed|batch-ui|hls\.js|kadr-video-lab-adapter/i.test(text), 'Old provider code in build');
+  assert.ok(!/CANARY_PRIVATE_VALUE|PRIVATE_FIXTURE/.test(text), 'Test secret in build');
+}
+const build = JSON.parse(await readFile('dist/build-info.json'));
+assert.match(build.commit, /^[a-f0-9]{40}$/); assert.equal(build.version, 'lift-1');
+const worker = await readFile('dist/sw.js', 'utf8');
+assert.ok(!worker.includes('caches.delete(key)') || worker.includes('requests.every'));
+assert.ok(!worker.includes("addEventListener('fetch'"));
+console.log('Public Lift build PASS: only allowed assets; no old providers, backend or signed iframe URL.');

@@ -1,0 +1,25 @@
+{
+  "kind": "KADR_LIFT_STAND_LOCAL_CHECKS",
+  "utc": "2026-10-22T04:42:39.769586+00:00",
+  "scope": "Release working tree before commit/publication. Synthetic tests are not real Lift events.",
+  "collector": {
+    "originalAssertions": 8,
+    "additionalTestCases": 6,
+    "status": "PASS",
+    "inputs": "synthetic"
+  },
+  "browser": {
+    "testCases": 8,
+    "status": "PASS",
+    "inputs": "synthetic API/iframe; archived real worker source with synthetic shell"
+  },
+  "preservation": {
+    "files": 16,
+    "status": "byte-identical",
+    "oldBrowserKey": "kadr.videoLab.v1",
+    "oldKeyPolicy": "never modify; export-only"
+  },
+  "build": "PASS; only Lift assets; no signed URL, provider runtime, server or private canary",
+  "iPhone": "NOT_RUN",
+  "fullAdSession": "NOT_RUN"
+}

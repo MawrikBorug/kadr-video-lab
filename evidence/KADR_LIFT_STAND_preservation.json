@@ -1,0 +1,34 @@
+{
+  "archivedCommit": "6e80f7756abeee359a674fe8a21afeaaf235d0b8",
+  "archiveBranch": "archive/pre-lift-6e80f77",
+  "originalFiles": {
+    "evidence/browser-api-probe.json": "f2387f799411a5625338a8a2528e5adea1b2946ac186e14f5981ff0e7cc72a95",
+    "evidence/browser-contracts-1.2.json": "607affbc5487c707c2efe9d79d0317153c6f7322a05a4039e2f11034c24a390c",
+    "evidence/contracts.json": "7082bbb169756eebebca5a7fe4e7157c25e851473c0e894d5da259b50f73acb9",
+    "evidence/owner-phone-report-2026-10-20.json": "d839086683deac6133527fc773476841ce6c60da2188637b049f45ad40b97614",
+    "evidence/phone-audit-1.4.json": "745ed6819fa8b7c42c886ceedbe5f4204c55d70d32542fcdd26ae1d37953b252",
+    "evidence/probes.json": "55b7bf1c13bd29ca61ef02424f9c0abf5932978d37a8ee614f3c4f8e94e99d15",
+    "evidence/research-integrity.json": "fbc243924fb220cf7534df30588e0cddccae4ba17bb098693877b59c3278e785",
+    "evidence/stage-source-checks.json": "b2dead6b81bd74e53b3b3c97e8e4a072ada04d40b374cb1c71a0605b155d534d",
+    "evidence/videoseed-owned-checks-1.4.json": "48925754881b4850008b827025467feae345f3053c002eb0e1e70b228b772ec2",
+    "protocol/blank-results.json": "ec933b5e45a9f5f3cb3292a549f06574f5cabd55d5ab86397e3ca6222ad8acad",
+    "web/data/backend.json": "bf86cefc2c13e9ee1307f870384647cacf64a7a957eb1676d75e27bad6c992fa",
+    "web/data/registry.json": "b9ed603b841f1c8d48be3c6157b7268e98b9ba5816e2945ea51a5dff9213324a",
+    "web/data/samples.json": "6b7c0744a5476db6517b33055d9c76588538172e58a901195e9b07b454abaab5",
+    "web/data/scope.json": "d983cf1f5be2f23f5a2b1a4cb553783fb97017c3ff0d36730e2012418c7f0ed7",
+    "web/data/untested-1.4.csv": "671e84e175ecaad56a85148ef6e13322657eef87b0bfe3f15aaa888108ab353b",
+    "web/data/untested-1.4.json": "71964b4def7ba015ba5ba675f0ef9c199f4b3d7e6a4cd2d1e8713a64549c5608"
+  },
+  "dataMovedTo": "history/data",
+  "prototypeDriveId": "1DBADVneLc6uk1S6d-MHpD8jwPu5T9uVz",
+  "prototypeFilesSHA256": {
+    "manifest.webmanifest": "8528ae5dcc5f0a59cffc44f186ebe0523b3e971e64ae8d10fd51144d4f121f15",
+    "index.html": "9feb8dd7fa72dacfca60a078214cca6ec29566c61674baa4b9496a8de068316a",
+    "config.js": "ff07650d1c414e6449a44397fc45bbc821fffb66d8c4d924335da40e60dee1fb",
+    "README.md": "c46a28b76f9cb46464b16d083a4e83ecbe42843eac2fa188d4c874b4bedc1c83",
+    "harness.mjs": "962f46b0f984780b4613d7c3e4ac2d9d6a6aac210ab46cab298457e0934b9f63",
+    "test.mjs": "6bdd2e26950a23e183e438dc75feef6dde15f95d18f99a45130efabba3f2a405",
+    "collector.mjs": "04e3fc45e733c225ed9acd5b4b44bc6b979845485c564a053e20d6d357433389",
+    "prepare_config.py": "4a3a0f5c84ba3b5b92c893d7953c5a08bd3c7b8a937d79cf4f0da0fda791616e"
+  }
+}

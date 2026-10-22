@@ -1,26 +1,21 @@
 import assert from 'node:assert/strict';
-import { appendFile } from 'node:fs/promises';
-
-const observed = process.env.PUBLISHED_URL;
-assert.ok(observed, 'No URL returned by deployment; publication is not verified.');
-const base = new URL(observed);
-assert.ok(base.protocol === 'https:' && base.hostname.endsWith('.github.io') && !base.username && !base.password && !base.search && !base.hash, 'Unexpected deployment URL.');
-if (!base.pathname.endsWith('/')) base.pathname += '/';
-
-async function read(relative) {
-  const url = new URL(relative, base);
-  const response = await fetch(url, { signal: AbortSignal.timeout(20000), redirect:'error' });
-  assert.equal(response.status, 200, `${relative}: HTTP ${response.status}`);
-  return response.text();
+import {appendFile} from 'node:fs/promises';
+assert.equal(new URL(process.env.PUBLISHED_URL).href, 'https://mawrikborug.github.io/kadr-video-lab/');
+const base = process.env.PUBLISHED_URL;
+async function read(path) {
+  const r = await fetch(new URL(path, base), {cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(20000)});
+  assert.equal(r.status, 200, `Asset ${path}: HTTP ${r.status}`); return r.text();
 }
 const html = await read('./');
-assert.ok(html.includes('КАДР 1.4 — лаборатория видео') && html.includes('id="export-json"'), 'Wrong page or incomplete deployment.');
+assert.ok(html.includes('Проверка Lift') && html.includes('id="export"'));
+const build = JSON.parse(await read('build-info.json'));
+assert.equal(build.version, 'lift-1'); assert.equal(build.commit, process.env.GITHUB_SHA);
+const config = await read('config.js');
+assert.ok(config.includes('https://api.liftw.ws/info/3637') && !config.includes('embedUrl'));
+const worker = await read('sw.js');
+assert.ok(worker.includes('requests.every') && !worker.includes("addEventListener('fetch'"));
 const manifest = JSON.parse(await read('manifest.webmanifest'));
-assert.equal(manifest.start_url, './'); assert.equal(manifest.scope, './');
-const worker = await read('sw.js'); assert.ok(worker.includes('kadr-lab-') && !worker.includes('__BUILD_ID__'));
-const samples = JSON.parse(await read('data/samples.json')); assert.equal(samples.length, 14);
-assert.ok((await read('app.js')).includes('jsonExport()'));
-const build=JSON.parse(await read('build-info.json'));assert.equal(build.commit,process.env.GITHUB_SHA);assert.equal(build.version,'1.4');const registry=JSON.parse(await read('data/registry.json'));assert.equal(registry.length,125);
-const result = `Verified public static assets: ${base.href}\nCommit: ${process.env.GITHUB_SHA || 'unknown'}\nChecked: ${new Date().toISOString()}\nPhysical iPhone / RU playback and advertising remain NOT_RUN.\n`;
+assert.equal(manifest.scope, './'); assert.equal(manifest.start_url, './');
+const result = `Published Lift shell verified: ${base}\nCommit: ${build.commit}\nUTC: ${new Date().toISOString()}\nPhysical iPhone and full advertising observation: pending.\n`;
 console.log(result);
 if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, result);

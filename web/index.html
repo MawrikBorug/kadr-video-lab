@@ -2,122 +2,88 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#102c35">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://kadr-video-lab-adapter.vercel.app https://archive.org https://api.anilibria.app https://api.mikai.me https://api.filmix.tv https://api.vokino.org https://animeon.club https://primesrc.me https://devstreaming-cdn.apple.com https://*.libria.fun https://*.anilibria.top https://*.aniliberty.top; media-src 'self' blob: https://devstreaming-cdn.apple.com https://download.blender.org https://*.libria.fun https://*.anilibria.top https://*.aniliberty.top; frame-src https://tv-1-kinoserial.net https://player.autoembed.app https://player.autoembed.to https://vidfast.vc https://moviesapi.to https://vidora.su https://api.rgshows.me https://anyembed.xyz https://www.2embed.cc https://vidsrc.pm https://player.videasy.to https://api.luxembd.ws https://ashdi.vip https://moonanime.art https://fenixplay.xyz https://tortuga.tw https://vaplayer.ru https://vidlink.pro https://player.vidzee.wtf https://stellar.rip https://yapgrid.com https://mapple.fun https://embedwave.cc https://embed.vidrift.net https://cinesrc.st https://player.cinezo.live https://primesrc.me https://kodik.info https://kodik.cc https://kodik.biz https://kodik.video https://kodikdb.com; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <title>КАДР 1.4 — лаборатория видео</title>
-  <meta name="description" content="Videoseed: проверка собственного доступа, видео, рекламы и управления. Результаты хранятся на устройстве.">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.js"></script>
+  <meta name="theme-color" content="#102c35">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.liftw.ws; frame-src https://embed.liftw.ws; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <title>КАДР · проверка Lift</title>
 </head>
 <body>
-  <header class="top"><div class="wrap header-inner"><a class="brand" href="./" aria-label="КАДР, начало">КАДР <span>LAB / 1.4</span></a><span class="tag">Эксперимент E1–E2</span></div></header>
-  <main class="wrap">
-    <section class="intro">
-      <p class="eyebrow">Технический стенд · 20.10.2026</p>
-      <h1>Videoseed.<br>Проверяем свой доступ.</h1>
-      <p>Наличие фильма, реклама и контроль плеера — отдельные результаты. Новая сборка ожидает испытания Videoseed на iPhone. Прежние наблюдения сохранены в журнале.</p>
-      <div class="links"><a href="./docs/e1-e2.md" target="_blank" rel="noopener noreferrer">Протокол E1/E2 ↗</a><a href="./docs/implementation-1.4.md" target="_blank" rel="noopener noreferrer">Результат обновления ↗</a><a href="#journal">К журналу ↓</a></div>
-    </section>
-    <aside id="storage-warning" class="notice danger" role="alert" hidden></aside>
-    <aside id="offline" class="notice" hidden>Вы офлайн. Форма и журнал доступны; для источников требуется сеть. Видео не кешируется стендом.</aside>
-    <section class="panel" id="videoseed-search-panel">
-      <h2>Поиск в Videoseed</h2>
-      <p id="videoseed-access-state" class="notice">Поиск ожидает закрытый сервер. Точный блокер доступа проверяется при загрузке.</p>
-      <div class="two"><label>Название<input id="videoseed-query" maxlength="120" type="search" placeholder="Название фильма или сериала"></label><label>Год<input id="videoseed-year" type="number" min="1900" max="2100"></label><label>Тип<select id="videoseed-type"><option value="movie">Фильм</option><option value="tv">Сериал / аниме</option></select></label></div>
-      <button id="videoseed-search" type="button">Найти в собственном каталоге</button><p id="videoseed-search-status" role="status"></p><div id="videoseed-results" class="history"></div>
-      <details><summary>Прямая проба из кабинета без поиска</summary><p>После активации доступа в кабинете найдите точное название и год. Скопируйте ID Videoseed, а не KP/TMDB ID, в параметры сеанса ниже. Для сериала выберите сезон и эпизод в штатном плеере и подтвердите их вручную.</p><label>Ключ API плеера<input id="videoseed-player-token" type="password" autocomplete="off" spellcheck="false" maxlength="32"></label><p class="hint">Только отдельный player token, который кабинет указывает в embed. Он остаётся в памяти вкладки и URL штатного iframe; не записывается в журнал или сборку. Ключ базы в браузер не вводите.</p><button id="videoseed-forget" type="button">Очистить player token</button></details>
-    </section>
-    <details class="panel" id="technical-checks"><summary>Технические проверки · Apple HLS / Blender MP4</summary><p>Разрешённые контрольные ролики проверяют транспорт и восстановление. Они не являются каталогом Videoseed.</p><div class="button-row"><button id="technical-apple" type="button">Подготовить Apple HLS</button><button id="technical-blender" type="button">Подготовить Blender MP4</button></div></details>
-    <section class="panel" id="phone-conditions">
-      <h2>Условия следующих попыток</h2><p class="hint">VPN и сеть подтверждаются вами. Смена условий создаёт новую попытку; старые записи не переписываются.</p>
-      <details><summary>Изменить VPN, сеть или устройство</summary><div class="two"><label>Устройство<select id="next-device"></select></label><label>Страна сети<select id="next-country"></select></label><label>Сеть<select id="next-network"></select></label><label>VPN<select id="next-vpn"></select></label><label>Блокировщик<select id="next-blocker"></select></label><label>Условия / оператор<input id="next-notes" maxlength="300"></label></div><button id="conditions-apply" type="button">Применить только к новым попыткам</button></details>
-      <p id="conditions-summary" class="hint">Для первого запуска укажите условия в параметрах сеанса.</p><button id="retry-conditions" type="button">Повторить опыт / выбрать другой вариант</button>
-    </section>
-    <section id="batch" class="panel">
-      <h2>Очередь Videoseed</h2><p>Один видеосеанс одновременно. Каталог, iframe и основное видео оцениваются отдельно; фоновые тесты iOS не обещаются.</p>
-      <details><summary>Серверные доступы</summary><p id="backend-state" class="hint">Backend не размещён: Vercel отклонил создание проекта (403 scope). Прямая проба по ID Videoseed доступна с отдельным player token; каталог остаётся недоступен до подключения сервера.</p><label id="adapter-password-label" hidden>Пароль закрытого стенда (не ключ поставщика)<input id="adapter-access" disabled type="password" autocomplete="off" maxlength="200"></label><p class="hint">Ключи поставщиков — только в серверных переменных окружения. Это поле не сохраняется и не экспортируется.</p></details>
-      <details><summary>1. Подключение Videoseed</summary><div class="button-row"><button id="batch-ready" type="button">Выбрать Videoseed</button><button id="batch-all" type="button" hidden>Все, включая блокеры</button><button id="batch-none" type="button">Снять выбор</button></div><div id="batch-modes" class="selection-list"></div></details>
-      <details><summary>2. Произведения / контрольные объекты</summary><button id="batch-subjects-all" type="button">Выбрать все произведения</button><div id="batch-subjects" class="selection-list"></div><label class="check-line"><input id="batch-custom" type="checkbox">Включить текущий ручной ID из формы</label><div class="two"><label>Сезон (пусто — из N14)<input id="batch-season" type="number" min="1" max="999"></label><label>Эпизод (пусто — из N14)<input id="batch-episode" type="number" min="0.01" max="999" step="0.01"></label></div><p class="hint">У аниме сезон — отдельный ID релиза; изменение сезона без нового ID не создаёт соответствие.</p></details>
-      <div class="two"><label>Профиль<select id="batch-profile"><option value="quick">Быстрая диагностика</option><option value="five">Не менее 5 минут main video</option><option value="full">Полный сеанс</option></select></label><label>Предел на опыт, секунд<input id="batch-limit" type="number" min="1" max="14400" value="20"></label></div>
-      <div class="button-row"><button id="batch-preview-button" type="button">Предпросмотр</button><button id="batch-create" type="button">Создать и сохранить очередь</button></div><p id="batch-preview-summary" role="status">Сначала выберите режимы и произведения.</p><details><summary>Применимость и причины пропусков</summary><ol id="batch-preview" class="selection-list"></ol></details>
-      <details><summary>Ограничения доступа Videoseed</summary><ul id="batch-access-blockers"></ul></details><label>Сохранённый запуск<select id="batch-run-select"></select></label><p id="batch-status" class="notice" role="status" aria-live="polite"></p>
-      <div class="button-row"><button id="batch-start" class="primary" type="button">Запустить / возобновить</button><button id="batch-pause" type="button">Пауза очереди</button><button id="batch-cancel" type="button">Отменить очередь</button></div><label>Причина пропуска<input id="batch-skip-reason" maxlength="300"></label><div class="button-row"><button id="batch-skip" type="button">Пропустить текущий</button><button id="batch-retry" type="button">Повтор выбранных ошибок</button></div><div id="batch-results" class="history"></div>
-    </section>
-    <div class="workspace">
-      <section class="panel setup" aria-labelledby="setup-title">
-        <div class="section-head"><span class="step">01</span><h2 id="setup-title">Сеанс испытания</h2></div>
-        <form id="setup-form">
-          <fieldset id="config-fields">
-            <legend class="sr-only">Источник и условия испытания</legend>
-            <label>Поставщик<select id="provider" name="provider"></select></label>
-            <label>Режим подключения<select id="provider-mode"></select></label><label>Год выбранного релиза<input id="release-year" type="number" min="1900" max="2100"></label><div id="provider-info" class="provider-info"></div>
-            <label>Объект из выборки<select id="sample"><option value="custom">Другой объект — ввести вручную</option></select></label>
-            <p class="hint">Это список для проверки, а не подтверждённый каталог поставщика. <a id="catalog-link" target="_blank" rel="noopener noreferrer" hidden>Первичная карточка ↗</a></p>
-            <label>Название и точная версия<input id="title" maxlength="200" autocomplete="off" required></label>
-            <div class="two"><label>Тип<select id="type"><option value="movie">Фильм</option><option value="tv">Сериал / аниме</option><option value="control">Контроль транспорта</option></select></label><label>Система ID<select id="namespace"><option value="videoseed">Videoseed · ID из кабинета</option><option value="aniliberty">AniLiberty</option><option value="tmdb">TMDB</option><option value="imdb">IMDb</option><option value="kp">Кинопоиск</option><option value="mal">MyAnimeList</option><option value="filmix">FilmixTV</option><option value="animeon">AnimeON</option><option value="archive">Internet Archive</option><option value="control">Контроль</option></select></label></div>
-            <label>ID или alias<input id="content-id" maxlength="120" autocomplete="off" autocapitalize="none" spellcheck="false" required><span id="id-hint" class="hint"></span></label>
-            <div class="two"><label>Сезон<input id="season" type="number" min="1" max="999" value="1" inputmode="numeric"></label><label>Эпизод / ordinal<input id="episode" type="number" min="0.01" max="999" step="0.01" value="1" inputmode="decimal"></label></div>
-            <label id="quality-label">Запросить HLS<select id="quality"><option value="480">480p</option><option value="720">720p</option><option value="1080">1080p</option></select></label>
-            <label id="sandbox-label">Изоляция iframe<select id="sandbox"><option value="strict">Sandbox: без окон и верхней навигации</option><option value="popups">Sandbox: окна разрешены, навигация ограничена</option><option value="documented">Сравнение: без sandbox</option></select></label>
-            <p id="sandbox-hint" class="hint">Sandbox не убирает видеорекламу и может сломать плеер. Каждый режим — новый сеанс.</p>
-            <p id="sandbox-warning" class="notice danger" role="alert" hidden>Без sandbox внешний сайт может открывать окна, пытаться перенаправить страницу и вести трекинг. Не используйте этот режим первым тестом на личном iPhone. Сначала strict; сравнение без изоляции — только в отдельной чистой тестовой сессии после экспорта журнала.</p>
-            <label id="unrestricted-label" class="check-line" hidden><input id="unrestricted-consent" type="checkbox">Я экспортировал(а) журнал и понимаю: без sandbox возможны окна и попытки сменить страницу.</label>
-            <label id="clean-session-label" class="check-line" hidden><input id="clean-session-consent" type="checkbox">Использую отдельную чистую тестовую сессию после strict-пробы, а не первый тест на личном iPhone.</label>
-            <div class="two"><label>Translation ID (AnimeON)<input id="translation-id" inputmode="numeric"></label><label>Player ID (AnimeON)<input id="upstream-player-id" inputmode="numeric"></label></div><label>VPN<select id="vpn"><option value="unknown">Не установлено</option><option value="off">Выключен (подтверждаю)</option><option value="on">Включён (подтверждаю)</option></select></label><label>Оператор сети / ОС / версия браузера<input id="environment-notes" maxlength="300"></label><div class="divider"></div>
-            <div class="two"><label>Этап<select id="stage"><option value="E1">E1 · наличие / старт</option><option value="E2">E2 · реклама / управление</option></select></label><label>Объём просмотра<select id="watch-scope"><option value="smoke">Короткая проба</option><option value="full">Полный просмотр</option></select></label></div>
-            <label id="e1-label" hidden>Подтверждённый E1 для E2<select id="e1-record"><option value="">Нет подтверждённого E1</option></select></label>
-            <p id="e1-warning" class="notice danger" role="status" hidden></p>
-            <label>Устройство и браузер<select id="device"><option value="unknown">Указать вручную</option><option value="iphone-safari">iPhone · Safari</option><option value="iphone-pwa">iPhone · PWA с экрана «Домой»</option><option value="desktop-chrome">ПК · Chrome</option><option value="desktop-safari">Mac · Safari</option><option value="desktop-firefox">ПК · Firefox</option><option value="other">Другое (версия в примечании)</option></select></label>
-            <div class="two"><label>Страна сети<select id="country"><option value="unknown">Не указана</option><option value="RU">Россия</option><option value="other">Другая</option></select></label><label>Сеть<select id="network"><option value="unknown">Не указана</option><option value="home">Домашняя</option><option value="mobile">Мобильная</option><option value="other">Другая</option></select></label></div>
-            <label>Блокировщик / DNS-фильтр<select id="blocker"><option value="unknown">Неизвестно</option><option value="off">Выключен</option><option value="on">Включён (указать в примечании)</option></select></label>
-            <label class="check-line"><input id="access-consent" type="checkbox" required>Использую только контент, к которому имею право доступа. Ключи и частные данные не ввожу.</label>
-          </fieldset>
-          <button id="open-source" class="primary" type="submit">Открыть источник вручную</button>
-        </form>
-        <button id="new-session" class="secondary" type="button">Новый сеанс / изменить условия</button>
-        <p class="hint">Условия фиксируются при открытии. Для повтора после полного просмотра закройте PWA / вкладку и откройте заново: идентификатор сессии изменится.</p>
-      </section>
-      <div class="main-column">
-        <section class="panel" aria-labelledby="player-title">
-          <div class="section-head"><span class="step">02</span><h2 id="player-title">Источник и воспроизведение</h2></div>
-          <p id="message" class="notice" role="status" aria-live="polite">Выберите условия и откройте источник. До этого сторонние страницы и видео не загружаются.</p>
-          <div id="player" class="player"><p>Ручной запуск<br><span>Ни одного подтверждённого просмотра</span></p></div>
-          <div id="api-results" class="api-results"></div><p id="evidence-summary" class="notice" role="status"></p><p id="measurement-summary" class="hint"></p><p id="provenance" class="hint">Стенд не хранит фильмы и не проксирует медиатрафик.</p>
-          <div class="button-row"><button id="play" type="button" disabled>Play</button><button id="pause" type="button" disabled>Пауза</button><button id="seek" type="button" disabled>К 50%</button><button id="stop" type="button" disabled>Закрыть источник</button></div>
-          <div class="button-row"><button id="restore-position" type="button">Восстановить позицию</button><button id="sleep-timer" type="button">Пауза через 10 секунд</button><button id="cancel-timer" type="button">Отменить таймер</button></div>
-          <div class="button-row"><button id="diagnostic-show" type="button">Диагностика несовместимости с sandbox</button></div>
-          <div id="diagnostic-panel" class="notice danger" hidden><p>Диагностический iframe без sandbox. Поставщик сможет открывать окна и пытаться перенаправить вкладку. Сохраните JSON перед запуском. Это новая отдельная попытка; защищённый режим остаётся стандартным.</p><label class="check-line"><input id="diagnostic-ack" type="checkbox">Понимаю предупреждение и явно выбираю запуск без sandbox.</label><div class="button-row"><button id="diagnostic-start" type="button">Начать диагностическую попытку</button><button id="diagnostic-external" type="button">Отдельная диагностическая вкладка</button><button id="diagnostic-cancel" type="button">Отмена</button></div></div>
-          <label>Результат / причина блокировки<select id="attempt-diagnosis"><option value="none">Отдельный блокер не установлен</option><option value="lab-sandbox">Сообщение о sandbox стенда</option><option value="provider-refusal">Явный отказ поставщика</option><option value="network-error">Наблюдаемая ошибка сети</option><option value="auth-required">Требуется вход / свой доступ</option><option value="paid">Требуется оплата / платный тест</option><option value="manual-partner-approval">Требуется индивидуальное партнёрское одобрение</option><option value="not-found">Не найдено это произведение / эта серия</option><option value="unconfirmed">Причина не установлена</option></select></label><label>Точный текст / наблюдение<input id="diagnosis-note" maxlength="300"></label><p class="hint">Диагноз сохраняется как ваше наблюдение. События play и iframe.onload не подтверждают основное видео.</p>
-          <label class="check-line"><input id="main-video-confirmed" type="checkbox">Наблюдаю основное видео выбранного произведения (не рекламу)</label><label>Русский звук<select id="ru-audio"><option value="unknown">Не установлено</option><option value="yes">Есть · подтверждаю на слух</option><option value="no">Нет · подтверждаю на слух</option></select></label><div class="button-row"><button id="confirm-identity" type="button">Подтвердить точное совпадение</button><button id="complete-current" type="button" disabled>Подтверждения сохранены — следующий опыт</button></div><p class="hint">Команды выше работают с наблюдаемым native video. Для iframe команды помечаются недоступными. В iframe используйте органы управления поставщика. Загрузка iframe не подтверждает наличие фильма.</p>
-          <details><summary>Технические события <span id="event-count">0</span></summary><p id="event-note" class="hint">Лог не доказывает отсутствие рекламы или просмотр основного видео.</p><pre id="events">Событий пока нет.</pre></details>
-        </section>
-        <section class="panel" aria-labelledby="observations-title">
-          <div class="section-head"><span class="step">03</span><h2 id="observations-title">Наблюдения этого сеанса</h2></div>
-          <p id="current-record" class="hint">Сначала откройте источник. Каждая попытка создаёт отдельную запись.</p>
-          <form id="observations" autocomplete="off"><fieldset id="observation-fields" disabled><legend class="sr-only">Ручные результаты</legend><div id="checks" class="observations-grid"></div><h3>Реклама и трекинг</h3><p class="hint">«Не наблюдалось» относится только к фактически просмотренному отрезку. Трекинг — отдельное поле; запрос аналитики сам по себе не является видеорекламой.</p><div id="ads" class="observations-grid"></div><div class="two"><label>Тип рекламного наблюдения<select id="ad-type"><option value="pre-roll">Pre-roll</option><option value="mid-roll">Mid-roll</option><option value="post-roll">Post-roll</option><option value="banner">Баннер</option><option value="popup">Pop-up</option><option value="navigation">Принудительный переход</option></select></label><label>Длительность, секунд (пусто — неизвестно)<input id="ad-duration" type="number" min="0" max="14400"></label></div><label>Пропуск рекламы<select id="ad-skippable"><option value="unknown">Не установлено</option><option value="yes">Доступен</option><option value="no">Недоступен</option></select></label><button id="add-ad" type="button">Добавить рекламное наблюдение</button><p id="ad-count" class="hint">Вставки не измерены</p><h3>Измерения и детали</h3><div id="details" class="observations-grid"></div><label><span id="outcome-label">Итог E1: наличие и запуск</span><select id="outcome"><option>NOT_RUN</option><option>PASS</option><option>FAIL</option><option>INCONCLUSIVE</option></select></label></fieldset></form>
-          <p id="e2-assessment" class="notice" role="status" hidden></p>
-          <p id="consistency" class="notice" role="status" hidden></p>
-          <p class="hint">Изменения сохраняются на этом устройстве автоматически. Перед выходом или сравнением без sandbox экспортируйте JSON. Safari и PWA могут иметь отдельное хранилище.</p>
-        </section>
-      </div>
-    </div>
-    <section id="journal" class="panel journal" aria-labelledby="journal-title">
-      <div class="section-head"><span class="step">04</span><h2 id="journal-title">Локальный журнал <span id="record-count">0</span></h2></div>
-      <p>Результаты не отправляются в аналитику и не коммитятся в GitHub. Экспорт может содержать ваши примечания — проверьте их перед передачей.</p>
-      <label>Объём экспорта<select id="export-scope"><option value="all">Весь журнал и очереди</option><option value="run">Выбранная очередь, включая незавершённую</option><option value="current">Текущий опыт с основанием E1</option></select></label><label>Объединить JSON с журналом<input id="import-json" type="file" accept="application/json,.json"></label><div class="button-row"><button id="export-json" class="primary" type="button">Скачать JSON</button><button id="export-csv" type="button">Скачать CSV</button><button id="share-json" type="button">Поделиться JSON</button><button id="export-recovery" type="button" hidden>Копия для восстановления</button></div>
-      <div id="history" class="history"><p class="hint">Записей пока нет.</p></div>
-      <details><summary>Как проверить на iPhone</summary><ol><li>Откройте эту HTTPS-страницу; сборка и публикация выполнены исполнителем.</li><li>В Safari: «Поделиться» → «На экран “Домой”». Запускайте Safari и установленный PWA раздельно.</li><li>E1: подтвердите точное произведение, язык, старт ≤30 с, 5 минут и seek к 50% с возобновлением ≤10 с.</li><li>E2: один фильм и один эпизод целиком, затем повтор в новой сессии. Домашняя и мобильная сети РФ — отдельные сеансы. Десктопный тест остаётся NOT_RUN до появления доступа к ПК.</li><li>Экспортируйте журнал через «Скачать JSON» или «Поделиться JSON». Компьютер и терминал для этого не нужны.</li></ol></details>
-    </section>
-    <details class="panel" id="research-archive"><summary>Архив исследования и адаптеров · 125 ID</summary><p>Архивирование не означает, что сервис навсегда сломан. <a href="./data/untested-1.4.json">Направления без подтверждённого просмотра · JSON</a> · <a href="./data/untested-1.4.csv">CSV</a> · <a href="?archive=1">Открыть архивную ручную диагностику 1.3</a>. Массовый старый набор скрыт в основном стенде.</p><h2>Исходный реестр</h2><p>Исходные статусы сохранены. Инфраструктура и общие upstream не считаются независимыми фильмотеками.</p><label>Найти ID / поставщика<input id="registry-search" type="search"></label><p id="registry-count"></p><div id="registry" class="history"></div></details>
-    <p id="build-info" class="hint"></p><button id="update-app" type="button" hidden>Сохранить результаты и обновить приложение</button>
-    <footer><p>КАДР 1.4 · минимальный эксперимент, без утверждения архитектуры.</p><p>Автопроверки кода и физические E1/E2 имеют разное происхождение.</p></footer>
-  </main>
+<main>
+  <header><span class="eyebrow">КАДР / ВИДЕОСТЕНД</span><h1>Проверка Lift</h1>
+    <p>Проверяем видео и реальные события в Safari и при запуске с экрана «Домой». Результат опыта поможет оценить Lift; архитектура КАДРа ещё не выбрана.</p>
+    <p class="meta" id="environment"></p><p class="meta" id="build-info"></p>
+  </header>
+
+  <section aria-labelledby="material-title">
+    <h2 id="material-title">Sintel <span class="muted">/ 2010</span></h2>
+    <p>Blender Foundation · Lift ID 3637 · <a href="https://durian.blender.org/sharing/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>.</p>
+    <p><strong>Для опыта — оригинальная английская дорожка.</strong> Проверьте её в плеере до просмотра. Если доступна только сторонняя озвучка, остановите опыт: её разрешение не установлено.</p>
+    <p>Iframe получаем заново из публичного API Lift. При региональном, доменном или ином отказе запишите причину. Реклама и переходы не блокируются стендом.</p>
+    <div class="actions"><button id="start" class="primary">Получить и открыть Lift</button><button id="reload" disabled>Перезагрузить iframe</button><button id="stop" disabled>Закрыть iframe</button></div>
+    <p id="status" role="status" aria-live="polite">Готов к получению iframe. Видео ещё не загружено.</p>
+    <div id="player-container"><p id="placeholder">Здесь появится штатный плеер Lift</p></div>
+    <div class="actions"><button id="ping" disabled>Проверить ping / pong</button></div>
+    <p id="bridge" class="meta">Мост ещё не проверен. Pong подтверждает связь, но не воспроизведение.</p>
+  </section>
+
+  <section aria-labelledby="evidence-title">
+    <h2 id="evidence-title">Что получено</h2>
+    <dl class="states">
+      <div><dt>Iframe</dt><dd id="frame-state">Не запущен</dd></div>
+      <div><dt>Готовность плеера</dt><dd id="ready-state">Нет playerReady</dd></div>
+      <div><dt>Воспроизведение</dt><dd id="play-state">Нет реальных событий</dd></div>
+      <div><dt>Окончание</dt><dd id="end-state">Нет ended</dd></div>
+    </dl>
+    <p id="position">Позиция и длительность в этой загрузке ещё не получены.</p>
+    <p id="saved">Сохранённой позиции нет.</p><p id="restore"></p>
+    <p class="meta">Позиция сохраняется отдельно. Внешние pause / seek не подтверждены — используйте кнопки плеера. Fullscreen и PiP также проверяйте в плеере и отмечайте вручную.</p>
+    <p class="meta">«Просмотрено» не выставляется. endedSoon и ended различаются. Покрытие уникальных участков не вычисляется; автоперехода нет.</p>
+  </section>
+
+  <section aria-labelledby="notes-title">
+    <h2 id="notes-title">Ручные наблюдения</h2>
+    <label for="note">Что произошло</label><select id="note"></select>
+    <label for="diagnostic">Текст отказа или детали (необязательно, без ссылок и личных данных)</label>
+    <input id="diagnostic" maxlength="300" placeholder="Например: видео недоступно для региона US">
+    <button id="mark">Записать отметку</button><p id="manual-status" role="status"></p>
+    <p class="meta">Эти отметки не считаются событиями плеера. Отсутствие рекламы относится только к наблюдавшемуся полному сеансу.</p>
+  </section>
+
+  <section aria-labelledby="log-title">
+    <h2 id="log-title">Журнал и результат</h2>
+    <p id="run-info" class="meta"></p><p id="storage-status" role="status"></p>
+    <p id="storage-warning" class="warning" role="alert" hidden></p>
+    <label class="check"><input type="checkbox" id="include-ua"> Включить user-agent в JSON (версия браузера и ОС)</label>
+    <p class="meta">В JSON: время UTC, ID прогона, режим запуска, сборка, реальные события, ручные отметки и сохранённая позиция. Подписанные ссылки и произвольные payload не включаются.</p>
+    <div class="actions"><button id="export" class="primary">Экспорт JSON</button><button id="new-run">Новый прогон</button><button id="recovery" hidden>Экспорт повреждённого журнала</button></div>
+    <p id="export-status" role="status"></p>
+    <p id="event-count" class="meta"></p><pre id="log" tabindex="0" aria-label="Последние события"></pre>
+    <details><summary>Данные прежнего стенда</summary>
+      <p>Старые журналы остаются в браузере. Архив Git их не содержит. Экспорт доступен на этом же устройстве и в том же браузере; прежние очереди не запускаются.</p>
+      <p id="legacy-status"></p><button id="legacy-export" disabled>Экспорт старых данных</button>
+      <p class="meta">Резервная копия сохраняет записи и очереди с удалением URL и полей секретов; прежние оценки не пересчитываются.</p>
+    </details>
+  </section>
+
+  <section aria-labelledby="scenario-title">
+    <h2 id="scenario-title">Сценарий на iPhone</h2>
+    <ol>
+      <li>Откройте Lift, выберите оригинальную дорожку и смотрите минуту без перемотки. Сравните позицию и длительность с плеером.</li>
+      <li>Пауза на 10 секунд, перемотка вперёд и назад средствами плеера. Затем ping / pong.</li>
+      <li>Fullscreen, PiP, уход в фон или блокировка и возврат. Запишите результат каждого действия.</li>
+      <li>Кратко отключите сеть и верните её. Отметьте, возобновились ли видео и события.</li>
+      <li>Запомните сохранённую позицию, перезагрузите iframe. Сравните её с новой реальной позицией. Автоматического seek стенд не делает.</li>
+      <li>Создайте отдельный прогон: разрешённый ролик от начала до конца, без перемоток. Отмечайте рекламу и переходы; в конце — фактическое окончание и экспорт.</li>
+      <li>Экспортируйте JSON. Повторите функциональную часть после добавления на экран «Домой»: это отдельный режим и прогон.</li>
+    </ol>
+    <p class="meta">Manifest не доказывает установку PWA. Offline-воспроизведение не заявлено. Если сверху указан Safari, запуск не считается standalone.</p>
+  </section>
+</main>
+<script type="module" src="harness.mjs"></script>
 </body>
 </html>

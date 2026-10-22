@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {sanitize,accept,progress} from '../web/collector.mjs';
+const frame={};assert(accept({source:frame,origin:'https://embed.liftw.ws'},frame,'https://embed.liftw.ws'));
+assert(!accept({source:{},origin:'https://embed.liftw.ws'},frame,'https://embed.liftw.ws'));
+assert(!accept({source:frame,origin:'https://evil.example'},frame,'https://embed.liftw.ws'));
+assert.deepEqual(sanitize({event:'viewProgress',time:12,duration:60,url:'https://secret/?token=x',token:'secret',nested:{}}),{event:'viewProgress',time:12,duration:60});
+assert.deepEqual(progress({event:'viewProgress',time:12,duration:60}),{time:12,duration:60});
+assert.equal(progress({event:'viewProgress',time:-1,duration:60}),null);
+assert.equal(progress({event:'viewProgress',time:NaN,duration:60}),null);
+assert.equal(progress({event:'viewProgress',time:50,duration:0}),null);
+console.log(JSON.stringify({utc:new Date().toISOString(),checks:8,result:'PASS',scope:'Unit assertions with fabricated inputs, NOT real Lift events or Safari playback'}));
