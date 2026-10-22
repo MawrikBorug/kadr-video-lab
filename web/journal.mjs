@@ -8,7 +8,8 @@ export const utc = () => new Date().toISOString();
 
 export const ORIGINAL_SUBJECT = {connection:'lift', materialId:3637, season:null, episode:null};
 export function scopeKey(subject = ORIGINAL_SUBJECT) {
-  return [subject.connection, subject.materialId, subject.season ?? '-', subject.episode ?? '-'].join(':');
+  return [subject.connection, subject.materialId, subject.season ?? '-', subject.episode ?? '-',
+    ...(subject.episodeProviderId ? [subject.episodeProviderId] : [])].join(':');
 }
 export function makeRun(mode, build, subject = ORIGINAL_SUBJECT) {
   return {runId: crypto.randomUUID(), started: utc(), mode, build, subject: {...subject}, generation: 0, droppedEvents: 0,

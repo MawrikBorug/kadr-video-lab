@@ -1,0 +1,446 @@
+{
+  "kind": "KADR_LIFT_STAND_PHONE_FIX_PREPUBLICATION",
+  "utc": "2026-10-22T09:55:52.207179+00:00",
+  "baseCommit": "731735f55df9919202e359ecfa38bb0880e6afc8",
+  "archive": "archive/pre-phone-fixes-731735f",
+  "historicalFilesUnchanged": 16,
+  "ownerTitles": [
+    {
+      "id": 76436,
+      "title": "Дандадан",
+      "original": "Dandadan",
+      "providerTitle": "Дандадан",
+      "year": 2024,
+      "nativeType": 7,
+      "group": "anime"
+    },
+    {
+      "id": 68777,
+      "title": "Фрирен / Frieren: Beyond Journey’s End",
+      "original": "Sousou no Frieren",
+      "providerTitle": "Провожающая в последний путь Фрирен",
+      "year": 2023,
+      "nativeType": 7,
+      "group": "anime"
+    },
+    {
+      "id": 2087,
+      "title": "Тетрадь смерти",
+      "original": "Death Note",
+      "providerTitle": "Тетрадь Смерти",
+      "year": 2006,
+      "nativeType": 7,
+      "group": "anime"
+    },
+    {
+      "id": 180,
+      "title": "Интерстеллар",
+      "original": "Interstellar",
+      "providerTitle": "Интерстеллар",
+      "year": 2014,
+      "nativeType": 1,
+      "group": "film"
+    },
+    {
+      "id": 70403,
+      "title": "Фаллаут",
+      "original": "Fallout",
+      "providerTitle": "Фоллаут",
+      "year": 2024,
+      "nativeType": 3,
+      "group": "series"
+    },
+    {
+      "id": 255,
+      "title": "Во все тяжкие",
+      "original": "Breaking Bad",
+      "providerTitle": "Во все тяжкие",
+      "year": 2008,
+      "nativeType": 3,
+      "group": "series"
+    },
+    {
+      "id": 5784,
+      "title": "Человек-паук: Вдали от дома",
+      "original": "Spider-Man: Far From Home",
+      "providerTitle": "Человек-паук: Вдали от дома",
+      "year": 2019,
+      "nativeType": 1,
+      "group": "film"
+    },
+    {
+      "id": 87181,
+      "title": "Проект «Аве Мария» / Project Hail Mary",
+      "original": "Project Hail Mary",
+      "providerTitle": "Проект «Конец света»",
+      "year": 2026,
+      "nativeType": 1,
+      "group": "film"
+    },
+    {
+      "id": 2209,
+      "title": "Шрек",
+      "original": "Shrek",
+      "providerTitle": "Шрэк",
+      "year": 2001,
+      "nativeType": 2,
+      "group": "film"
+    },
+    {
+      "id": 69530,
+      "title": "Слово пацана. Кровь на асфальте",
+      "original": "",
+      "providerTitle": "Слово пацана. Кровь на асфальте",
+      "year": 2023,
+      "nativeType": 3,
+      "group": "series"
+    }
+  ],
+  "catalogVideoClaim": "Not made; all ten can open native iframe separately from metadata",
+  "blanketGateRemoved": true,
+  "noProviderBypass": true,
+  "webseedQualification": "No qualified authorized webseed for ten owner works found in exact-title webseed searches or official WebTorrent open inventory; no claim of global absence",
+  "sourceInventory": "https://webtorrent.io/free-torrents",
+  "openBytes": [
+    {
+      "id": "big-buck-bunny",
+      "infoHash": "dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c",
+      "filename": "Big Buck Bunny.mp4",
+      "fileSize": 276134947,
+      "pieceIndex": 1,
+      "range": {
+        "start": 262004,
+        "end": 524147
+      },
+      "httpStatus": 206,
+      "contentRange": "bytes 262004-524147/276134947",
+      "acao": "*",
+      "byteCount": 262144,
+      "sha1": "3dffd6361a06b6b763baeb27331d1af46562cd57",
+      "expectedSHA1": "3dffd6361a06b6b763baeb27331d1af46562cd57",
+      "pieceMatches": true
+    },
+    {
+      "id": "cosmos-laundromat",
+      "infoHash": "c9e15763f722f23e98a29decdfae341b98d53056",
+      "filename": "Cosmos Laundromat.mp4",
+      "fileSize": 220087570,
+      "pieceIndex": 1,
+      "range": {
+        "start": 246223,
+        "end": 508366
+      },
+      "httpStatus": 206,
+      "contentRange": "bytes 246223-508366/220087570",
+      "acao": "*",
+      "byteCount": 262144,
+      "sha1": "6c9047a7caf7bb2cb6e4f700b18d096a3a10e8a1",
+      "expectedSHA1": "6c9047a7caf7bb2cb6e4f700b18d096a3a10e8a1",
+      "pieceMatches": true
+    },
+    {
+      "id": "tears-of-steel",
+      "infoHash": "209c8226b299b308beaf2b9cd3fb49212dbd13ec",
+      "filename": "Tears of Steel.webm",
+      "fileSize": 571346576,
+      "pieceIndex": 1,
+      "range": {
+        "start": 480353,
+        "end": 1004640
+      },
+      "httpStatus": 206,
+      "contentRange": "bytes 480353-1004640/571346576",
+      "acao": "*",
+      "byteCount": 524288,
+      "sha1": "f6f025a455023e22ed9dbfd4eb8d13f66ae17970",
+      "expectedSHA1": "f6f025a455023e22ed9dbfd4eb8d13f66ae17970",
+      "pieceMatches": true
+    }
+  ],
+  "openCodecMetadata": [
+    {
+      "id": "big-buck-bunny",
+      "infoHash": "dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c",
+      "pieceLength": 262144,
+      "length": 276445467,
+      "files": [
+        {
+          "name": "Big Buck Bunny.en.srt",
+          "path": "Big Buck Bunny/Big Buck Bunny.en.srt",
+          "length": 140,
+          "offset": 0
+        },
+        {
+          "name": "Big Buck Bunny.mp4",
+          "path": "Big Buck Bunny/Big Buck Bunny.mp4",
+          "length": 276134947,
+          "offset": 140
+        },
+        {
+          "name": "poster.jpg",
+          "path": "Big Buck Bunny/poster.jpg",
+          "length": 310380,
+          "offset": 276135087
+        }
+      ],
+      "urlList": [
+        "https://webtorrent.io/torrents/"
+      ],
+      "selectedFile": {
+        "name": "Big Buck Bunny.mp4",
+        "path": "Big Buck Bunny/Big Buck Bunny.mp4",
+        "length": 276134947,
+        "offset": 140
+      },
+      "mediaRangeStatus": 206,
+      "acao": "*",
+      "codecs": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "duration": "634.533333",
+          "tags": {
+            "creation_time": "2013-12-16T17:44:39.000000Z",
+            "language": "und",
+            "handler_name": "GPAC ISO Video Handler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "mp3",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "634.533333",
+          "tags": {
+            "creation_time": "2013-12-16T17:44:42.000000Z",
+            "language": "und",
+            "handler_name": "GPAC ISO Audio Handler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        },
+        {
+          "index": 2,
+          "codec_name": "ac3",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 6,
+          "duration": "634.533333",
+          "tags": {
+            "creation_time": "2013-12-16T17:44:42.000000Z",
+            "language": "und",
+            "handler_name": "GPAC ISO Audio Handler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        }
+      ],
+      "duration": "634.533333",
+      "source": "https://webtorrent.io/free-torrents"
+    },
+    {
+      "id": "cosmos-laundromat",
+      "infoHash": "c9e15763f722f23e98a29decdfae341b98d53056",
+      "pieceLength": 262144,
+      "length": 220864086,
+      "files": [
+        {
+          "name": "Cosmos Laundromat.en.srt",
+          "path": "Cosmos Laundromat/Cosmos Laundromat.en.srt",
+          "length": 3945,
+          "offset": 0
+        },
+        {
+          "name": "Cosmos Laundromat.es.srt",
+          "path": "Cosmos Laundromat/Cosmos Laundromat.es.srt",
+          "length": 3911,
+          "offset": 3945
+        },
+        {
+          "name": "Cosmos Laundromat.fr.srt",
+          "path": "Cosmos Laundromat/Cosmos Laundromat.fr.srt",
+          "length": 4120,
+          "offset": 7856
+        },
+        {
+          "name": "Cosmos Laundromat.it.srt",
+          "path": "Cosmos Laundromat/Cosmos Laundromat.it.srt",
+          "length": 3945,
+          "offset": 11976
+        },
+        {
+          "name": "Cosmos Laundromat.mp4",
+          "path": "Cosmos Laundromat/Cosmos Laundromat.mp4",
+          "length": 220087570,
+          "offset": 15921
+        },
+        {
+          "name": "poster.jpg",
+          "path": "Cosmos Laundromat/poster.jpg",
+          "length": 760595,
+          "offset": 220103491
+        }
+      ],
+      "urlList": [
+        "https://webtorrent.io/torrents/"
+      ],
+      "selectedFile": {
+        "name": "Cosmos Laundromat.mp4",
+        "path": "Cosmos Laundromat/Cosmos Laundromat.mp4",
+        "length": 220087570,
+        "offset": 15921
+      },
+      "mediaRangeStatus": 206,
+      "acao": "*",
+      "codecs": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 804,
+          "duration": "730.500000",
+          "tags": {
+            "language": "und",
+            "handler_name": "VideoHandler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "730.615873",
+          "tags": {
+            "language": "und",
+            "handler_name": "SoundHandler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        }
+      ],
+      "duration": "730.615873",
+      "source": "https://webtorrent.io/free-torrents"
+    },
+    {
+      "id": "tears-of-steel",
+      "infoHash": "209c8226b299b308beaf2b9cd3fb49212dbd13ec",
+      "pieceLength": 524288,
+      "length": 571426507,
+      "files": [
+        {
+          "name": "Tears of Steel.de.srt",
+          "path": "Tears of Steel/Tears of Steel.de.srt",
+          "length": 4850,
+          "offset": 0
+        },
+        {
+          "name": "Tears of Steel.en.srt",
+          "path": "Tears of Steel/Tears of Steel.en.srt",
+          "length": 4755,
+          "offset": 4850
+        },
+        {
+          "name": "Tears of Steel.es.srt",
+          "path": "Tears of Steel/Tears of Steel.es.srt",
+          "length": 4944,
+          "offset": 9605
+        },
+        {
+          "name": "Tears of Steel.fr.srt",
+          "path": "Tears of Steel/Tears of Steel.fr.srt",
+          "length": 4618,
+          "offset": 14549
+        },
+        {
+          "name": "Tears of Steel.it.srt",
+          "path": "Tears of Steel/Tears of Steel.it.srt",
+          "length": 4746,
+          "offset": 19167
+        },
+        {
+          "name": "Tears of Steel.nl.srt",
+          "path": "Tears of Steel/Tears of Steel.nl.srt",
+          "length": 4531,
+          "offset": 23913
+        },
+        {
+          "name": "Tears of Steel.no.srt",
+          "path": "Tears of Steel/Tears of Steel.no.srt",
+          "length": 9558,
+          "offset": 28444
+        },
+        {
+          "name": "Tears of Steel.ru.srt",
+          "path": "Tears of Steel/Tears of Steel.ru.srt",
+          "length": 5933,
+          "offset": 38002
+        },
+        {
+          "name": "Tears of Steel.webm",
+          "path": "Tears of Steel/Tears of Steel.webm",
+          "length": 571346576,
+          "offset": 43935
+        },
+        {
+          "name": "poster.jpg",
+          "path": "Tears of Steel/poster.jpg",
+          "length": 35996,
+          "offset": 571390511
+        }
+      ],
+      "urlList": [
+        "https://webtorrent.io/torrents/"
+      ],
+      "selectedFile": {
+        "name": "Tears of Steel.webm",
+        "path": "Tears of Steel/Tears of Steel.webm",
+        "length": 571346576,
+        "offset": 43935
+      },
+      "mediaRangeStatus": 206,
+      "acao": "*",
+      "codecs": [
+        {
+          "index": 0,
+          "codec_name": "vp8",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 800
+        },
+        {
+          "index": 1,
+          "codec_name": "vorbis",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2
+        }
+      ],
+      "duration": "734.167000",
+      "source": "https://webtorrent.io/free-torrents"
+    }
+  ],
+  "cloudRTC": {
+    "policy": "WebRtcIPHandling=disable_non_proxied_udp",
+    "policySource": "Read-only managed Chromium policy, no changes made",
+    "nativeProbe": {
+      "gathering": "complete",
+      "candidateCount": 0,
+      "sdkUsed": false
+    },
+    "controlledBrowserSeeder": "Known fixture, infohash verified and ready before viewer; real local A result in delivery",
+    "inference": "Failure at ICE candidate gathering in this managed environment, not proof of no seeders or successful P2P"
+  },
+  "runtimeProgress": "Separate official same-site Lift experiment underway; only actual messages in delivered log will substantiate observations",
+  "phoneOriginalBasis": "Owner summary, raw JSON not supplied in linked folder",
+  "limits": [
+    "External Lift pause/seek/restore unsupported/unconfirmed; only ping and observed playlist messages sent",
+    "No watched/unique coverage/queue",
+    "No completed iPhone trial of new build",
+    "No new external servers/accounts/payments/Lampac/notebook setup"
+  ]
+}

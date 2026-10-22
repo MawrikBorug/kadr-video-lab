@@ -34,23 +34,41 @@ test('valid progress is not discarded by the former 30-message threshold; invali
   expect(run.events.filter(e=>e.kind==='iframe_message' && e.event==='viewProgress')).toHaveLength(80);
 });
 
-test('six exact catalogue subjects are independent, with blocked unlicensed media and explicit untested fields',async({page})=>{
-  const catalog=JSON.parse(await readFile('web/catalog.json','utf8')).filter(item=>item.group!=='control');
+test('all ten owner subjects can open native iframe; catalogue stays a separate action',async({page})=>{
+  const catalog=JSON.parse(await readFile('web/catalog.json','utf8')).filter(item=>item.ownerSample);
   await page.route('https://api.liftw.ws/info/*',route=>{
     const id=Number(new URL(route.request().url()).pathname.split('/').at(-1)),item=catalog.find(x=>x.id===id);
-    return route.fulfill({json:{id,origin_name:item.original,year:item.year,type:item.nativeType,quality:'FHD',iframe_uri:`https://embed.liftw.ws/embed/movie/${id}?fixture=PRIVATE_FIXTURE`},headers:{'Access-Control-Allow-Origin':'*'}});
+    return route.fulfill({json:{id,name:item.providerTitle,origin_name:item.original,year:item.year,type:item.nativeType,quality:'FHD',iframe_uri:`https://embed.liftw.ws/embed/movie/${id}?fixture=PRIVATE_FIXTURE`},headers:{'Access-Control-Allow-Origin':'*'}});
   });
+  await page.route('https://embed.liftw.ws/**',r=>r.fulfill({contentType:'text/html',body:'<p>SYNTHETIC iframe, not media proof</p>'}));
   await page.goto('./');
   for(const item of catalog){
     await page.selectOption('#material',String(item.id));await waitSelection(page);
-    await expect(page.locator('#start')).toBeDisabled();await page.click('#catalog-test');await expect(page.locator('#status')).toContainText('Каталожная проверка завершена');
+    await expect(page.locator('#start')).toBeEnabled();await page.click('#catalog-test');await expect(page.locator('#status')).toContainText('Каталожная проверка завершена');
     await expect(page.locator('iframe,video[src]')).toHaveCount(0);
     const run=(await journal(page)).runs.at(-1);expect(run.subject.materialId).toBe(item.id);
-    expect(run.subject.season).toBe(item.plannedSeason);expect(run.subject.episode).toBe(item.plannedEpisode);
     expect(run.catalog.found).toBe(true);expect(run.catalog.iframeReceived).toBe(true);
     expect(run.media.ruAudio).toBe('NOT_RUN');expect(run.media.mainVideo).toBe('NOT_RUN');expect(run.lastPosition).toBe(null);
+    await page.click('#start');await expect(page.locator('iframe')).toHaveCount(1);
   }
-  await page.click('#compare');expect(await page.locator('#comparison-body tr').count()).toBeGreaterThanOrEqual(6);
+  expect(catalog).toHaveLength(10);await page.click('#compare');expect(await page.locator('#comparison-body tr').count()).toBeGreaterThanOrEqual(10);
+});
+
+test('episode plan, native changeEpisode confirmation and saved positions remain separate',async({page})=>{
+ const catalog=JSON.parse(await readFile('web/catalog.json','utf8'));const item=catalog.find(m=>m.id===76436),s2=item.snapshot.seasons.find(s=>s.season===2),ep=s2.episodes[1];
+ await page.route('https://api.liftw.ws/info/76436',r=>r.fulfill({json:{id:76436,origin_name:item.original,year:2024,type:7,iframe_uri:'https://embed.liftw.ws/embed/movie/76436?fixture=PRIVATE_FIXTURE'},headers:{'Access-Control-Allow-Origin':'*'}}));
+ await page.route('https://embed.liftw.ws/**',r=>r.fulfill({contentType:'text/html',body:`<p>SYNTHETIC playlist bridge</p><script>addEventListener('message',e=>{if(e.data==='playlist hook')parent.postMessage('playlist hooked','*');if(e.data?.event==='playlist go') {parent.postMessage({event:'viewProgress',time:60,duration:1500},'*');parent.postMessage({event:'changeEpisode',season:e.data.season,episode:e.data.episode,id:${ep.providerId}},'*');parent.postMessage({event:'viewProgress',time:70,duration:1500,id:${ep.providerId+7}},'*');}})</script>`}));
+ await page.goto('./');await page.selectOption('#material','76436');await waitSelection(page);await page.selectOption('#season','2');await waitSelection(page);await page.selectOption('#episode',String(ep.providerId));await waitSelection(page);
+ const runBefore=(await journal(page)).runs.at(-1);expect(runBefore.subject).toMatchObject({materialId:76436,season:2,episode:ep.episode,episodeProviderId:ep.providerId});
+ await page.click('#start');await expect(page.locator('#episode-status')).toContainText('подтвердил changeEpisode');await expect(page.locator('#position')).toContainText('70.0');
+ const after=(await journal(page)).runs.at(-1);expect(after.unattributedProgress.time).toBe(60);expect(after.lastPosition.time).toBe(70);expect(after.episodeEvidence.confirmed).toBe(true);
+ await page.selectOption('#episode',String(s2.episodes[2].providerId));await waitSelection(page);await expect(page.locator('#saved')).toContainText('нет');await expect(page.locator('iframe')).toHaveCount(0);
+});
+
+test('manual phase/visible time never substitutes real Lift progress',async({page})=>{
+ await page.goto('./');await page.locator('#progress-diagnostic > summary').click();await page.fill('#visible-time','180');await page.click('#phase-mark');
+ const run=(await journal(page)).runs.at(-1);expect(run.lastPosition).toBe(null);expect(run.diagnostics.progressAccepted).toBe(0);expect(run.events.some(e=>e.kind==='progress_observation'&&e.visibleTime===180)).toBe(true);
+ await expect(page.locator('#position')).toContainText('неизвестна');
 });
 
 async function localTorrentFixture(page){
@@ -92,4 +110,20 @@ test('WebRTC-only mode ignores even a supplied HTTP webseed and cannot silently 
   await expect(page.locator('#transport-state')).toContainText('Metadata: готовы');await page.waitForTimeout(1000);
   const run=(await journal(page)).runs.at(-1);expect(run.transport.httpBytes).toBe(0);expect(run.transport.webSeedConnections).toBe(0);expect(mediaRequests).toBe(0);
   await page.click('#stop');await expect(page.locator('#status')).toContainText('Источник закрыт');
+});
+
+test('WebRTC zero payload reaches a terminal timeout, closes client and offers retry',async({page})=>{
+ await localTorrentFixture(page);await page.clock.install();await page.goto('./');await page.selectOption('#connection','wt-webrtc');await waitSelection(page);await page.click('#start');
+ await expect(page.locator('#transport-state')).toContainText('Metadata: готовы');await page.clock.fastForward(46000);
+ await expect(page.locator('#status')).toContainText('Соединения закрываются');
+ const run=(await journal(page)).runs.at(-1);expect(run.transport.timedOut).toBe(true);expect(run.transport.httpBytes).toBe(0);expect(run.transport.webRTCBytes).toBe(0);expect(run.events.some(e=>e.kind==='transport_timeout')).toBe(true);await expect(page.locator('#start')).toBeEnabled();
+ await page.click('#start');await expect.poll(async()=>(await journal(page)).runs.at(-1).generation).toBe(2);await page.click('#stop');
+});
+
+test('an open lift-2 run is preserved and a new build starts its own run',async({page})=>{
+ const id='11111111-2222-4333-8444-555555555555';
+ const old={runId:id,started:'2026-10-22T06:10:00Z',mode:'browser',build:{version:'lift-2',commit:'731735f55df9919202e359ecfa38bb0880e6afc8'},subject:{connection:'lift',materialId:3637,season:null,episode:null},generation:1,droppedEvents:0,rejectedMessages:0,diagnostics:{trusted:1,accepted:1,rejected:{},progressReceived:1,progressAccepted:1,arrivalGapsMs:[]},events:[{kind:'manual_observation',utc:'2026-10-22T06:10:00Z',code:'old'}],lastPosition:{time:60,duration:888,utc:'2026-10-22T06:10:00Z'},observations:{},media:{},ended:null};
+ const data={schema:3,runs:[old],positions:{},currentByMode:{'browser|lift:3637:-:-':id}};
+ await page.addInitScript(({KEY,data})=>localStorage.setItem(KEY,JSON.stringify(data)),{KEY,data});await page.goto('./');
+ const now=await journal(page);expect(now.runs).toHaveLength(2);expect(now.runs[0]).toEqual(old);expect(now.runs[1].build.version).toBe('lift-3');
 });

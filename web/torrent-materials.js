@@ -2,15 +2,18 @@
 export const TORRENT_MATERIALS = [
   {id:'sintel-public', title:'Sintel · открытая раздача WebTorrent', year:2010,
     infoHash:'08ada5a7a6183aae1e09d831df6748d566095a10', metadata:'fixtures/sintel.torrent',
-    filename:'Sintel.mp4', size:129241752, container:'MP4', codecs:'H.264 + AAC',
+    filename:'Sintel.mp4', size:129241752, container:'MP4', codecs:'H.264 1024×436 + AAC stereo', declaredQuality:'1024×436 (ffprobe)', audioLabels:['AAC · оригинал; услышанный звук не проверен'],
     source:'https://webtorrent.io/torrents/', webseed:'https://webtorrent.io/torrents/', license:'CC BY 3.0 · Blender Foundation',
     dependency:'WebRTC: нужны совместимые доступные пиры. HTTP: внешний webseed webtorrent.io.',
     allowed:['wt-webrtc','wt-http']},
   {id:'kadr-control', title:'Контроль КАДРа · 60 секунд, синтетика',
     infoHash:'05b36bedda4c62b73af236553176141c51912689', metadata:'fixtures/kadr-control-60s.torrent',
-    filename:'kadr-control-60s.mp4', size:572719, container:'MP4', codecs:'H.264 + 2 AAC (тоны, без речи)',
+    filename:'kadr-control-60s.mp4', size:572719, container:'MP4', codecs:'H.264 640×360 + 2 AAC (тоны, без речи)', declaredQuality:'640×360 (ffprobe)', audioLabels:['AAC mono · rus tag · тон 1, не русская речь','AAC mono · eng tag · тон 2, не английская речь'],
     source:'Собственный математический ролик из исследования КАДРа', license:'Разрешённый тестовый материал автора исследования',
-    dependency:'Требуется временная браузерная вкладка-сидер разработчика. Это не автономная публичная раздача.',
-    seedFile:'fixtures/kadr-control-60s.mp4', allowed:['wt-webrtc']},
+    dependency:'A: нужен временный браузер-сидер разработчика. B: разрешённый static Pages webseed этого же стенда; это не P2P. Файл содержит два тона без речи.',
+    seedFile:'fixtures/kadr-control-60s.mp4', webseed:new URL('fixtures/kadr-control-60s.mp4',import.meta.url).href, allowed:['wt-webrtc','wt-http']},
+  {"id": "big-buck-bunny", "title": "Big Buck Bunny · открытый транспортный контроль", "infoHash": "dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c", "metadata": "fixtures/big-buck-bunny.torrent", "filename": "Big Buck Bunny.mp4", "size": 276134947, "container": "MP4", "codecs": "h264 1920×1080 + mp3 + ac3", "declaredQuality": "1920×1080 (ffprobe)", "audioLabels": ["mp3 · 2 channels · language und", "ac3 · 6 channels · language und"], "source": "https://webtorrent.io/free-torrents", "webseed": "https://webtorrent.io/torrents/", "license": "Blender Foundation · открытый фильм Creative Commons, официальный список WebTorrent", "dependency": "B: внешний HTTP webseed, трекеры и WebRTC отключены. Кодеки проверяются браузером отдельно от транспорта.", "allowed": ["wt-http"]},
+  {"id": "cosmos-laundromat", "title": "Cosmos Laundromat · открытый транспортный контроль", "infoHash": "c9e15763f722f23e98a29decdfae341b98d53056", "metadata": "fixtures/cosmos-laundromat.torrent", "filename": "Cosmos Laundromat.mp4", "size": 220087570, "container": "MP4", "codecs": "h264 1920×804 + aac", "declaredQuality": "1920×804 (ffprobe)", "audioLabels": ["aac · 2 channels · language und"], "source": "https://webtorrent.io/free-torrents", "webseed": "https://webtorrent.io/torrents/", "license": "Blender Foundation · открытый фильм Creative Commons, официальный список WebTorrent", "dependency": "B: внешний HTTP webseed, трекеры и WebRTC отключены. Кодеки проверяются браузером отдельно от транспорта.", "allowed": ["wt-http"]},
+  {"id": "tears-of-steel", "title": "Tears of Steel · WebM / проверка совместимости", "infoHash": "209c8226b299b308beaf2b9cd3fb49212dbd13ec", "metadata": "fixtures/tears-of-steel.torrent", "filename": "Tears of Steel.webm", "size": 571346576, "container": "WebM", "codecs": "vp8 1920×800 + vorbis", "declaredQuality": "1920×800 (ffprobe)", "audioLabels": ["vorbis · 2 channels · language not tagged"], "source": "https://webtorrent.io/free-torrents", "webseed": "https://webtorrent.io/torrents/", "license": "Blender Foundation · открытый фильм Creative Commons, официальный список WebTorrent", "dependency": "B: внешний HTTP webseed, трекеры и WebRTC отключены. Кодеки проверяются браузером отдельно от транспорта.", "allowed": ["wt-http"]},
 ];
 export const TRACKERS = ['wss://tracker.openwebtorrent.com', 'wss://tracker.webtorrent.dev'];

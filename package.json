@@ -1,6 +1,6 @@
 {
   "name": "kadr-video-lab",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -14,7 +14,8 @@
     "package": "python3 scripts/package.py"
   },
   "devDependencies": {
-    "@playwright/test": "1.64.1"
+    "@playwright/test": "1.64.1",
+    "json5": "2.2.3"
   },
   "dependencies": {
     "webtorrent": "3.0.21"

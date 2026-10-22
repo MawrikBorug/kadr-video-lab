@@ -9,6 +9,7 @@ const original = {id:3637, original:'Sintel', year:2010, nativeType:2};
 export function extractEmbed(data, material = original) {
   if (!data || typeof data !== 'object' || Array.isArray(data) || data.id !== material.id
       || data.origin_name !== material.original || Number(data.year) !== material.year
+      || (!material.original && data.name !== material.providerTitle)
       || (data.type !== undefined && data.type !== material.nativeType)) throw new LiftError('identity_mismatch');
   const raw = data.iframe_uri;
   if (typeof raw !== 'string' || raw.length > 8192) throw new LiftError('embed_missing');

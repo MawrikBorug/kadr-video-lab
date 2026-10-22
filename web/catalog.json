@@ -3,15 +3,17 @@
     "id": 3637,
     "title": "Синтел",
     "original": "Sintel",
+    "providerTitle": "Синтел",
     "year": 2010,
     "nativeType": 2,
     "group": "control",
     "series": false,
+    "ownerSample": false,
     "plannedSeason": null,
     "plannedEpisode": null,
-    "mediaPermission": "original-only",
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:21.997818+00:00",
+      "checkedAt": "2026-10-22T06:45:41.527Z",
       "found": true,
       "iframeReceived": true,
       "catalogQuality": "FHD",
@@ -22,25 +24,1031 @@
       ],
       "subtitleLabels": [],
       "seasons": [],
-      "plannedEpisodeFound": false,
-      "episodeProviderId": null,
+      "videoProviderId": 730427,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": false,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "OPEN_TRANSPORT_FIXTURE_AVAILABLE",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
+    }
+  },
+  {
+    "id": 76436,
+    "title": "Дандадан",
+    "original": "Dandadan",
+    "providerTitle": "Дандадан",
+    "year": 2024,
+    "nativeType": 7,
+    "group": "anime",
+    "series": true,
+    "ownerSample": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "access": "native-player-user-selected",
+    "snapshot": {
+      "checkedAt": "2026-10-22T06:45:42.352Z",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "StudioBand",
+        "Рус. Проф. многоголосый",
+        "TVShows",
+        "Anilibria",
+        "Eng. Dub.",
+        "Japan Original",
+        "AniBaza",
+        "DreamCast",
+        "New Dream Media"
+      ],
+      "subtitleLabels": [],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 760230,
+              "title": "Дандадан (1 сезон) - 1 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 2,
+              "providerId": 760226,
+              "title": "Дандадан (1 сезон) - 2 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 3,
+              "providerId": 760227,
+              "title": "Дандадан (1 сезон) - 3 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 4,
+              "providerId": 760228,
+              "title": "Дандадан (1 сезон) - 4 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 5,
+              "providerId": 760229,
+              "title": "Дандадан (1 сезон) - 5 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 6,
+              "providerId": 760225,
+              "title": "Дандадан (1 сезон) - 6 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 7,
+              "providerId": 760231,
+              "title": "Дандадан (1 сезон) - 7 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 8,
+              "providerId": 760232,
+              "title": "Дандадан (1 сезон) - 8 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1421
+            },
+            {
+              "episode": 9,
+              "providerId": 760233,
+              "title": "Дандадан (1 сезон) - 9 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1422
+            },
+            {
+              "episode": 10,
+              "providerId": 760234,
+              "title": "Дандадан (1 сезон) - 10 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1422
+            },
+            {
+              "episode": 11,
+              "providerId": 760235,
+              "title": "Дандадан (1 сезон) - 11 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1422
+            },
+            {
+              "episode": 12,
+              "providerId": 760236,
+              "title": "Дандадан (1 сезон) - 12 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Рус. Проф. многоголосый",
+                "TVShows",
+                "Anilibria",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1407
+            }
+          ]
+        },
+        {
+          "season": 2,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 785973,
+              "title": "Дандадан (2 сезон) - 1 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 2,
+              "providerId": 785974,
+              "title": "Дандадан (2 сезон) - 2 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1451
+            },
+            {
+              "episode": 3,
+              "providerId": 785975,
+              "title": "Дандадан (2 сезон) - 3 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 4,
+              "providerId": 785976,
+              "title": "Дандадан (2 сезон) - 4 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 5,
+              "providerId": 787305,
+              "title": "Дандадан (2 сезон) - 5 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 6,
+              "providerId": 789407,
+              "title": "Дандадан (2 сезон) - 6 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 7,
+              "providerId": 790745,
+              "title": "Дандадан (2 сезон) - 7 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1452
+            },
+            {
+              "episode": 8,
+              "providerId": 791698,
+              "title": "Дандадан (2 сезон) - 8 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 9,
+              "providerId": 792592,
+              "title": "Дандадан (2 сезон) - 9 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 10,
+              "providerId": 793929,
+              "title": "Дандадан (2 сезон) - 10 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 11,
+              "providerId": 797262,
+              "title": "Дандадан (2 сезон) - 11 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "New Dream Media",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1437
+            },
+            {
+              "episode": 12,
+              "providerId": 797263,
+              "title": "Дандадан (2 сезон) - 12 серия",
+              "audioLabels": [
+                "StudioBand",
+                "AniBaza",
+                "TVShows",
+                "DreamCast",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1422
+            }
+          ]
+        }
+      ],
+      "videoProviderId": 1163428,
+      "videoNotStarted": true,
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
+    }
+  },
+  {
+    "id": 68777,
+    "title": "Фрирен / Frieren: Beyond Journey’s End",
+    "original": "Sousou no Frieren",
+    "providerTitle": "Провожающая в последний путь Фрирен",
+    "year": 2023,
+    "nativeType": 7,
+    "group": "anime",
+    "series": true,
+    "ownerSample": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "access": "native-player-user-selected",
+    "snapshot": {
+      "checkedAt": "2026-10-22T06:45:43.503Z",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "StudioBand",
+        "Anilibria",
+        "AniBaza",
+        "DreamCast",
+        "Дубляжная",
+        "Japan Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 789644,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 1 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1560
+            },
+            {
+              "episode": 2,
+              "providerId": 789645,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 2 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1560
+            },
+            {
+              "episode": 3,
+              "providerId": 789646,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 3 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 4,
+              "providerId": 789647,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 4 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1561
+            },
+            {
+              "episode": 5,
+              "providerId": 789648,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 5 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 6,
+              "providerId": 789649,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 6 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 7,
+              "providerId": 789650,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 7 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 8,
+              "providerId": 789651,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 8 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 9,
+              "providerId": 789652,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 9 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 10,
+              "providerId": 789653,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 10 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 11,
+              "providerId": 789654,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 11 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 12,
+              "providerId": 789655,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 12 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 13,
+              "providerId": 789656,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 13 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 14,
+              "providerId": 789657,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 14 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 15,
+              "providerId": 789658,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 15 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 16,
+              "providerId": 789659,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 16 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1447
+            },
+            {
+              "episode": 17,
+              "providerId": 789660,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 17 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 18,
+              "providerId": 789661,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 18 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 19,
+              "providerId": 789662,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 19 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 20,
+              "providerId": 789663,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 20 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 21,
+              "providerId": 789664,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 21 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 22,
+              "providerId": 789665,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 22 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 23,
+              "providerId": 789666,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 23 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 24,
+              "providerId": 789667,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 24 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 25,
+              "providerId": 789668,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 25 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 26,
+              "providerId": 789669,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 26 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1471
+            },
+            {
+              "episode": 27,
+              "providerId": 789670,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 27 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 28,
+              "providerId": 789671,
+              "title": "Провожающая в последний путь Фрирен (1 сезон) - 28 серия",
+              "audioLabels": [
+                "StudioBand",
+                "Anilibria",
+                "AniBaza",
+                "DreamCast",
+                "Дубляжная",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1464
+            }
+          ]
+        },
+        {
+          "season": 2,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 820973,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 1 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1470
+            },
+            {
+              "episode": 2,
+              "providerId": 820974,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 2 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 3,
+              "providerId": 822689,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 3 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 4,
+              "providerId": 824539,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 4 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 5,
+              "providerId": 826308,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 5 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 6,
+              "providerId": 829768,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 6 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 7,
+              "providerId": 830787,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 7 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 8,
+              "providerId": 832258,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 8 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1450
+            },
+            {
+              "episode": 9,
+              "providerId": 834454,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 9 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1440
+            },
+            {
+              "episode": 10,
+              "providerId": 835504,
+              "title": "Провожающая в последний путь Фрирен (2 сезон) - 10 серия",
+              "audioLabels": [
+                "Anilibria",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1430
+            }
+          ]
+        }
+      ],
+      "videoProviderId": 1194536,
+      "videoNotStarted": true,
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   },
   {
     "id": 2087,
-    "title": "Тетрадь Смерти",
+    "title": "Тетрадь смерти",
     "original": "Death Note",
+    "providerTitle": "Тетрадь Смерти",
     "year": 2006,
     "nativeType": 7,
     "group": "anime",
     "series": true,
+    "ownerSample": true,
     "plannedSeason": 1,
     "plannedEpisode": 1,
-    "mediaPermission": "catalog-only",
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:22.390482+00:00",
+      "checkedAt": "2026-10-22T06:45:44.864Z",
       "found": true,
       "iframeReceived": true,
       "catalogQuality": "FHD",
@@ -50,68 +1058,962 @@
         "Eng. Dub.",
         "Japan Original"
       ],
-      "subtitleLabels": [
-        "Рус. полные - 1",
-        "Рус. полные - 2"
-      ],
+      "subtitleLabels": [],
       "seasons": [
         {
           "season": 1,
-          "episodes": 37
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 694871,
+              "title": "Тетрадь Смерти (1 сезон) - 1 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 2,
+              "providerId": 694872,
+              "title": "Тетрадь Смерти (1 сезон) - 2 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 3,
+              "providerId": 694873,
+              "title": "Тетрадь Смерти (1 сезон) - 3 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 4,
+              "providerId": 694874,
+              "title": "Тетрадь Смерти (1 сезон) - 4 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 5,
+              "providerId": 694875,
+              "title": "Тетрадь Смерти (1 сезон) - 5 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 6,
+              "providerId": 694876,
+              "title": "Тетрадь Смерти (1 сезон) - 6 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 7,
+              "providerId": 694877,
+              "title": "Тетрадь Смерти (1 сезон) - 7 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 8,
+              "providerId": 694878,
+              "title": "Тетрадь Смерти (1 сезон) - 8 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 9,
+              "providerId": 694879,
+              "title": "Тетрадь Смерти (1 сезон) - 9 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 10,
+              "providerId": 694880,
+              "title": "Тетрадь Смерти (1 сезон) - 10 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 11,
+              "providerId": 694881,
+              "title": "Тетрадь Смерти (1 сезон) - 11 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 12,
+              "providerId": 694882,
+              "title": "Тетрадь Смерти (1 сезон) - 12 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 13,
+              "providerId": 694883,
+              "title": "Тетрадь Смерти (1 сезон) - 13 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1380
+            },
+            {
+              "episode": 14,
+              "providerId": 694884,
+              "title": "Тетрадь Смерти (1 сезон) - 14 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1379
+            },
+            {
+              "episode": 15,
+              "providerId": 694885,
+              "title": "Тетрадь Смерти (1 сезон) - 15 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 16,
+              "providerId": 694886,
+              "title": "Тетрадь Смерти (1 сезон) - 16 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 17,
+              "providerId": 694887,
+              "title": "Тетрадь Смерти (1 сезон) - 17 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 18,
+              "providerId": 694888,
+              "title": "Тетрадь Смерти (1 сезон) - 18 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 19,
+              "providerId": 694889,
+              "title": "Тетрадь Смерти (1 сезон) - 19 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 20,
+              "providerId": 694890,
+              "title": "Тетрадь Смерти (1 сезон) - 20 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 21,
+              "providerId": 694891,
+              "title": "Тетрадь Смерти (1 сезон) - 21 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 22,
+              "providerId": 694892,
+              "title": "Тетрадь Смерти (1 сезон) - 22 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1375
+            },
+            {
+              "episode": 23,
+              "providerId": 694893,
+              "title": "Тетрадь Смерти (1 сезон) - 23 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 24,
+              "providerId": 694894,
+              "title": "Тетрадь Смерти (1 сезон) - 24 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1379
+            },
+            {
+              "episode": 25,
+              "providerId": 694895,
+              "title": "Тетрадь Смерти (1 сезон) - 25 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 26,
+              "providerId": 694896,
+              "title": "Тетрадь Смерти (1 сезон) - 26 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 27,
+              "providerId": 694897,
+              "title": "Тетрадь Смерти (1 сезон) - 27 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 28,
+              "providerId": 694898,
+              "title": "Тетрадь Смерти (1 сезон) - 28 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 29,
+              "providerId": 694899,
+              "title": "Тетрадь Смерти (1 сезон) - 29 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 30,
+              "providerId": 694904,
+              "title": "Тетрадь Смерти (1 сезон) - 30 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1378
+            },
+            {
+              "episode": 31,
+              "providerId": 694906,
+              "title": "Тетрадь Смерти (1 сезон) - 31 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 32,
+              "providerId": 694907,
+              "title": "Тетрадь Смерти (1 сезон) - 32 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 33,
+              "providerId": 694908,
+              "title": "Тетрадь Смерти (1 сезон) - 33 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 34,
+              "providerId": 694909,
+              "title": "Тетрадь Смерти (1 сезон) - 34 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1377
+            },
+            {
+              "episode": 35,
+              "providerId": 694910,
+              "title": "Тетрадь Смерти (1 сезон) - 35 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1378
+            },
+            {
+              "episode": 36,
+              "providerId": 694911,
+              "title": "Тетрадь Смерти (1 сезон) - 36 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1376
+            },
+            {
+              "episode": 37,
+              "providerId": 694912,
+              "title": "Тетрадь Смерти (1 сезон) - 37 серия",
+              "audioLabels": [
+                "Студия СВ-Дубль",
+                "Рус. Дублированный",
+                "Eng. Dub.",
+                "Japan Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 1355
+            }
+          ]
         }
       ],
-      "plannedEpisodeFound": true,
-      "episodeProviderId": 694871,
+      "videoProviderId": 1092459,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   },
   {
-    "id": 13324,
-    "title": "Стальной Алхимик: Братство",
-    "original": "Fullmetal Alchemist: Brotherhood",
-    "year": 2009,
-    "nativeType": 7,
-    "group": "anime",
-    "series": true,
-    "plannedSeason": 1,
-    "plannedEpisode": 1,
-    "mediaPermission": "catalog-only",
+    "id": 180,
+    "title": "Интерстеллар",
+    "original": "Interstellar",
+    "providerTitle": "Интерстеллар",
+    "year": 2014,
+    "nativeType": 1,
+    "group": "film",
+    "series": false,
+    "ownerSample": true,
+    "plannedSeason": null,
+    "plannedEpisode": null,
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:22.493219+00:00",
+      "checkedAt": "2026-10-22T06:45:45.624Z",
       "found": true,
       "iframeReceived": true,
-      "catalogQuality": "HD",
+      "catalogQuality": "FHD",
       "audioLabels": [
-        "Студия СВ-Дубль",
-        "Рус. Люб. многоголосый"
+        "Рус. Дублированный",
+        "Омикрон",
+        "Ю. Сербин",
+        "Ю. Живов",
+        "Д. Есарев",
+        "Укр. Дубльований",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [],
+      "videoProviderId": 1260892,
+      "videoNotStarted": true,
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": false,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
+    }
+  },
+  {
+    "id": 70403,
+    "title": "Фаллаут",
+    "original": "Fallout",
+    "providerTitle": "Фоллаут",
+    "year": 2024,
+    "nativeType": 3,
+    "group": "series",
+    "series": true,
+    "ownerSample": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "access": "native-player-user-selected",
+    "snapshot": {
+      "checkedAt": "2026-10-22T06:45:46.545Z",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "HDRezka Studio",
+        "JASKIER",
+        "LostFilm",
+        "NewComers",
+        "ViruseProject",
+        "DniproFilm (укр)",
+        "Цікава Ідея (укр)",
+        "Eng.Original",
+        "NewStudio",
+        "Рус. Дублированный",
+        "1WinStudio",
+        "TVShows",
+        "LE-Production",
+        "Dragon Money Studio",
+        "Uaflix (укр)",
+        "Red Head Sound"
       ],
       "subtitleLabels": [],
       "seasons": [
         {
           "season": 1,
-          "episodes": 64
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 678537,
+              "title": "Фоллаут (1 сезон) - 1 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 4497
+            },
+            {
+              "episode": 2,
+              "providerId": 678538,
+              "title": "Фоллаут (1 сезон) - 2 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3930
+            },
+            {
+              "episode": 3,
+              "providerId": 678539,
+              "title": "Фоллаут (1 сезон) - 3 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3419
+            },
+            {
+              "episode": 4,
+              "providerId": 678540,
+              "title": "Фоллаут (1 сезон) - 4 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2920
+            },
+            {
+              "episode": 5,
+              "providerId": 679024,
+              "title": "Фоллаут (1 сезон) - 5 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2720
+            },
+            {
+              "episode": 6,
+              "providerId": 679025,
+              "title": "Фоллаут (1 сезон) - 6 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3640
+            },
+            {
+              "episode": 7,
+              "providerId": 679488,
+              "title": "Фоллаут (1 сезон) - 7 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewStudio",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3663
+            },
+            {
+              "episode": 8,
+              "providerId": 679489,
+              "title": "Фоллаут (1 сезон) - 8 серия",
+              "audioLabels": [
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "NewStudio",
+                "NewComers",
+                "ViruseProject",
+                "DniproFilm (укр)",
+                "Цікава Ідея (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3746
+            }
+          ]
+        },
+        {
+          "season": 2,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 815472,
+              "title": "Фоллаут (2 сезон) - 1 серия",
+              "audioLabels": [
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3748
+            },
+            {
+              "episode": 2,
+              "providerId": 815977,
+              "title": "Фоллаут (2 сезон) - 2 серия",
+              "audioLabels": [
+                "Red Head Sound",
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3488
+            },
+            {
+              "episode": 3,
+              "providerId": 817869,
+              "title": "Фоллаут (2 сезон) - 3 серия",
+              "audioLabels": [
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3295
+            },
+            {
+              "episode": 4,
+              "providerId": 820908,
+              "title": "Фоллаут (2 сезон) - 4 серия",
+              "audioLabels": [
+                "Red Head Sound",
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2923
+            },
+            {
+              "episode": 5,
+              "providerId": 820909,
+              "title": "Фоллаут (2 сезон) - 5 серия",
+              "audioLabels": [
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3391
+            },
+            {
+              "episode": 6,
+              "providerId": 824081,
+              "title": "Фоллаут (2 сезон) - 6 серия",
+              "audioLabels": [
+                "Red Head Sound",
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3066
+            },
+            {
+              "episode": 7,
+              "providerId": 824082,
+              "title": "Фоллаут (2 сезон) - 7 серия",
+              "audioLabels": [
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3038
+            },
+            {
+              "episode": 8,
+              "providerId": 824253,
+              "title": "Фоллаут (2 сезон) - 8 серия",
+              "audioLabels": [
+                "Рус. Дублированный",
+                "NewComers",
+                "HDRezka Studio",
+                "JASKIER",
+                "LostFilm",
+                "1WinStudio",
+                "TVShows",
+                "LE-Production",
+                "Dragon Money Studio",
+                "ViruseProject",
+                "Цікава Ідея (укр)",
+                "Uaflix (укр)",
+                "DniproFilm (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3374
+            }
+          ]
         }
       ],
-      "plannedEpisodeFound": true,
-      "episodeProviderId": 143050,
+      "videoProviderId": 1074203,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   },
   {
     "id": 255,
     "title": "Во все тяжкие",
     "original": "Breaking Bad",
+    "providerTitle": "Во все тяжкие",
     "year": 2008,
     "nativeType": 3,
     "group": "series",
     "series": true,
+    "ownerSample": true,
     "plannedSeason": 1,
     "plannedEpisode": 1,
-    "mediaPermission": "catalog-only",
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:22.907061+00:00",
+      "checkedAt": "2026-10-22T06:45:47.515Z",
       "found": true,
       "iframeReceived": true,
       "catalogQuality": "FHD",
@@ -124,176 +2026,1415 @@
         "Дмитрий \"Goblin\" Пучков",
         "AMC (укр)",
         "Eng.Original",
-        "Eng. Orig. with Commentary"
-      ],
-      "subtitleLabels": [
-        "Рус. форсированные - 1",
-        "Рус. полные - 2",
-        "Eng. full - 3"
-      ],
-      "seasons": [
-        {
-          "season": 1,
-          "episodes": 7
-        },
-        {
-          "season": 4,
-          "episodes": 13
-        },
-        {
-          "season": 2,
-          "episodes": 13
-        },
-        {
-          "season": 3,
-          "episodes": 13
-        },
-        {
-          "season": 5,
-          "episodes": 17
-        }
-      ],
-      "plannedEpisodeFound": true,
-      "episodeProviderId": 778006,
-      "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
-    }
-  },
-  {
-    "id": 354,
-    "title": "Очень странные дела / Странные вещи / Загадочные события",
-    "original": "Stranger Things",
-    "year": 2016,
-    "nativeType": 3,
-    "group": "series",
-    "series": true,
-    "plannedSeason": 2,
-    "plannedEpisode": 1,
-    "mediaPermission": "catalog-only",
-    "snapshot": {
-      "checkedAt": "2026-10-22T05:16:23.727435+00:00",
-      "found": true,
-      "iframeReceived": true,
-      "catalogQuality": "4K",
-      "audioLabels": [
-        "Пифагор",
-        "LostFilm",
+        "Eng. Orig. with Commentary",
+        "Flarrow Films",
         "JASKIER",
-        "NewStudio",
-        "Good People",
-        "TVShows",
-        "Так Треба Продакшн",
-        "Eng.Original"
+        "HDRezka Studio",
+        "IdeaFilm",
+        "HamsterStudio",
+        "СiмпсониUA"
       ],
-      "subtitleLabels": [
-        "Eng. full - 1",
-        "Укр. повні - 2",
-        "Укр. форсовані - 3",
-        "Рус. полные - 4",
-        "Рус. форсированные - 5"
-      ],
+      "subtitleLabels": [],
       "seasons": [
         {
           "season": 1,
-          "episodes": 8
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 778006,
+              "title": "Во все тяжкие (1 сезон) - 1 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 3486
+            },
+            {
+              "episode": 2,
+              "providerId": 778007,
+              "title": "Во все тяжкие (1 сезон) - 2 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2892
+            },
+            {
+              "episode": 3,
+              "providerId": 778008,
+              "title": "Во все тяжкие (1 сезон) - 3 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2891
+            },
+            {
+              "episode": 4,
+              "providerId": 778009,
+              "title": "Во все тяжкие (1 сезон) - 4 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2895
+            },
+            {
+              "episode": 5,
+              "providerId": 778010,
+              "title": "Во все тяжкие (1 сезон) - 5 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2891
+            },
+            {
+              "episode": 6,
+              "providerId": 778011,
+              "title": "Во все тяжкие (1 сезон) - 6 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2884
+            },
+            {
+              "episode": 7,
+              "providerId": 778012,
+              "title": "Во все тяжкие (1 сезон) - 7 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            }
+          ]
         },
         {
           "season": 2,
-          "episodes": 9
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 778013,
+              "title": "Во все тяжкие (2 сезон) - 1 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2835
+            },
+            {
+              "episode": 2,
+              "providerId": 778014,
+              "title": "Во все тяжкие (2 сезон) - 2 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2877
+            },
+            {
+              "episode": 3,
+              "providerId": 778015,
+              "title": "Во все тяжкие (2 сезон) - 3 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2819
+            },
+            {
+              "episode": 4,
+              "providerId": 778016,
+              "title": "Во все тяжкие (2 сезон) - 4 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2844
+            },
+            {
+              "episode": 5,
+              "providerId": 778017,
+              "title": "Во все тяжкие (2 сезон) - 5 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 6,
+              "providerId": 778018,
+              "title": "Во все тяжкие (2 сезон) - 6 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2842
+            },
+            {
+              "episode": 7,
+              "providerId": 778019,
+              "title": "Во все тяжкие (2 сезон) - 7 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 8,
+              "providerId": 778020,
+              "title": "Во все тяжкие (2 сезон) - 8 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 9,
+              "providerId": 778021,
+              "title": "Во все тяжкие (2 сезон) - 9 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 10,
+              "providerId": 778022,
+              "title": "Во все тяжкие (2 сезон) - 10 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2842
+            },
+            {
+              "episode": 11,
+              "providerId": 778024,
+              "title": "Во все тяжкие (2 сезон) - 11 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 12,
+              "providerId": 778025,
+              "title": "Во все тяжкие (2 сезон) - 12 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2844
+            },
+            {
+              "episode": 13,
+              "providerId": 778026,
+              "title": "Во все тяжкие (2 сезон) - 13 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2854
+            }
+          ]
         },
         {
           "season": 3,
-          "episodes": 8
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 778028,
+              "title": "Во все тяжкие (3 сезон) - 1 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 2,
+              "providerId": 778029,
+              "title": "Во все тяжкие (3 сезон) - 2 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2832
+            },
+            {
+              "episode": 3,
+              "providerId": 778030,
+              "title": "Во все тяжкие (3 сезон) - 3 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2835
+            },
+            {
+              "episode": 4,
+              "providerId": 778031,
+              "title": "Во все тяжкие (3 сезон) - 4 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 5,
+              "providerId": 778032,
+              "title": "Во все тяжкие (3 сезон) - 5 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2833
+            },
+            {
+              "episode": 6,
+              "providerId": 778033,
+              "title": "Во все тяжкие (3 сезон) - 6 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 7,
+              "providerId": 778034,
+              "title": "Во все тяжкие (3 сезон) - 7 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 8,
+              "providerId": 778035,
+              "title": "Во все тяжкие (3 сезон) - 8 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2838
+            },
+            {
+              "episode": 9,
+              "providerId": 778036,
+              "title": "Во все тяжкие (3 сезон) - 9 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 10,
+              "providerId": 778037,
+              "title": "Во все тяжкие (3 сезон) - 10 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2833
+            },
+            {
+              "episode": 11,
+              "providerId": 778038,
+              "title": "Во все тяжкие (3 сезон) - 11 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2836
+            },
+            {
+              "episode": 12,
+              "providerId": 778039,
+              "title": "Во все тяжкие (3 сезон) - 12 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 13,
+              "providerId": 778040,
+              "title": "Во все тяжкие (3 сезон) - 13 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2837
+            }
+          ]
         },
         {
           "season": 4,
-          "episodes": 9
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 778044,
+              "title": "Во все тяжкие (4 сезон) - 1 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2831
+            },
+            {
+              "episode": 2,
+              "providerId": 778046,
+              "title": "Во все тяжкие (4 сезон) - 2 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2758
+            },
+            {
+              "episode": 3,
+              "providerId": 778047,
+              "title": "Во все тяжкие (4 сезон) - 3 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2773
+            },
+            {
+              "episode": 4,
+              "providerId": 778048,
+              "title": "Во все тяжкие (4 сезон) - 4 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2743
+            },
+            {
+              "episode": 5,
+              "providerId": 778049,
+              "title": "Во все тяжкие (4 сезон) - 5 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2832
+            },
+            {
+              "episode": 6,
+              "providerId": 778050,
+              "title": "Во все тяжкие (4 сезон) - 6 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 7,
+              "providerId": 778051,
+              "title": "Во все тяжкие (4 сезон) - 7 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 8,
+              "providerId": 778052,
+              "title": "Во все тяжкие (4 сезон) - 8 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 9,
+              "providerId": 778053,
+              "title": "Во все тяжкие (4 сезон) - 9 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 10,
+              "providerId": 778054,
+              "title": "Во все тяжкие (4 сезон) - 10 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2862
+            },
+            {
+              "episode": 11,
+              "providerId": 778055,
+              "title": "Во все тяжкие (4 сезон) - 11 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2847
+            },
+            {
+              "episode": 12,
+              "providerId": 778056,
+              "title": "Во все тяжкие (4 сезон) - 12 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2788
+            },
+            {
+              "episode": 13,
+              "providerId": 778057,
+              "title": "Во все тяжкие (4 сезон) - 13 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 3057
+            }
+          ]
         },
         {
           "season": 5,
-          "episodes": 9
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 778058,
+              "title": "Во все тяжкие (5 сезон) - 1 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2578
+            },
+            {
+              "episode": 2,
+              "providerId": 778059,
+              "title": "Во все тяжкие (5 сезон) - 2 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2833
+            },
+            {
+              "episode": 3,
+              "providerId": 778060,
+              "title": "Во все тяжкие (5 сезон) - 3 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2867
+            },
+            {
+              "episode": 4,
+              "providerId": 778061,
+              "title": "Во все тяжкие (5 сезон) - 4 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2846
+            },
+            {
+              "episode": 5,
+              "providerId": 778062,
+              "title": "Во все тяжкие (5 сезон) - 5 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2883
+            },
+            {
+              "episode": 6,
+              "providerId": 778063,
+              "title": "Во все тяжкие (5 сезон) - 6 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2845
+            },
+            {
+              "episode": 7,
+              "providerId": 778064,
+              "title": "Во все тяжкие (5 сезон) - 7 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2837
+            },
+            {
+              "episode": 8,
+              "providerId": 778065,
+              "title": "Во все тяжкие (5 сезон) - 8 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original"
+              ],
+              "subtitleLabels": [],
+              "duration": 2841
+            },
+            {
+              "episode": 9,
+              "providerId": 778066,
+              "title": "Во все тяжкие (5 сезон) - 9 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2842
+            },
+            {
+              "episode": 10,
+              "providerId": 778067,
+              "title": "Во все тяжкие (5 сезон) - 10 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2843
+            },
+            {
+              "episode": 11,
+              "providerId": 778068,
+              "title": "Во все тяжкие (5 сезон) - 11 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2843
+            },
+            {
+              "episode": 12,
+              "providerId": 778069,
+              "title": "Во все тяжкие (5 сезон) - 12 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2865
+            },
+            {
+              "episode": 13,
+              "providerId": 778070,
+              "title": "Во все тяжкие (5 сезон) - 13 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2773
+            },
+            {
+              "episode": 14,
+              "providerId": 778071,
+              "title": "Во все тяжкие (5 сезон) - 14 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 2833
+            },
+            {
+              "episode": 15,
+              "providerId": 778072,
+              "title": "Во все тяжкие (5 сезон) - 15 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 3206
+            },
+            {
+              "episode": 16,
+              "providerId": 778073,
+              "title": "Во все тяжкие (5 сезон) - 16 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "Рус. Дублированный",
+                "LostFilm",
+                "Fox",
+                "Ю. Сербин",
+                "Дмитрий \"Goblin\" Пучков",
+                "AMC (укр)",
+                "Eng.Original",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 3314
+            },
+            {
+              "episode": 17,
+              "providerId": 778074,
+              "title": "Во все тяжкие (5 сезон) - 17 серия",
+              "audioLabels": [
+                "Кубик в кубе",
+                "LostFilm",
+                "Flarrow Films",
+                "JASKIER",
+                "HDRezka Studio",
+                "IdeaFilm",
+                "HamsterStudio",
+                "Ю. Сербин",
+                "СiмпсониUA",
+                "Eng.Original",
+                "Eng. Orig. with Commentary",
+                "Eng. Orig. with Commentary"
+              ],
+              "subtitleLabels": [],
+              "duration": 7338
+            }
+          ]
         }
       ],
-      "plannedEpisodeFound": true,
-      "episodeProviderId": 873057,
+      "videoProviderId": 1182060,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   },
   {
-    "id": 180,
-    "title": "Интерстеллар",
-    "original": "Interstellar",
-    "year": 2014,
+    "id": 5784,
+    "title": "Человек-паук: Вдали от дома",
+    "original": "Spider-Man: Far From Home",
+    "providerTitle": "Человек-паук: Вдали от дома",
+    "year": 2019,
     "nativeType": 1,
     "group": "film",
     "series": false,
+    "ownerSample": true,
     "plannedSeason": null,
     "plannedEpisode": null,
-    "mediaPermission": "catalog-only",
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:23.563072+00:00",
+      "checkedAt": "2026-10-22T06:45:48.408Z",
       "found": true,
       "iframeReceived": true,
       "catalogQuality": "4K",
       "audioLabels": [
         "Рус. Дублированный",
-        "Омикрон",
-        "Ю. Сербин",
-        "Ю. Живов",
-        "Д. Есарев",
+        "HDRezka Studio",
         "Укр. Дубльований",
         "Eng.Original"
       ],
       "subtitleLabels": [],
       "seasons": [],
-      "plannedEpisodeFound": false,
-      "episodeProviderId": null,
+      "videoProviderId": 1267339,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": false,
+      "declaredQualities": [
+        "4K"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   },
   {
-    "id": 474,
-    "title": "Матрица",
-    "original": "The Matrix",
-    "year": 1999,
+    "id": 87181,
+    "title": "Проект «Аве Мария» / Project Hail Mary",
+    "original": "Project Hail Mary",
+    "providerTitle": "Проект «Конец света»",
+    "year": 2026,
     "nativeType": 1,
     "group": "film",
     "series": false,
+    "ownerSample": true,
     "plannedSeason": null,
     "plannedEpisode": null,
-    "mediaPermission": "catalog-only",
+    "access": "native-player-user-selected",
     "snapshot": {
-      "checkedAt": "2026-10-22T05:16:24.047427+00:00",
+      "checkedAt": "2026-10-22T06:45:49.307Z",
       "found": true,
       "iframeReceived": true,
       "catalogQuality": "4K",
       "audioLabels": [
-        "Рус. Дублированный",
-        "Рус. Проф. многоголосый",
-        "НТВ",
-        "Рус. Проф. двухголосый",
-        "П.Гланц и И.Королёва",
-        "Рус. Одноголосый",
-        "C. Визгунов",
-        "А. Гаврилов",
-        "Рус. Одноголосый",
-        "А. Дольский",
-        "Д. Есарев",
-        "Ю. Живов",
-        "А.Кашкин",
-        "Дмитрий \"Goblin\" Пучков",
-        "Рус. Одноголосый",
-        "Укр. Проф. багатоголосий",
+        "MovieDalen",
+        "AlexFilm",
+        "JASKIER",
+        "LostFilm",
+        "Дубляжная",
+        "заКАДРЫ",
+        "М. Яроцкий",
+        "Baibako (укр)",
         "Eng.Original"
       ],
       "subtitleLabels": [],
       "seasons": [],
-      "plannedEpisodeFound": false,
-      "episodeProviderId": null,
+      "videoProviderId": 1267226,
       "videoNotStarted": true,
-      "evidence": "HTTP metadata and native embed configuration only; no media session"
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": false,
+      "declaredQualities": [
+        "4K"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
+    }
+  },
+  {
+    "id": 2209,
+    "title": "Шрек",
+    "original": "Shrek",
+    "providerTitle": "Шрэк",
+    "year": 2001,
+    "nativeType": 2,
+    "group": "film",
+    "series": false,
+    "ownerSample": true,
+    "plannedSeason": null,
+    "plannedEpisode": null,
+    "access": "native-player-user-selected",
+    "snapshot": {
+      "checkedAt": "2026-10-22T06:45:50.141Z",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "Рус. Дублированный",
+        "Укр. Дубльований",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [],
+      "videoProviderId": 736481,
+      "videoNotStarted": true,
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": false,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
+    }
+  },
+  {
+    "id": 69530,
+    "title": "Слово пацана. Кровь на асфальте",
+    "original": "",
+    "providerTitle": "Слово пацана. Кровь на асфальте",
+    "year": 2023,
+    "nativeType": 3,
+    "group": "series",
+    "series": true,
+    "ownerSample": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "access": "native-player-user-selected",
+    "snapshot": {
+      "checkedAt": "2026-10-22T06:45:50.834Z",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "Рус. Оригинальный"
+      ],
+      "subtitleLabels": [],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": [
+            {
+              "episode": 1,
+              "providerId": 872616,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 1 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3060
+            },
+            {
+              "episode": 2,
+              "providerId": 872617,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 2 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3120
+            },
+            {
+              "episode": 3,
+              "providerId": 872618,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 3 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3161
+            },
+            {
+              "episode": 4,
+              "providerId": 872619,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 4 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 2915
+            },
+            {
+              "episode": 5,
+              "providerId": 872620,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 5 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3288
+            },
+            {
+              "episode": 6,
+              "providerId": 872621,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 6 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 2951
+            },
+            {
+              "episode": 7,
+              "providerId": 872622,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 7 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3146
+            },
+            {
+              "episode": 8,
+              "providerId": 872623,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 8 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 3424
+            },
+            {
+              "episode": 9,
+              "providerId": 640121,
+              "title": "Слово пацана. Кровь на асфальте (1 сезон) - 9 серия",
+              "audioLabels": [
+                "Рус. Оригинальный"
+              ],
+              "subtitleLabels": [],
+              "duration": 2996
+            }
+          ]
+        }
+      ],
+      "videoProviderId": 1282211,
+      "videoNotStarted": true,
+      "evidence": "Native info identity and embed playlist metadata, no media claim",
+      "episodeCommandInNativeCode": true,
+      "declaredQualities": [
+        "FHD"
+      ],
+      "qualityEvidence": "Provider API label; actual levels/dimensions not tested"
+    },
+    "webseedQualification": {
+      "state": "NO_QUALIFIED_WEBSEED_FOUND",
+      "checkedAt": "2026-10-22T06:50:00Z",
+      "basis": "Exact title webseed searches and official WebTorrent free-torrents inventory; no authorized matching torrent+HTTP byte source for owner selection found",
+      "qualitiesTested": [],
+      "audioTested": []
     }
   }
 ]

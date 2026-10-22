@@ -1,6 +1,6 @@
 // Adapted from research/followup/lift/collector.mjs. No raw payload is retained.
 export const MAX_DURATION = 86400;
-export const EVENTS = new Set(['startWatching', 'viewProgress', 'playerReady', 'endedSoon', 'ended', 'adStart', 'adStop', 'click overlay']);
+export const EVENTS = new Set(['startWatching', 'viewProgress', 'playerReady', 'endedSoon', 'ended', 'adStart', 'adStop', 'click overlay', 'changeEpisode', 'lastEpisode']);
 
 export function accept(e, frame, origin) {
   return !!frame && origin === 'https://embed.liftw.ws' && e.source === frame && e.origin === origin;
@@ -15,12 +15,15 @@ export function progress(data) {
 
 export function sanitize(data) {
   if (data === 'pong') return {event: 'pong'};
+  if (data === 'playlist hooked') return {event:'playlist hooked'};
   if (!data || typeof data !== 'object' || Array.isArray(data) || !Object.hasOwn(data, 'event') || !EVENTS.has(data.event)) return null;
   // Fixed fields only: no id/key/free text, nested objects, URLs or signatures.
   const identity = {};
   for (const key of ['id', 'season', 'episode']) {
-    if (Number.isSafeInteger(data[key]) && data[key] > 0 && data[key] < 1e9) identity[key] = data[key];
+    const value=['lastEpisode','changeEpisode'].includes(data.event) && typeof data[key]==='string' && /^\d{1,5}$/.test(data[key])?Number(data[key]):data[key];
+    if (Number.isSafeInteger(value) && value >= (key==='id'?1:0) && value < 1e9) identity[key] = value;
   }
+  if (['changeEpisode','lastEpisode'].includes(data.event) && (identity.season===undefined || identity.episode===undefined)) return null;
   if (data.event === 'viewProgress') {
     const p = progress(data);
     return p ? {event: data.event, ...p, ...identity} : null;
@@ -38,7 +41,7 @@ export function savedPosition(value) {
   if (!value || !progress({event: 'viewProgress', time: value.time, duration: value.duration})) return null;
   if (!Number.isFinite(Date.parse(value.utc))) return null;
   return {time: value.time, duration: value.duration, utc: value.utc,
-    materialId: Number.isSafeInteger(value.materialId) || ['sintel-public','kadr-control'].includes(value.materialId) ? value.materialId : 3637,
+    materialId: Number.isSafeInteger(value.materialId) || (typeof value.materialId==='string' && /^[a-z][a-z0-9-]{0,64}$/.test(value.materialId)) ? value.materialId : 3637,
     runId: typeof value.runId === 'string' && /^[a-f0-9-]{36}$/.test(value.runId) ? value.runId : null};
 }
 

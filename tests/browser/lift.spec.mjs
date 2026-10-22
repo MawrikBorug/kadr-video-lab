@@ -119,7 +119,7 @@ test('storage quota failure stays visible and JSON still contains new observatio
 });
 
 test('actual archived worker updates at same scope; only its shell cache is removed', async ({browser}) => {
-  let oldMode=true;
+  let oldMode=true,releaseLate;const lateStarted=new Promise(resolve=>{globalThis.qaLateStart=resolve;});
   const oldWorker=(await readFile('tests/fixtures/pre-lift-sw.js','utf8')).replace('__BUILD_ID__','abcdef123456');
   const mime={'.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.webmanifest':'application/manifest+json'};
   const server=http.createServer(async(req,res)=>{
@@ -129,6 +129,7 @@ test('actual archived worker updates at same scope; only its shell cache is remo
       res.writeHead(200,{'Content-Type':script?'text/javascript':'text/html','Cache-Control':'no-store'});
       res.end(script?oldWorker:'<!doctype html><h1>Прежняя оболочка — synthetic fixture</h1>');return;
     }
+    if(req.headers['x-kadr-delay']==='1'){releaseLate=()=>{if(res.writableEnded)return;res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end('{}');};globalThis.qaLateStart();return;}
     try{
       const relative=pathname.replace(/^\/kadr-video-lab\//,'')||'index.html';
       const body=await readFile(path.join('dist',relative));
@@ -147,12 +148,18 @@ test('actual archived worker updates at same scope; only its shell cache is remo
       await (await caches.open('another-app')).put('/another-project/data',new Response('KEEP'));
       await (await caches.open('kadr-lab-0123456789ab')).put('/another-project/data',new Response('KEEP'));
     });
+    const olderTab=await context.newPage();await olderTab.goto(base);
     oldMode=false;
+    await olderTab.evaluate(()=>{window.qaLateDone=false;fetch('./build-info.json',{headers:{'X-Kadr-Delay':'1'}}).then(r=>r.text()).then(()=>window.qaLateDone=true);});await lateStarted;
     await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
+    // An outstanding fetch can keep the retiring worker alive; do not wait for
+    // its replacement while deliberately withholding that response.
+    releaseLate();await olderTab.waitForFunction(()=>window.qaLateDone);
     await expect.poll(()=>page.evaluate(()=>caches.keys()),{timeout:15000}).not.toContain('kadr-lab-abcdef123456');
+    await olderTab.close();
     const keys=await page.evaluate(()=>caches.keys());expect(keys).toContain('another-app');expect(keys).toContain('kadr-lab-0123456789ab');
     expect(await page.evaluate(()=>localStorage.getItem('kadr.videoLab.v1'))).toBe('KEEP_OLD_JOURNAL');
     expect(await page.evaluate(()=>localStorage.getItem('unrelated-settings'))).toBe('KEEP');
     await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
-  }finally{await context.close();await new Promise(resolve=>server.close(resolve));}
+  }finally{releaseLate?.();delete globalThis.qaLateStart;await context.close();await new Promise(resolve=>server.close(resolve));}
 });

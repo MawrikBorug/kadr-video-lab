@@ -24,7 +24,9 @@
     <label for="connection">Подключение</label>
     <select id="connection" disabled><option value="lift">Lift · штатный iframe</option><option value="wt-webrtc">A · WebTorrent / только WebRTC, без webseed</option><option value="wt-http">B · WebTorrent / только внешний HTTP-webseed</option></select>
     <label for="material">Материал</label><select id="material" disabled><option>Загружаем список…</option></select>
+    <div id="episode-controls" hidden><label for="season">Сезон из конфигурации Lift</label><select id="season"></select><label for="episode">Эпизод из конфигурации Lift</label><select id="episode"></select></div>
     <p id="episode-summary" class="meta"></p>
+    <details><summary>Десять произведений по подключениям</summary><div class="table-scroll"><table><thead><tr><th>Материал</th><th>Lift: каталог / видео</th><th>A: WebRTC</th><th>B: webseed</th></tr></thead><tbody id="owner-matrix"></tbody></table></div><p class="meta">Наличие в Lift, полученный iframe и фактическое видео — отдельные результаты. Открытые ролики B проверяют транспорт и не заменяют этот список.</p></details>
     <p class="meta">Смена подключения или материала останавливает предыдущий источник и создаёт отдельный прогон. Автоматической очереди нет.</p>
   </section>
 
@@ -35,15 +37,13 @@
     <div class="actions"><button id="catalog-test">Проверить каталог Lift</button><button id="start" class="primary" disabled>Получить и открыть Lift</button><button id="reload" disabled>Перезапустить источник</button><button id="stop" disabled>Остановить источник</button></div>
     <p id="status" role="status" aria-live="polite">Загружаем конфигурацию стенда…</p>
     <div id="player-container"><p id="placeholder">Плеер появится после запуска</p><video id="native-video" controls playsinline preload="metadata" hidden></video></div>
-    <div class="actions"><button id="ping" disabled>Проверить ping / pong</button></div>
+    <div class="actions"><button id="ping" disabled>Проверить ping / pong</button><button id="apply-episode" hidden disabled>Передать выбранный эпизод Lift</button></div><p id="episode-status" class="meta"></p>
     <p id="bridge" class="meta">Мост ещё не проверен. Pong подтверждает связь, но не воспроизведение.</p>
     <div id="catalog-data"><p id="catalog-state"></p><p id="catalog-labels" class="meta"></p></div>
-    <div id="torrent-data" hidden><h3>Фактический транспорт</h3><pre id="transport-state"></pre>
+    <div id="torrent-data" hidden><p id="torrent-declared" class="meta"></p><h3>Фактический транспорт</h3><pre id="transport-state"></pre>
       <p class="meta">Metadata загружаются по HTTPS в обоих режимах. В A HTTP-медиабайты запрещены; в B отключены трекеры и P2P. Отдельно показаны payload байты (с повторами) и уникальные байты файла. Видео получает Range-поток через локальный service worker, без предварительной загрузки фильма в Blob.</p>
-      <details id="seeder-tools" hidden><summary>Временный браузерный сидер разработчика</summary>
-        <p>Только для синтетического контроля 60 с. Эта вкладка полностью читает разрешённый маленький файл для раздачи. Зритель получает его по WebRTC. Закрытие вкладки убирает зависимость; это не автономная раздача.</p>
-        <div class="actions"><button id="seed-start">Запустить временный сидер</button><button id="seed-stop">Остановить сидер</button></div><p id="seed-status" role="status"></p>
-      </details>
+      <p class="meta">Временный контрольный сидер запускает разработчик. Владельцу не нужно запускать сидер или сервер. При тайм-ауте нажмите подготовку ещё раз; A никогда не использует HTTP fallback.</p>
+      <label for="native-audio">Аудиодорожки, доступные браузеру</label><select id="native-audio" disabled><option>Сначала loadedmetadata</option></select><p id="native-audio-state" class="meta"></p>
     </div>
   </section>
 
@@ -59,7 +59,8 @@
     <p id="saved">Сохранённой позиции нет.</p><p id="restore"></p>
     <button id="restore-position" hidden disabled>Передать сохранённую позицию HTML-плееру</button>
     <p id="collector-state" class="meta"></p>
-    <details id="cadence-info"><summary>Почему прогресс Lift бывает редким</summary><p>В проверенной версии Venom отправка подавляется первые 60 с после старта или скачка более 4 с между timeupdate. Затем Lift задаёт порог 9 с (обычно событие раз в ~10 с целого медиавремени). Паузы, фон, перемотки и перезапуски могут снова подавить события. Это вывод по коду, не обещание частоты на телефоне.</p><p>Стенд сохраняет только пришедшие числа. Таймер меняет лишь возраст измерения. Lift умеет хранить позицию у себя; внешний подтверждённый seek-контракт не найден.</p></details>
+    <details id="cadence-info"><summary>Почему прогресс Lift бывает редким</summary><p>В проверенной версии Venom отправка подавляется первые 60 с после старта или скачка более 4 с между timeupdate. Затем Lift задаёт порог 9 с (обычно событие раз в ~10 с целого медиавремени). Фон с редкими timeupdate, перемотки и перезапуски могут снова подавить события. Это вывод по коду, не обещание частоты на телефоне.</p><p>Стенд сохраняет только пришедшие числа. Таймер меняет лишь возраст измерения. Lift умеет хранить позицию у себя; внешний подтверждённый seek-контракт не найден.</p></details>
+    <details id="progress-diagnostic"><summary>Диагностика минутного прогресса Lift</summary><p>Отметьте начало непрерывного участка, затем паузу, перемотку и перезагрузку. Таймер измеряет длительность наблюдения, не позицию видео. В каждой фазе сохраняются входящие/принятые события, отказы и поколение iframe.</p><label for="progress-phase">Фаза наблюдения</label><select id="progress-phase"><option value="continuous">Непрерывный просмотр 150 с</option><option value="pause">Пауза средствами плеера</option><option value="seek">Перемотка средствами плеера</option><option value="before_reload">Перед перезагрузкой</option><option value="after_reload">После перезагрузки</option></select><label for="visible-time">Время, видимое в плеере, с (ручное, необязательно)</label><input id="visible-time" type="number" min="0" max="86400" step="0.1"><button id="phase-mark">Записать фазу / начать 150 с</button><p id="phase-status" role="status"></p><p class="meta">Ручное время не становится viewProgress и не сохраняется как позиция для восстановления. Если видео не запустилось, отметьте отказ; ждать 150 с не требуется.</p></details>
     <p class="meta">Позиция сохраняется отдельно. Внешние pause / seek не подтверждены — используйте кнопки плеера. Fullscreen и PiP также проверяйте в плеере и отмечайте вручную.</p>
     <p class="meta">«Просмотрено» не выставляется. endedSoon и ended различаются. Покрытие уникальных участков не вычисляется; автоперехода нет.</p>
   </section>
@@ -97,17 +98,17 @@
   <section aria-labelledby="scenario-title">
     <h2 id="scenario-title">Сценарий на iPhone</h2>
     <ol>
-      <li>Lift → Sintel → Eng.Original. Смотрите 150 с без перемотки и фона. Сравните позицию, время обновления и счётчики collector с плеером; не перезапускайте его каждые 60 с.</li>
+      <li>Lift → Sintel → Eng.Original. Отметьте начало фазы диагностики и смотрите 150 с без перемотки и фона. Сравните позицию, время обновления и счётчики collector с плеером; не перезапускайте его каждые 60 с.</li>
       <li>Пауза на 10 секунд, перемотка вперёд и назад средствами плеера. Затем ping / pong.</li>
       <li>Fullscreen, PiP, уход в фон или блокировка и возврат. Запишите результат каждого действия.</li>
       <li>Кратко отключите сеть и верните её. Отметьте, возобновились ли видео и события.</li>
       <li>Запомните сохранённую позицию, перезагрузите iframe. Сравните её с новой реальной позицией. Автоматического seek стенд не делает.</li>
       <li>Создайте отдельный прогон: разрешённый ролик от начала до конца, без перемоток. Отмечайте рекламу и переходы; в конце — фактическое окончание и экспорт.</li>
-      <li>Выберите по одному произведению выборки и нажмите «Проверить каталог Lift». Это получение metadata/iframe без просмотра защищённого произведения.</li>
-      <li>В B откройте разрешённый Sintel, нажмите Play, затем перемотайте в дальний участок и восстановите сеть. Проверьте HTTP/WebRTC байты. В A — отдельный запуск; ноль пиров фиксируется как блокер, без HTTP fallback.</li>
+      <li>Выберите произведение списка: «Проверить каталог Lift» получает metadata, «Получить и открыть Lift» отдельно открывает штатный плеер. Для сериала выберите сезон и эпизод; проверьте подтверждение changeEpisode. Найденные дорожки и качества не равны испытанным.</li>
+      <li>В B по одному проверьте открытые транспортные ролики разных размеров и дорожек: Play до полной загрузки, дальний seek, восстановление сети. Они не заменяют десять желаемых произведений. Проверьте HTTP/WebRTC байты. В A — отдельный запуск; ноль пиров фиксируется как блокер, без HTTP fallback.</li>
       <li>Экспортируйте JSON и сравните прогоны. Повторите функциональную часть после добавления на экран «Домой»: это отдельный режим и прогон.</li>
     </ol>
-    <p class="meta">Manifest не доказывает установку PWA. Offline-воспроизведение не заявлено. Если сверху указан Safari, запуск не считается standalone.</p>
+    <p class="meta">Manifest не доказывает установку PWA. Offline-воспроизведение не заявлено. Запуск во вкладке браузера не считается standalone.</p>
   </section>
 </main>
 <script type="module" src="harness.mjs"></script>
