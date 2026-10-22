@@ -8,7 +8,7 @@ import {BUILD} from './build.js';
 
 const $ = id => document.getElementById(id);
 const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-const mode = standalone ? 'standalone' : 'safari';
+const mode = standalone ? 'standalone' : 'browser';
 const visitId = crypto.randomUUID();
 const observations = {
   video_audio: 'Видео и звук есть', original_track: 'Выбрана оригинальная английская дорожка',
@@ -62,7 +62,7 @@ function log(kind, details = {}) {
   persist(); renderLog();
 }
 function renderLog() {
-  $('run-info').textContent = `Прогон ${run.runId} · ${mode === 'standalone' ? 'Экран «Домой»' : 'Safari / вкладка'} · сохранено прогонов: ${journal.runs.length}`;
+  $('run-info').textContent = `Прогон ${run.runId} · ${mode === 'standalone' ? 'Экран «Домой»' : 'Вкладка браузера'} · сохранено прогонов: ${journal.runs.length}`;
   $('event-count').textContent = `${run.events.length} событий в прогоне · отброшено старых: ${run.droppedEvents} · отклонено сообщений: ${run.rejectedMessages}`;
   $('log').textContent = JSON.stringify(run.events.slice(-16), null, 2);
 }
@@ -258,7 +258,7 @@ window.addEventListener('offline', () => log('network', {online: false}));
 document.addEventListener('fullscreenchange', () => log('parent_fullscreen', {active: !!document.fullscreenElement}));
 window.addEventListener('error', () => log('parent_js_error'));
 window.addEventListener('unhandledrejection', () => log('parent_promise_error'));
-$('environment').textContent = `${standalone ? 'Экран «Домой» · standalone' : 'Safari / вкладка · не standalone'} · сеть ${navigator.onLine ? 'доступна' : 'отключена'}`;
+$('environment').textContent = `${standalone ? 'Экран «Домой» · standalone' : 'Вкладка браузера · не standalone'} · сеть ${navigator.onLine ? 'доступна' : 'отключена'}`;
 $('build-info').textContent = `Lift ${BUILD.version} · commit ${BUILD.commit.slice(0, 12)}`;
 log('harness_ready', {mode, standalone, secureContext: isSecureContext, build: BUILD}); showSaved();
 

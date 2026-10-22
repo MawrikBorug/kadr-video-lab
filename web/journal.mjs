@@ -19,7 +19,7 @@ export function readJournal(storage) {
   if (raw === null) return {schema: 2, runs: [], currentByMode: {}};
   const data = JSON.parse(raw);
   if (data?.schema !== 2 || !Array.isArray(data.runs) || !data.currentByMode
-      || data.runs.some(r => !r || !/^[a-f0-9-]{36}$/.test(r.runId) || !['safari', 'standalone'].includes(r.mode)
+      || data.runs.some(r => !r || !/^[a-f0-9-]{36}$/.test(r.runId) || !['browser', 'safari', 'standalone'].includes(r.mode)
         || !Array.isArray(r.events) || r.events.length > MAX_EVENTS || !Number.isInteger(r.generation)
         || !r.observations || !Number.isFinite(Date.parse(r.started)))) throw Error('journal_invalid');
   return data;

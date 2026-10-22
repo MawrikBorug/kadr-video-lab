@@ -87,7 +87,7 @@ test('journal survives navigation, saves lifecycle/notes, and separates standalo
   await context.addInitScript(()=>Object.defineProperty(navigator,'standalone',{value:true}));
   await page.reload(); await expect(page.locator('#environment')).toContainText('Экран «Домой»');
   const next=await journal(page); expect(next.runs).toHaveLength(2);
-  expect(next.runs.map(r=>r.mode)).toEqual(['safari','standalone']);
+  expect(next.runs.map(r=>r.mode)).toEqual(['browser','standalone']);
 });
 
 test('old journal/settings remain byte-identical and export without old credentials', async ({page}) => {
