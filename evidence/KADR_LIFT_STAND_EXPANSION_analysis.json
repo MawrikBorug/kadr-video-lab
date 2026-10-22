@@ -1,0 +1,106 @@
+{
+  "kind": "KADR_LIFT_STAND_EXPANSION_SOURCE_AND_PREPUBLICATION_CHECKS",
+  "checkedAt": "2026-10-22T06:06:10.270397+00:00",
+  "baseCommit": "f7006deb9d58898ca61da219b3d31f4bf6ef5a89",
+  "archiveBranch": "archive/pre-expansion-f7006de",
+  "historicalFilesByteIdentical": 16,
+  "phoneRun": {
+    "id": "126bdadb-c16f-4870-aa63-56a1743bd71a",
+    "basis": "Owner summary in task; raw JSON not supplied in linked folder",
+    "apiSuccesses": 6,
+    "viewProgressCount": 1,
+    "lastApproxSeconds": 60,
+    "durationApproxSeconds": 888,
+    "ended": false,
+    "mode": "browser",
+    "standalone": false
+  },
+  "liftSource": {
+    "listenerUrl": "https://embed.liftw.ws/js/listen-player.js",
+    "listenerSHA256": "7be3804629c29f34deecce975e2c37aa3876a9e5cc5f73709e6ef04b958c5826",
+    "sdk": "player-venom@0.3.6",
+    "sdkUrl": "https://cdn.jsdelivr.net/npm/player-venom@0.3.6/dist/player.js",
+    "sdkSHA256": "245a898b1a26415549c73b7ac03730a57ad7457c4bc3eaff12903b97869e57d8",
+    "nativeEmbedConfiguration": {
+      "trackProgress": 9,
+      "time": 0
+    },
+    "sourceModelOnly": {
+      "firstSuppressionMediaSeconds": 60,
+      "jumpAboveSecondsResetsSuppression": 4,
+      "laterContinuousIntegerProgressIntervalSeconds": 10,
+      "providerStorage": "vp.<id>",
+      "providerSaveDistanceStrictlyGreaterThanSeconds": 10
+    },
+    "runtimeCadenceOnPhone": "UNMEASURED: raw phone log absent; requires continuous new run",
+    "uniqueRootCause": "NOT_PROVEN from owner summary alone",
+    "parentRestoresLiftPosition": false,
+    "supportedOuterPauseSeekRestoreContract": "NOT_FOUND",
+    "internalSDKUrlParameterT": "Not applied to signed Lift URL"
+  },
+  "changes": {
+    "former30MessageGate": "Valid trusted progress bypasses it; reasons counted for rejected inputs",
+    "position": "Last UTC and generation; unknown on new load until actual input",
+    "journalKeysPreserved": [
+      "kadr.lift.journal.v1",
+      "kadr-lift-experiment-position",
+      "kadr.videoLab.v1"
+    ],
+    "newJournal": "kadr.videoLab.experiments.v1",
+    "scope": "connection/material/season/episode/run/browser-or-standalone"
+  },
+  "catalogue": "web/catalog.json: two anime, two live-action series, two films; metadata-only without established media permission",
+  "torrents": {
+    "sdk": "WebTorrent 3.0.21 browser ESM",
+    "A": "webSeeds false; only wire.type webrtc accepted",
+    "B": "tracker false; no P2P; external webtorrent.io HTTP webseed",
+    "C": "Omitted to keep transports isolated",
+    "streaming": "file.streamURL + per-run local nonce; browser service-worker Range; no full-file viewer Blob",
+    "store": "Distinct per-client OPFS/RAM; only owned session directory removed",
+    "sdkPatch": "Remove exact unconditional generic OPFS/chunks startup deletion; no network implementation edits",
+    "nativeRestore": "Explicit currentTime request; seeked/playing logged independently",
+    "publicSintel": {
+      "infoHash": "08ada5a7a6183aae1e09d831df6748d566095a10",
+      "fileSize": 129241752,
+      "duration": 888.064,
+      "codecs": "H264/AAC",
+      "httpRangeStatus": 206,
+      "acao": "*"
+    },
+    "ownControl": {
+      "infoHash": "05b36bedda4c62b73af236553176141c51912689",
+      "fileSize": 572719,
+      "codecs": "H264/2xAAC pure tones",
+      "sha256": "04a44af2d9a53eb952e95783bab8e0569b3f396c680cbf907d1314fc73a41b9d"
+    }
+  },
+  "lampac": {
+    "state": "BLOCKED_NO_QUALIFIED_EXTERNAL_INSTANCE",
+    "checkedReferences": [
+      "Supplied research VD-E01/02/03",
+      "https://lampac.dev/",
+      "https://github.com/lampac-nextgen/lampac"
+    ],
+    "missing": [
+      "Authorized external instance URL and free terms without card/manual partnership",
+      "Actual HTTPS/CORS/source/media route checks"
+    ],
+    "noServerOrAccountCreated": true
+  },
+  "tests": {
+    "nodeTests": 13,
+    "originalPrototypeAssertions": 8,
+    "browserTests": 13,
+    "lastSuite": "PASS: final 13 Node tests and 13 browser tests, public build scanner, package and diff checks",
+    "liftInputsInAutomatedBrowserTests": "SYNTHETIC, not Lift runtime events",
+    "nativeHTTPFixture": "Actual browser library and owned H264 MP4; local test only",
+    "oldJournalAndOPFSGenericChunksPreservation": "PASS"
+  },
+  "claimsNotMade": [
+    "Expanded iPhone test complete",
+    "Lift architecture selected",
+    "Ad-free whole catalogue",
+    "Autonomous public P2P proved",
+    "Watched/unique coverage calculated"
+  ]
+}

@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 
-const KEY = 'kadr.lift.journal.v1', OLD = 'kadr.videoLab.v1';
+const KEY = 'kadr.videoLab.experiments.v1', OLD = 'kadr.videoLab.v1';
 const journal = page => page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY);
 async function exported(page) {
   const pending = page.waitForEvent('download'); await page.click('#export');
@@ -28,7 +28,7 @@ test('mobile shell loads without external calls or JavaScript errors', async ({p
   page.on('pageerror', e => errors.push(e.message));
   page.on('request', r => { if (!r.url().startsWith('http://127.0.0.1:4173')) external.push(new URL(r.url()).origin); });
   await page.goto('./'); await expect(page.locator('#run-info')).toContainText('Прогон');
-  await expect(page.locator('iframe, video')).toHaveCount(0);
+  await expect(page.locator('iframe, video[src]')).toHaveCount(0);
   await expect(page.locator('#environment')).toContainText('не standalone');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(external).toEqual([]); expect(errors).toEqual([]);
@@ -93,7 +93,7 @@ test('journal survives navigation, saves lifecycle/notes, and separates standalo
 test('old journal/settings remain byte-identical and export without old credentials', async ({page}) => {
   const old=JSON.stringify({records:[{note:'old observation',url:'https://private.test/?s=PRIVATE_FIXTURE',token:'PRIVATE_FIXTURE'}],runs:[{status:'paused'}]});
   await page.addInitScript(({old,OLD})=>{localStorage.setItem(OLD,old);localStorage.setItem('unrelated-settings','KEEP');},{old,OLD});
-  await page.goto('./'); await page.locator('summary').click();
+  await page.goto('./'); await page.getByText('Данные прежнего стенда',{exact:true}).click();
   await expect(page.locator('#legacy-status')).toContainText('найден');
   const pending=page.waitForEvent('download'); await page.click('#legacy-export');
   const backup=JSON.parse(await readFile(await (await pending).path(),'utf8'));
@@ -148,11 +148,11 @@ test('actual archived worker updates at same scope; only its shell cache is remo
       await (await caches.open('kadr-lab-0123456789ab')).put('/another-project/data',new Response('KEEP'));
     });
     oldMode=false;
-    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift');
-    await expect.poll(()=>page.evaluate(()=>caches.keys())).not.toContain('kadr-lab-abcdef123456');
+    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
+    await expect.poll(()=>page.evaluate(()=>caches.keys()),{timeout:15000}).not.toContain('kadr-lab-abcdef123456');
     const keys=await page.evaluate(()=>caches.keys());expect(keys).toContain('another-app');expect(keys).toContain('kadr-lab-0123456789ab');
     expect(await page.evaluate(()=>localStorage.getItem('kadr.videoLab.v1'))).toBe('KEEP_OLD_JOURNAL');
     expect(await page.evaluate(()=>localStorage.getItem('unrelated-settings'))).toBe('KEEP');
-    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift');
+    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
   }finally{await context.close();await new Promise(resolve=>server.close(resolve));}
 });

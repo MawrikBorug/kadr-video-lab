@@ -18,7 +18,18 @@ if (!commit) {
 if (!/^[a-f0-9]{40}$/.test(commit)) throw new Error('Build commit is missing or invalid');
 const builtAt = new Date().toISOString();
 await writeFile(new URL('build.js',dist),(await readFile(new URL('build.js',dist),'utf8')).replace('__COMMIT__',commit).replace('__BUILT_AT__',builtAt));
-await writeFile(new URL('build-info.json',dist),JSON.stringify({version:'lift-1',commit,builtAt})+'\n');
+await writeFile(new URL('build-info.json',dist),JSON.stringify({version:'lift-2',commit,builtAt})+'\n');
+await mkdir(new URL('vendor/',dist),{recursive:true});
+let webtorrentBundle=await readFile(new URL('node_modules/webtorrent/dist/webtorrent.min.js',root),'utf8');
+// Pinned upstream fsa-chunk-store has an unconditional origin-wide `chunks` wipe.
+// We use SessionPieceStore instead; remove only that import-time destructive side effect.
+const unsafeCleanup='globalThis.navigator?.storage?.getDirectory&&navigator.storage.getDirectory().then(e=>{e.removeEntry("chunks",{recursive:!0}).catch(()=>{})});';
+if(webtorrentBundle.split(unsafeCleanup).length!==2)throw Error('Review WebTorrent startup-storage cleanup patch for the pinned bundle');
+webtorrentBundle=webtorrentBundle.replace(unsafeCleanup,'');
+await writeFile(new URL('vendor/webtorrent.min.js',dist),webtorrentBundle);
+await writeFile(new URL('vendor/NOTICE.txt',dist),'WebTorrent 3.0.21 official browser ESM bundle. Only the unconditional fsa-chunk-store startup deletion of generic OPFS/chunks was removed. Standard store option selects our isolated per-session chunk store. Network/BitTorrent/WebRTC implementations are unchanged. See WebTorrent.LICENSE.\n');
+await cp(new URL('node_modules/webtorrent/dist/sw.min.js',root),new URL('vendor/webtorrent.sw.min.js',dist));
+await cp(new URL('node_modules/webtorrent/LICENSE',root),new URL('vendor/WebTorrent.LICENSE',dist));
 // Only the Lift shell is deployed. Historical registries and evidence stay in Git.
 
 // Deterministic PNG application icons, no external asset requests.

@@ -9,11 +9,15 @@ async function read(path) {
 const html = await read('./');
 assert.ok(html.includes('Проверка Lift') && html.includes('id="export"'));
 const build = JSON.parse(await read('build-info.json'));
-assert.equal(build.version, 'lift-1'); assert.equal(build.commit, process.env.GITHUB_SHA);
+assert.equal(build.version, 'lift-2'); assert.equal(build.commit, process.env.GITHUB_SHA);
 const config = await read('config.js');
-assert.ok(config.includes('https://api.liftw.ws/info/3637') && !config.includes('embedUrl'));
+assert.ok(config.includes('https://api.liftw.ws/info/') && !config.includes('embedUrl'));
 const worker = await read('sw.js');
 assert.ok(worker.includes('requests.every') && !worker.includes("addEventListener('fetch'"));
+assert.ok(worker.includes("importScripts('./vendor/webtorrent.sw.min.js')"));
+assert.ok((await read('vendor/webtorrent.sw.min.js')).includes('ReadableStream'));
+const catalog=JSON.parse(await read('catalog.json'));assert.equal(catalog.filter(item=>item.group!=='control').length,6);
+assert.ok(html.includes('value="wt-webrtc"') && html.includes('value="wt-http"'));
 const manifest = JSON.parse(await read('manifest.webmanifest'));
 assert.equal(manifest.scope, './'); assert.equal(manifest.start_url, './');
 const result = `Published Lift shell verified: ${base}\nCommit: ${build.commit}\nUTC: ${new Date().toISOString()}\nPhysical iPhone and full advertising observation: pending.\n`;

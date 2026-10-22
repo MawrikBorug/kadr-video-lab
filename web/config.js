@@ -1,5 +1,6 @@
 // Static public configuration. Signed URLs exist only in the live iframe's memory.
 export const CONFIG = Object.freeze({
+  apiBase: 'https://api.liftw.ws/info/',
   endpoint: 'https://api.liftw.ws/info/3637',
   expectedOrigin: 'https://embed.liftw.ws',
   expectedPath: '/embed/movie/3637',

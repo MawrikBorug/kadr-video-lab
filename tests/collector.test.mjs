@@ -39,6 +39,18 @@ test('browser fetch uses public CORS without credentials or storage; provider er
     await assert.rejects(getFreshEmbed(), e => e.code === 'api_network_or_cors' && !e.message.includes('PRIVATE_FIXTURE'));
   } finally { globalThis.fetch = original; }
 });
+test('series metadata larger than old Sintel limit is accepted, but responses stay bounded', async () => {
+  const original=globalThis.fetch;
+  try {
+    const material={id:255,original:'Breaking Bad',year:2008,nativeType:3};
+    globalThis.fetch=async()=>new Response(JSON.stringify({id:255,origin_name:material.original,year:2008,type:3,
+      cast:'x'.repeat(220000),iframe_uri:'https://embed.liftw.ws/embed/movie/255?fixture=PRIVATE_FIXTURE'}));
+    const result=await getFreshEmbed(undefined,material);assert.equal(result.catalog.id,255);
+    assert.ok(!JSON.stringify(result.catalog).includes('PRIVATE_FIXTURE'));assert.ok(!Object.hasOwn(result.catalog,'cast'));
+    globalThis.fetch=async()=>new Response('x'.repeat(2*1024*1024+1));
+    await assert.rejects(getFreshEmbed(),e=>e.code==='api_too_large');
+  } finally {globalThis.fetch=original;}
+});
 test('bounded journal has explicit dropped count; no completion score is generated', () => {
   const run = makeRun('safari', {version:'unit'});
   for (let i=0; i<MAX_EVENTS+9; i++) append(run, {utc:new Date().toISOString(), kind:'synthetic_unit', i});

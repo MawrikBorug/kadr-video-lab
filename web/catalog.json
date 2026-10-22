@@ -1,0 +1,299 @@
+[
+  {
+    "id": 3637,
+    "title": "Синтел",
+    "original": "Sintel",
+    "year": 2010,
+    "nativeType": 2,
+    "group": "control",
+    "series": false,
+    "plannedSeason": null,
+    "plannedEpisode": null,
+    "mediaPermission": "original-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:21.997818+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "Рус. Проф. двухголосый",
+        "Рус. Люб. многоголосый",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [],
+      "plannedEpisodeFound": false,
+      "episodeProviderId": null,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 2087,
+    "title": "Тетрадь Смерти",
+    "original": "Death Note",
+    "year": 2006,
+    "nativeType": 7,
+    "group": "anime",
+    "series": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:22.390482+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "Студия СВ-Дубль",
+        "Рус. Дублированный",
+        "Eng. Dub.",
+        "Japan Original"
+      ],
+      "subtitleLabels": [
+        "Рус. полные - 1",
+        "Рус. полные - 2"
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": 37
+        }
+      ],
+      "plannedEpisodeFound": true,
+      "episodeProviderId": 694871,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 13324,
+    "title": "Стальной Алхимик: Братство",
+    "original": "Fullmetal Alchemist: Brotherhood",
+    "year": 2009,
+    "nativeType": 7,
+    "group": "anime",
+    "series": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:22.493219+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "HD",
+      "audioLabels": [
+        "Студия СВ-Дубль",
+        "Рус. Люб. многоголосый"
+      ],
+      "subtitleLabels": [],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": 64
+        }
+      ],
+      "plannedEpisodeFound": true,
+      "episodeProviderId": 143050,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 255,
+    "title": "Во все тяжкие",
+    "original": "Breaking Bad",
+    "year": 2008,
+    "nativeType": 3,
+    "group": "series",
+    "series": true,
+    "plannedSeason": 1,
+    "plannedEpisode": 1,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:22.907061+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "FHD",
+      "audioLabels": [
+        "Кубик в кубе",
+        "Рус. Дублированный",
+        "LostFilm",
+        "Fox",
+        "Ю. Сербин",
+        "Дмитрий \"Goblin\" Пучков",
+        "AMC (укр)",
+        "Eng.Original",
+        "Eng. Orig. with Commentary"
+      ],
+      "subtitleLabels": [
+        "Рус. форсированные - 1",
+        "Рус. полные - 2",
+        "Eng. full - 3"
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": 7
+        },
+        {
+          "season": 4,
+          "episodes": 13
+        },
+        {
+          "season": 2,
+          "episodes": 13
+        },
+        {
+          "season": 3,
+          "episodes": 13
+        },
+        {
+          "season": 5,
+          "episodes": 17
+        }
+      ],
+      "plannedEpisodeFound": true,
+      "episodeProviderId": 778006,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 354,
+    "title": "Очень странные дела / Странные вещи / Загадочные события",
+    "original": "Stranger Things",
+    "year": 2016,
+    "nativeType": 3,
+    "group": "series",
+    "series": true,
+    "plannedSeason": 2,
+    "plannedEpisode": 1,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:23.727435+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "4K",
+      "audioLabels": [
+        "Пифагор",
+        "LostFilm",
+        "JASKIER",
+        "NewStudio",
+        "Good People",
+        "TVShows",
+        "Так Треба Продакшн",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [
+        "Eng. full - 1",
+        "Укр. повні - 2",
+        "Укр. форсовані - 3",
+        "Рус. полные - 4",
+        "Рус. форсированные - 5"
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": 8
+        },
+        {
+          "season": 2,
+          "episodes": 9
+        },
+        {
+          "season": 3,
+          "episodes": 8
+        },
+        {
+          "season": 4,
+          "episodes": 9
+        },
+        {
+          "season": 5,
+          "episodes": 9
+        }
+      ],
+      "plannedEpisodeFound": true,
+      "episodeProviderId": 873057,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 180,
+    "title": "Интерстеллар",
+    "original": "Interstellar",
+    "year": 2014,
+    "nativeType": 1,
+    "group": "film",
+    "series": false,
+    "plannedSeason": null,
+    "plannedEpisode": null,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:23.563072+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "4K",
+      "audioLabels": [
+        "Рус. Дублированный",
+        "Омикрон",
+        "Ю. Сербин",
+        "Ю. Живов",
+        "Д. Есарев",
+        "Укр. Дубльований",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [],
+      "plannedEpisodeFound": false,
+      "episodeProviderId": null,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  },
+  {
+    "id": 474,
+    "title": "Матрица",
+    "original": "The Matrix",
+    "year": 1999,
+    "nativeType": 1,
+    "group": "film",
+    "series": false,
+    "plannedSeason": null,
+    "plannedEpisode": null,
+    "mediaPermission": "catalog-only",
+    "snapshot": {
+      "checkedAt": "2026-10-22T05:16:24.047427+00:00",
+      "found": true,
+      "iframeReceived": true,
+      "catalogQuality": "4K",
+      "audioLabels": [
+        "Рус. Дублированный",
+        "Рус. Проф. многоголосый",
+        "НТВ",
+        "Рус. Проф. двухголосый",
+        "П.Гланц и И.Королёва",
+        "Рус. Одноголосый",
+        "C. Визгунов",
+        "А. Гаврилов",
+        "Рус. Одноголосый",
+        "А. Дольский",
+        "Д. Есарев",
+        "Ю. Живов",
+        "А.Кашкин",
+        "Дмитрий \"Goblin\" Пучков",
+        "Рус. Одноголосый",
+        "Укр. Проф. багатоголосий",
+        "Eng.Original"
+      ],
+      "subtitleLabels": [],
+      "seasons": [],
+      "plannedEpisodeFound": false,
+      "episodeProviderId": null,
+      "videoNotStarted": true,
+      "evidence": "HTTP metadata and native embed configuration only; no media session"
+    }
+  }
+]

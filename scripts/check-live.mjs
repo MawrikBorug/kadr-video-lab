@@ -38,7 +38,7 @@ try{
     await page.fill('#diagnostic','Облачный Chromium: '+[...new Set(errors.map(e=>e.message))].join('; ').slice(0,250));
     await page.click('#mark');
   }
-  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.lift.journal.v1')));
+  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.videoLab.experiments.v1')));
   const download=page.waitForEvent('download');await page.click('#export');
   const exportText=await readFile(await (await download).path(),'utf8');
   if(nativeUrl && exportText.includes(nativeUrl))throw Error('Native URL leaked into JSON');
@@ -55,7 +55,7 @@ try{
     browserErrors:errors,networkFailures,exportPrivacy:'native URL and opaque query values absent',
     physicalIPhone:'NOT_RUN',fullAdSession:'NOT_RUN'};
   await page.reload({waitUntil:'networkidle'});
-  const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.lift.journal.v1')));
+  const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('kadr.videoLab.experiments.v1')));
   summary.persistence={sameRunId:before.runs.at(-1).runId===after.runs.at(-1).runId,eventsBefore:before.runs.at(-1).events.length,eventsAfter:after.runs.at(-1).events.length,
     iframeNotAutoOpened:await page.locator('iframe').count()===0};
   await writeFile(`${output}/KADR_LIFT_STAND_browser_evidence.json`,JSON.stringify(summary,null,2)+'\n');

@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 const root = path.resolve('dist');
 const base = '/kadr-video-lab/';
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.webmanifest':'application/manifest+json', '.svg':'image/svg+xml', '.png':'image/png', '.md':'text/plain; charset=utf-8' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.webmanifest':'application/manifest+json', '.svg':'image/svg+xml', '.png':'image/png', '.md':'text/plain; charset=utf-8', '.mp4':'video/mp4', '.torrent':'application/x-bittorrent' };
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://localhost');
@@ -13,7 +13,14 @@ const server = http.createServer(async (request, response) => {
     const filename = path.resolve(root, relative);
     if (!filename.startsWith(root + path.sep)) throw new Error('outside root');
     const data = await readFile(filename);
-    response.writeHead(200, { 'Content-Type': types[path.extname(filename)] || 'text/plain', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff' }); response.end(data);
+    const headers = { 'Content-Type': types[path.extname(filename)] || 'text/plain', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', 'Accept-Ranges':'bytes' };
+    const range=/^bytes=(\d+)-(\d*)$/.exec(request.headers.range || '');
+    if(range){
+      const start=Number(range[1]), end=Math.min(range[2]?Number(range[2]):data.length-1,data.length-1);
+      if(start>end || start>=data.length){response.writeHead(416,{'Content-Range':`bytes */${data.length}`});response.end();return;}
+      response.writeHead(206,{...headers,'Content-Range':`bytes ${start}-${end}/${data.length}`,'Content-Length':end-start+1});response.end(data.subarray(start,end+1));return;
+    }
+    response.writeHead(200, {...headers,'Content-Length':data.length}); response.end(data);
   } catch { response.writeHead(404, { 'Content-Type':'text/plain' }); response.end('Not found'); }
 });
 server.listen(4173, '127.0.0.1', () => console.log('Local QA: http://127.0.0.1:4173/kadr-video-lab/'));
