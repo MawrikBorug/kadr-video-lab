@@ -152,6 +152,7 @@ test('actual archived worker updates at same scope; only its shell cache is remo
     oldMode=false;
     await olderTab.evaluate(()=>{window.qaLateDone=false;fetch('./build-info.json',{headers:{'X-Kadr-Delay':'1'}}).then(r=>r.text()).then(()=>window.qaLateDone=true);});await lateStarted;
     await page.reload();await expect(page.locator('h1')).toHaveText('Поиск и проверка источников');
+    await expect(page.locator('#search-start')).toBeEnabled();
     // An outstanding fetch can keep the retiring worker alive; do not wait for
     // its replacement while deliberately withholding that response.
     releaseLate();await olderTab.waitForFunction(()=>window.qaLateDone);

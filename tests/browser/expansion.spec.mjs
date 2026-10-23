@@ -125,5 +125,6 @@ test('an open lift-2 run is preserved and a new build starts its own run',async(
  const old={runId:id,started:'2026-10-22T06:10:00Z',mode:'browser',build:{version:'lift-2',commit:'731735f55df9919202e359ecfa38bb0880e6afc8'},subject:{connection:'lift',materialId:3637,season:null,episode:null},generation:1,droppedEvents:0,rejectedMessages:0,diagnostics:{trusted:1,accepted:1,rejected:{},progressReceived:1,progressAccepted:1,arrivalGapsMs:[]},events:[{kind:'manual_observation',utc:'2026-10-22T06:10:00Z',code:'old'}],lastPosition:{time:60,duration:888,utc:'2026-10-22T06:10:00Z'},observations:{},media:{},ended:null};
  const data={schema:3,runs:[old],positions:{},currentByMode:{'browser|lift:3637:-:-':id}};
  await page.addInitScript(({KEY,data})=>localStorage.setItem(KEY,JSON.stringify(data)),{KEY,data});await page.goto('./');
+ await expect(page.locator('#run-info')).toContainText('сохранено прогонов: 2');
  const now=await journal(page);expect(now.runs).toHaveLength(2);expect(now.runs[0]).toEqual(old);expect(now.runs[1].build.version).toBe('search-1');
 });
