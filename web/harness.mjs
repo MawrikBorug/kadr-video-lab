@@ -481,6 +481,7 @@ function renderMaterialOptions() {
   $('material').value=String(material.id); $('connection').value=connection;
 }
 function renderContext() {
+  $('control-license-note').hidden=false;
   const lift=connection==='lift';
   $('material-title').textContent=material.title;
   $('material-meta').textContent=lift?`${material.original || material.providerTitle} · ${material.year} · Lift ${material.id} · тип ${material.nativeType}`:`${material.source} · ${material.size.toLocaleString('ru-RU')} байт · ${material.container} · ${material.codecs}`;
@@ -577,6 +578,15 @@ if ('serviceWorker' in navigator) {
 }
 
 searchLab = await mountSearch({video:$('native-video'),closeExisting:()=>detach(false),download,
+  showFoundPlayer:(candidate,mode)=>{
+    $('material-title').textContent=`Поиск · ${candidate.work.ru}${candidate.work.season?' · S'+candidate.work.season+'E'+candidate.work.episode:''}`;
+    $('material-meta').textContent=`Транспорт ${mode} · ${candidate.torrent.filePath || candidate.delivery.kind}`;
+    $('rights-note').textContent='Выбранный результат поиска. Найденный источник, проверенные байты и воспроизведение учитываются раздельно в панели поиска.';
+    $('control-license-note').hidden=true;$('status').textContent='Активен выбранный источник поиска; его управление и журнал — в панели «Найти и проверить».';
+    $('frame-state').textContent='Отдельный поисковый HTML-плеер';$('ready-state').textContent='См. состояние выбранного источника поиска';
+    $('play-state').textContent='События показаны в панели поиска';$('end-state').textContent='См. журнал поиска';
+    $('position').textContent='Позиция этого файла сохраняется в отдельном журнале поиска.';
+  },restoreContext:()=>{resetRuntime();renderContext();},
   openLift:async work=>{
     const item=catalog.find(m=>m.id===work.liftId);
     const ep=item?.snapshot?.seasons?.find(s=>s.season===work.season)?.episodes.find(e=>e.episode===work.episode);

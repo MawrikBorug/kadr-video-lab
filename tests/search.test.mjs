@@ -44,6 +44,7 @@ test('ambiguous packages, wrong provider index and sample/bonus never choose the
   for(const [key,name] of [['deathnote','Death Note 2017 live action'],['shrek','Shrek 2 (2004)'],['hailmary','Project Hail Mary audiobook.epub']]){
     const c=normalizeStream({infoHash:'1'.repeat(40),name},workQuery(WORKS.find(w=>w.key===key)),source,new LocatorVault());assert.equal(c.identity.match,'rejected');
   }
+  assert.equal(explicitFileAllowed({files:[]},{video:true,path:'Collection/Shrek.2.2004.mp4'},WORKS.find(w=>w.key==='shrek')),false);
 });
 test('Stremio errors distinguish invalid manifest, configure, empty, JSON parse and 429; reserve only runs when needed',async()=>{
   for(const [response,code] of [[{streams:[]},'EMPTY_STREAMS'],[{streams:[{name:'Please configure addon',url:'https://fixture.invalid/notice.mp4'}]},'CONFIGURATION_NOTICE'],[{},'STREAMS_INVALID']]){

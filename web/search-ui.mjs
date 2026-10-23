@@ -31,7 +31,7 @@ function wrongEpisode(file,work){
   const m=[...file.path.matchAll(/S(\d{1,2})[ ._\-]*E(\d{1,3})(?!\d)/gi)];
   return work.type==='series' && m.length && !m.some(x=>+x[1]===work.season && +x[2]===work.episode);
 }
-export async function mountSearch({video,closeExisting,openLift,download}) {
+export async function mountSearch({video,closeExisting,openLift,download,showFoundPlayer=()=>{},restoreContext=()=>{}}) {
   let config={mappings:[],packages:[]};
   try{const r=await fetch('./search-fixtures/packages.json');if(r.ok)config=await r.json();}catch{/* Online metadata remains available. */}
   const environment={mode:matchMedia('(display-mode: standalone)').matches || navigator.standalone===true?'standalone':'browser',
@@ -179,6 +179,7 @@ export async function mountSearch({video,closeExisting,openLift,download}) {
       }
       if(abort.signal.aborted || current!==session){await stopPlayer();return;}
       video.hidden=false;$('placeholder').hidden=true;
+      showFoundPlayer(c,mode);
       $('stop').disabled=false;
       session.run.playback={candidateId:c.candidateId,transport:mode,started:now(),positionIdentity:positionKey(c)};
       $('search-play-status').textContent='Выбранный файл готовится в HTML-плеере ниже. Нажмите Play; найденный magnet и байты не подтверждают декодирование.';
@@ -189,7 +190,7 @@ export async function mountSearch({video,closeExisting,openLift,download}) {
   async function stopPlayer(abortManual=true){
     if(abortManual)manualAbort?.abort();playerEpoch++;const old=player;player=null;
     for(const [type,handler] of videoHandlers)video.removeEventListener(type,handler);videoHandlers=[];
-    if(old){await old.stop().catch(()=>{});video.hidden=true;$('placeholder').hidden=false;current?.event('source_closed',{candidateId:selected?.candidateId});}
+    if(old){await old.stop().catch(()=>{});video.hidden=true;$('placeholder').hidden=false;restoreContext();current?.event('source_closed',{candidateId:selected?.candidateId});}
     $('search-restore').disabled=true;$('search-player-stop').disabled=true;
   }
   $('search-work').replaceChildren(...WORKS.map(w=>new Option(`${w.ru} / ${w.title}`,w.key)));options();

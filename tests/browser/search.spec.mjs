@@ -54,6 +54,7 @@ test('automatic B verifies bytes without claiming playback, then selected file p
  let run=(await journal(page)).runs.at(-1);expect(run.candidates[0].states.playback).toBe('unverified');expect(run.candidates[0].probe.webrtcBytes).toBe(0);
  await page.click('.source-result button');await page.click('#search-play-b');
  await page.waitForFunction(()=>document.querySelector('video').readyState>=1);await page.locator('video').evaluate(v=>v.play());
+ await expect(page.locator('#material-title')).toContainText('Поиск · Интерстеллар');await expect(page.locator('#control-license-note')).toBeHidden();
  await expect(page.locator('#search-play-status')).toContainText('Воспроизведение подтверждено');
  await page.locator('video').evaluate(v=>{v.currentTime=45;});await page.waitForFunction(()=>document.querySelector('video').currentTime>45 && !document.querySelector('video').seeking);
  run=(await journal(page)).runs.at(-1);expect(run.candidates[0].playerTransport.playbackBeforeFull).toBe(true);

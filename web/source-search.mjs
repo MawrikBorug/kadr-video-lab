@@ -1,5 +1,5 @@
 import {SEARCH_SOURCES,LIMITS,streamId} from './search-config.mjs';
-import {SourceError,requestBytes,safeText,safeOrigin,now,failure} from './source-utils.mjs';
+import {SourceError,requestBytes,safeText,safeOrigin,now,failure,identityContradiction} from './source-utils.mjs';
 const cooldowns=new Map();
 export const candidateKey = c => c.torrent.infoHash?`${c.torrent.infoHash}:${c.torrent.fileIdx ?? '?'}`:c.candidateId;
 export class LocatorVault {
@@ -31,9 +31,7 @@ export function normalizeStream(stream,work,source,vault,{evidenceId=crypto.rand
   if(!hash && !direct)return null; // externalUrl/resolvers/notice are not playable sources.
   const idx=Number.isInteger(stream.fileIdx) && stream.fileIdx>=0?stream.fileIdx:null;
   const filename=typeof stream.behaviorHints?.filename==='string'?stream.behaviorHints.filename:null;
-  const contradiction=work.key==='deathnote' && /\b(?:2015|2017)\b|live[ ._-]*action|игровая[ ._-]+экранизация/i.test(raw)?'Death Note live-action/year conflict':
-    work.key==='shrek' && /(?:Shrek|Шрек)[ .:_-]+(?:[234]\b|Forever\b|the[ ._-]+Third\b)/i.test(raw)?'Shrek sequel conflict':
-    work.key==='hailmary' && /audiobook|аудиокниг|\.(?:epub|fb2|mobi|pdf)\b/i.test(raw)?'Book instead of movie':null;
+  const contradiction=identityContradiction(work,raw);
   const c={schemaVersion:'0.1',candidateId:crypto.randomUUID(),dataMode,
     work:{...work,kind:work.type},provenance:{adapter:source.adapter || 'stremio',instanceId:source.id,hostLabel:source.label,
       upstreamLabels:[safeText(raw.match(/🔎\s*([^\n]+)/)?.[1] || '',180)].filter(Boolean),queriedAt,evidenceId,status:dataMode==='live'?'VERIFIED':'DOCUMENTED'},

@@ -2,6 +2,12 @@ export class SourceError extends Error {
   constructor(code,details={}) {super(code);this.name='SourceError';this.code=code;this.details=details;}
 }
 export const now = () => new Date().toISOString();
+export function identityContradiction(work,text) {
+  if(work.key==='deathnote' && /\b(?:2015|2017)\b|live[ ._-]*action|игровая[ ._-]+экранизация/i.test(text))return 'Death Note live-action/year conflict';
+  if(work.key==='shrek' && /(?:Shrek|Шрек)[ .:_-]+(?:[234]\b|Forever\b|the[ ._-]+Third\b)/i.test(text))return 'Shrek sequel conflict';
+  if(work.key==='hailmary' && /audiobook|аудиокниг|\.(?:epub|fb2|mobi|pdf)\b/i.test(text))return 'Book instead of movie';
+  return null;
+}
 export function safeText(value,max=800) {
   return String(value ?? '').replace(/(?:https?:)?\/\/[^\s<>"']+/gi,'[URL скрыт]')
     .replace(/(?:Bearer\s+|(?:token|signature|authorization|cookie|api[_-]?key|password|secret)\s*[:=]\s*)[^\s,;]+/gi,'[скрыто]').slice(0,max);

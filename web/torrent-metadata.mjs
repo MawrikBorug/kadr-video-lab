@@ -1,4 +1,4 @@
-import {SourceError} from './source-utils.mjs';
+import {SourceError,identityContradiction} from './source-utils.mjs';
 const decoder=new TextDecoder();
 const string = v => v instanceof Uint8Array?decoder.decode(v):'';
 export const videoFile = path => /\.(mp4|m4v|mkv|webm|mov|avi|ts)$/i.test(path) && !/(?:^|[\/ ._\-])(sample|bonus|trailer|extras?|ncop|nced)(?:[\/ ._\-]|$)/i.test(path);
@@ -54,6 +54,7 @@ export function resolveFile(meta,work,claimedIdx,mappings=[]) {
 }
 export function explicitFileAllowed(meta,file,work,mappings=[]) {
   if(!file?.video)return false;
+  if(identityContradiction(work,file.path))return false;
   if(work.type!=='series')return true;
   const explicit=[...file.path.matchAll(/S(\d{1,2})[ ._\-]*E(\d{1,3})(?!\d)/gi)];
   if(explicit.length && !explicit.some(m=>+m[1]===work.season && +m[2]===work.episode))return false;
