@@ -18,7 +18,7 @@ if (!commit) {
 if (!/^[a-f0-9]{40}$/.test(commit)) throw new Error('Build commit is missing or invalid');
 const builtAt = new Date().toISOString();
 await writeFile(new URL('build.js',dist),(await readFile(new URL('build.js',dist),'utf8')).replace('__COMMIT__',commit).replace('__BUILT_AT__',builtAt));
-await writeFile(new URL('build-info.json',dist),JSON.stringify({version:'lift-3',commit,builtAt})+'\n');
+await writeFile(new URL('build-info.json',dist),JSON.stringify({version:'search-1',commit,builtAt})+'\n');
 await mkdir(new URL('vendor/',dist),{recursive:true});
 let webtorrentBundle=await readFile(new URL('node_modules/webtorrent/dist/webtorrent.min.js',root),'utf8');
 // Pinned upstream fsa-chunk-store has an unconditional origin-wide `chunks` wipe.

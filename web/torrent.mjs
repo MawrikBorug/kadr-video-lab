@@ -2,6 +2,7 @@ import {TRACKERS} from './torrent-materials.js';
 import {safeDiagnostic} from './collector.mjs';
 import {SessionPieceStore} from './piece-store.mjs';
 import {transportTimeout} from './transport-diagnostics.mjs';
+import {requestBytes} from './source-utils.mjs';
 
 let library;
 export function loadWebTorrent() {
@@ -98,13 +99,12 @@ export class TorrentSession {
     };
     this.emit('torrent_metadata_requested', {materialId:this.material.id, transportPolicy:httpOnly?'HTTP only; tracker disabled':'WebRTC only; webSeeds disabled', downloadLimit:this.downloadLimit});
     this.stage('metadata','loading');this.metadataAbort=new AbortController();
-    const response = await fetch(this.material.metadata, {cache:'no-store', credentials:'omit',signal:this.metadataAbort.signal});
-    if (!response.ok) throw Error('torrent_metadata_http_' + response.status);
-    const metadata = new Uint8Array(await response.arrayBuffer());
+    const metadata = this.material.metadataBuffer || (await requestBytes(this.material.metadata,
+      {signal:this.metadataAbort.signal,ms:this.timeoutMs,max:1048576})).bytes;
     if (!this.active) return;
     if(metadata.byteLength>1048576)throw Error('torrent_metadata_too_large');
     this.emit('torrent_metadata_bytes', {bytes:metadata.byteLength, source:'HTTPS metadata, not media'});
-    this.torrent = this.client.add(metadata, {announce:httpOnly?[]:TRACKERS,
+    this.torrent = this.client.add(metadata, {announce:httpOnly?[]:TRACKERS,deselect:true,
       urlList:httpOnly && this.material.webseed?[this.material.webseed]:[], maxWebConns:2,
       store:SessionPieceStore, storeCacheSlots:4, storeOpts:{onMode:mode=>{this.state.storageMode=mode;this.emit('piece_storage_mode',{mode});}}, destroyStoreOnDestroy:true});
     const torrent = this.torrent;
@@ -133,7 +133,8 @@ export class TorrentSession {
     torrent.on('ready', () => {
       if (!this.active) return;
       if (torrent.infoHash !== this.material.infoHash) { this.error(Error('torrent_identity_mismatch')); this.stop(); return; }
-      this.file = torrent.files.find(file => file.name === this.material.filename && file.length === this.material.size);
+      this.file = Number.isInteger(this.material.fileIdx)?torrent.files[this.material.fileIdx]:torrent.files.find(file => file.name === this.material.filename && file.length === this.material.size);
+      if(this.file && (this.file.length!==this.material.size || (this.material.filePath && this.file.path!==this.material.filePath)))this.file=null;
       if (!this.file) { this.error(Error('torrent_file_identity_mismatch')); this.stop(); return; }
       // No whole-file Blob. Only the HTML media element's byte-range streams select pieces.
       torrent.deselect(0, torrent.pieces.length - 1, 0);
@@ -163,13 +164,13 @@ export class TorrentSession {
   }
   bindVideo() {
     for (const type of ['loadedmetadata','playing','pause','timeupdate','waiting','stalled','seeking','seeked','ended','error','resize']) {
-      const handler = () => {
+      const handler = event => {
         if (!this.active) return;
         if(type==='timeupdate') {
           if(performance.now()-(this.lastTimeUpdateAt || 0)<900)return;
           this.lastTimeUpdateAt=performance.now();
         }
-        const data = {event:type, time:Number.isFinite(this.video.currentTime)?this.video.currentTime:null,
+        const data = {event:type, trusted:event.isTrusted, time:Number.isFinite(this.video.currentTime)?this.video.currentTime:null,
           duration:Number.isFinite(this.video.duration)?this.video.duration:null,
           readyState:this.video.readyState,videoWidth:this.video.videoWidth,videoHeight:this.video.videoHeight, downloaded:this.file.downloaded, fileSize:this.file.length};
         Object.assign(this.state,{videoWidth:this.video.videoWidth,videoHeight:this.video.videoHeight,

@@ -7,6 +7,7 @@ import {redactLegacy} from './legacy.mjs';
 import {BUILD} from './build.js';
 import {TORRENT_MATERIALS} from './torrent-materials.js';
 import {TorrentSession} from './torrent.mjs';
+import {mountSearch} from './search-ui.mjs';
 
 const $ = id => document.getElementById(id);
 const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
@@ -25,6 +26,7 @@ try {
 let material = catalog.find(item => item.id === 3637), connection = 'lift';
 let subject = {connection, materialId:material.id, season:material.plannedSeason, episode:material.plannedEpisode};
 let torrentSession = null, switching = false, oldLift = null, diagnosticPhase=null, episodeHookTimer=null, episodeSelectionTimer=null;
+let searchLab = null;
 const observations = {
   video_audio: 'Видео и звук есть', original_track: 'Выбрана оригинальная английская дорожка',
   track_unavailable: 'Разрешённая оригинальная дорожка недоступна — опыт остановлен',
@@ -103,7 +105,8 @@ function showSaved() {
   $('restore-position').disabled = !torrentSession || !runtime.restoreBaseline;
   $('restore-position').textContent = runtime.restoreBaseline ? `Передать HTML-плееру позицию до запуска: ${runtime.restoreBaseline.time.toFixed(1)} с` : 'Позиции до запуска для восстановления нет';
 }
-async function detach() {
+async function detach(closeSearch = true) {
+  if(closeSearch)await searchLab?.stopPlayer();
   clearInterval(episodeHookTimer);episodeHookTimer=null;
   clearTimeout(episodeSelectionTimer);episodeSelectionTimer=null;
   if(diagnosticPhase){capturePhase('interrupted_by_source_change');diagnosticPhase=null;}
@@ -133,6 +136,7 @@ const errorLabels = {
   embed_origin_or_path: 'Изменился origin или путь штатного iframe. Опыт остановлен до проверки разработчиком.',
 };
 async function load(reload = false, catalogOnly = false) {
+  await searchLab?.suspendForExternalPlayer();
   if (connection !== 'lift') return loadTorrent();
   const baseline = saved;
   await detach(); resetRuntime(); runtime.restoreBaseline = baseline;
@@ -387,7 +391,7 @@ $('export').onclick = () => {
   log('export_requested');
   const environment = {mode, standalone, online: navigator.onLine, secureContext: isSecureContext,
     userAgentIncluded: $('include-ua').checked, ...($('include-ua').checked ? {userAgent: navigator.userAgent} : {})};
-  download(exportResult(journal, run, environment, saved, oldLift), `KADR_LIFT_STAND_${connection}_${mode}_${run.runId}.json`);
+  download({...exportResult(journal, run, environment, saved, oldLift),search:searchLab?.export()}, `KADR_LIFT_STAND_${connection}_${mode}_${run.runId}.json`);
 };
 $('new-run').onclick = async () => {
   try {
@@ -501,6 +505,7 @@ async function changeSelection(conn, id, season, episodeProviderId) {
   if(switching)return;
   switching=true; $('connection').disabled=true; $('material').disabled=true;
   try {
+    await searchLab?.selectionChanged();
     await detach();
 
     clearTimeout(rejectedTimer);rejectedTimer=null;rejectedPending=0;
@@ -570,3 +575,11 @@ if ('serviceWorker' in navigator) {
     .then(async registration => { await registration.update(); log('shell_migration_checked');recheckRetiredCache(); })
     .catch(() => log('shell_migration_unavailable'));
 }
+
+searchLab = await mountSearch({video:$('native-video'),closeExisting:()=>detach(false),download,
+  openLift:async work=>{
+    const item=catalog.find(m=>m.id===work.liftId);
+    const ep=item?.snapshot?.seasons?.find(s=>s.season===work.season)?.episodes.find(e=>e.episode===work.episode);
+    if(!item || (work.type==='series' && !ep)){$('status').textContent='Lift: канонический эпизод не найден в доступной карте; соседний элемент не запущен.';return;}
+    await changeSelection('lift',item.id,work.season,ep?.providerId);await load();
+  }});

@@ -6,7 +6,7 @@ if not (root / 'dist/index.html').is_file():
     raise SystemExit('Сначала выполните npm run build (в GitHub Actions это делается автоматически).')
 out = root / 'artifacts'
 out.mkdir(exist_ok=True)
-archive = out / 'kadr-video-lab-lift-3.zip'
+archive = out / 'kadr-video-lab-search-1.zip'
 folders = ['web', 'scripts', 'tests', 'docs', 'evidence', 'protocol', 'history', '.github', 'dist']
 files = ['README.md', 'package.json', 'package-lock.json', 'playwright.config.mjs', '.gitignore']
 def add(bundle,file):

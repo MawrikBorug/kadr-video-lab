@@ -1,0 +1,29 @@
+{
+  "kind": "OFFLINE_RESEARCH_FIXTURE_NOT_LIVE",
+  "observedAt": "2026-10-23T11:54Z",
+  "query": "tt22248376:1:2",
+  "streams": [
+    {
+      "name": "[TORRENT🧲] Comet 2160p",
+      "description": "📄 [FrixySubs] Sousou no Frieren - S01E02 [A-2160p BD HEVC FLAC REMUX] [Napisy PL].mkv\n📹 hevc | 🔊 FLAC\n⭐ REMUX | 🏷️ FrixySubs\n👤 0 💾 3.1 GB 🔎 DebridAccount|torbox\n🇵🇱",
+      "infoHash": "f75cb5094496a77d52e218e1b83371a55c32d853",
+      "fileIdx": 1,
+      "behaviorHints": {
+        "bingeGroup": "comet|torrent|f75cb5094496a77d52e218e1b83371a55c32d853",
+        "filename": "[FrixySubs] Sousou no Frieren - S01E02 [A-2160p BD HEVC FLAC REMUX] [Napisy PL].mkv",
+        "videoSize": 3340193569
+      }
+    },
+    {
+      "name": "[TORRENT🧲] Comet 2160p",
+      "description": "📄 葬送的芙莉莲.中配版.Frieren.Beyond.Journey's.End.S01E02.2023.2160p.WEB-DL.H265.HDR.AAC-ColorTV.mkv\n📹 hevc • HDR | 🔊 AAC\n⭐ WEB-DL | 🏷️ ColorTV\n👤 1 💾 1.7 GB 🔎 TorBox|unknown\n🇨🇳",
+      "infoHash": "858d206942c0c1121ba237ecfa9c0ffb08d00eb3",
+      "fileIdx": 4,
+      "behaviorHints": {
+        "bingeGroup": "comet|torrent|858d206942c0c1121ba237ecfa9c0ffb08d00eb3",
+        "filename": "葬送的芙莉莲.中配版.Frieren.Beyond.Journey's.End.S01E02.2023.2160p.WEB-DL.H265.HDR.AAC-ColorTV.mkv",
+        "videoSize": 1849005846
+      }
+    }
+  ]
+}

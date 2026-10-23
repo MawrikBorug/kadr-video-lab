@@ -151,7 +151,7 @@ test('actual archived worker updates at same scope; only its shell cache is remo
     const olderTab=await context.newPage();await olderTab.goto(base);
     oldMode=false;
     await olderTab.evaluate(()=>{window.qaLateDone=false;fetch('./build-info.json',{headers:{'X-Kadr-Delay':'1'}}).then(r=>r.text()).then(()=>window.qaLateDone=true);});await lateStarted;
-    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
+    await page.reload();await expect(page.locator('h1')).toHaveText('Поиск и проверка источников');
     // An outstanding fetch can keep the retiring worker alive; do not wait for
     // its replacement while deliberately withholding that response.
     releaseLate();await olderTab.waitForFunction(()=>window.qaLateDone);
@@ -160,6 +160,6 @@ test('actual archived worker updates at same scope; only its shell cache is remo
     const keys=await page.evaluate(()=>caches.keys());expect(keys).toContain('another-app');expect(keys).toContain('kadr-lab-0123456789ab');
     expect(await page.evaluate(()=>localStorage.getItem('kadr.videoLab.v1'))).toBe('KEEP_OLD_JOURNAL');
     expect(await page.evaluate(()=>localStorage.getItem('unrelated-settings'))).toBe('KEEP');
-    await page.reload();await expect(page.locator('h1')).toHaveText('Проверка Lift и WebTorrent');
+    await page.reload();await expect(page.locator('h1')).toHaveText('Поиск и проверка источников');
   }finally{releaseLate?.();delete globalThis.qaLateStart;await context.close();await new Promise(resolve=>server.close(resolve));}
 });

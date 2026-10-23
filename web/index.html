@@ -5,19 +5,46 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#102c35">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.liftw.ws https://webtorrent.io wss://tracker.openwebtorrent.com wss://tracker.webtorrent.dev wss://tracker.btorrent.xyz wss://tracker.fastcast.nz; frame-src https://embed.liftw.ws; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https: wss://tracker.openwebtorrent.com wss://tracker.webtorrent.dev wss://tracker.btorrent.xyz wss://tracker.fastcast.nz; frame-src https://embed.liftw.ws; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
-  <title>КАДР · Lift и браузерный WebTorrent</title>
+  <title>КАДР · поиск, проверка и Lift</title>
 </head>
 <body>
 <main>
-  <header><span class="eyebrow">КАДР / ВИДЕОСТЕНД</span><h1>Проверка Lift и WebTorrent</h1>
-    <p>Один видеоопыт: каталог Lift, реальные события и браузерные торрентные транспорты. Safari и экран «Домой» проверяются отдельно. Архитектура КАДРа ещё не выбрана.</p>
+  <header><span class="eyebrow">КАДР / ВИДЕОСТЕНД</span><h1>Поиск и проверка источников</h1>
+    <p>Найденный релиз, поступление данных и воспроизведение — три разных результата. Проверка Lift и WebTorrent сохранена ниже. Safari и экран «Домой» проверяются отдельно.</p>
     <p class="meta" id="environment"></p><p class="meta" id="build-info"></p>
   </header>
+
+  <section aria-labelledby="search-title">
+    <h2 id="search-title">Найти и проверить</h2>
+    <label for="search-work">Произведение · RU / оригинал</label><select id="search-work" disabled></select>
+    <div id="search-episodes"><label for="search-season">Сезон</label><select id="search-season"></select><label for="search-episode">Серия</label><select id="search-episode"><option value="1">Серия 1</option><option value="2">Серия 2</option></select></div>
+    <p id="search-identity" class="meta"></p>
+    <label for="search-quality">Качество по метке релиза</label><select id="search-quality"><option value="">Все, включая неизвестное</option></select>
+    <label for="search-language">Язык / озвучка по метке релиза</label><select id="search-language"><option value="">Все, включая неизвестное</option></select>
+    <p class="meta">Названия дорожек и 4K — сведения поставщика. Звук, кодеки и разрешение ещё не испытаны. Для этого опыта доступны первые две серии указанных сезонов; номера Lift выбираются отдельно по его каталогу.</p>
+    <div class="actions"><button id="search-start" class="primary" disabled>Найти и проверить</button><button id="search-stop" disabled>Остановить проверку</button><button id="search-next" disabled>Проверить следующие</button><button id="search-work-lift">Открыть выбранное произведение в Lift</button></div>
+    <p id="search-status" role="status" aria-live="polite">Загружаем конфигурацию поиска…</p><p id="search-limits" class="meta"></p>
+    <div id="search-hosts" class="meta"></div><p id="search-count" class="meta"></p>
+    <div id="search-results"></div><button id="search-more" hidden>Показать ещё 20</button>
+    <div id="search-selected" hidden>
+      <h3 id="search-selected-title"></h3><p id="search-file-status"></p>
+      <label for="search-file">Конкретный файл · исходный fileIdx, включая не-видео</label><select id="search-file" disabled></select>
+      <div class="actions"><button id="search-play-a">Пробный запуск A · WebRTC</button><button id="search-play-b">Запуск B · webseed</button><button id="search-play-direct" hidden>Запуск прямой ссылки</button><button id="search-lift">Открыть этот тайтл / эпизод в Lift</button></div>
+      <p id="search-play-status" role="status" aria-live="polite"></p><button id="search-player-stop" disabled>Закрыть выбранный источник</button><button id="search-restore" disabled>Восстановить сохранённую позицию этого файла</button>
+      <p class="meta">Плеер появится в общей области видео ниже. Для A HTTP-медиадоставка выключена. Для B нужны webseed той же раздачи и правильный файл. Просмотр останавливает фоновые пробы; после закрытия доступны «Проверить следующие». Позиции разных релизов не переносятся.</p>
+    </div>
+    <details><summary>Лимиты, источники и журнал поиска</summary>
+      <p>Основной: Comet · comet.feels.legal. Резерв: TorrentsDB · torrentsdb.com, при пустой выдаче, ошибке или тайм-ауте. Сторонние экземпляры без гарантии доступности и постоянной бесплатности. Серверы и платные сервисы не добавлены.</p>
+      <p>Rutor и Nyaa доступны только через собственные браузерные интерфейсы с CORS. Кнопка ниже делает отдельную ограниченную проверку. При отказе адаптер сохраняет причину; посредник не создаётся.</p>
+      <button id="search-supplements">Проверить Rutor / Nyaa</button><p id="search-supplement-status" class="meta"></p>
+      <button id="search-export">Экспорт поиска JSON</button><p id="search-storage-status" class="meta"></p><pre id="search-log"></pre>
+    </details>
+  </section>
 
   <section aria-labelledby="selection-title">
     <h2 id="selection-title">Подключение и материал</h2>
@@ -27,7 +54,7 @@
     <div id="episode-controls" hidden><label for="season">Сезон из конфигурации Lift</label><select id="season"></select><label for="episode">Эпизод из конфигурации Lift</label><select id="episode"></select></div>
     <p id="episode-summary" class="meta"></p>
     <details><summary>Десять произведений по подключениям</summary><div class="table-scroll"><table><thead><tr><th>Материал</th><th>Lift: каталог / видео</th><th>A: WebRTC</th><th>B: webseed</th></tr></thead><tbody id="owner-matrix"></tbody></table></div><p class="meta">Наличие в Lift, полученный iframe и фактическое видео — отдельные результаты. Открытые ролики B проверяют транспорт и не заменяют этот список.</p></details>
-    <p class="meta">Смена подключения или материала останавливает предыдущий источник и создаёт отдельный прогон. Автоматической очереди нет.</p>
+    <p class="meta">Смена подключения или материала останавливает предыдущий источник и создаёт отдельный прогон. Поисковая очередь находится в отдельной панели выше.</p>
   </section>
 
   <section aria-labelledby="material-title">
@@ -98,6 +125,7 @@
   <section aria-labelledby="scenario-title">
     <h2 id="scenario-title">Сценарий на iPhone</h2>
     <ol>
+      <li>В панели поиска выберите произведение и серию → «Найти и проверить». Список появится до завершения проб. Сравните «найдено», байты A/B и воспроизведение. Выберите результат и точный файл; запустите A или доступный B. При отказе — явный переход к этому же эпизоду в Lift. Сохраните «Экспорт поиска JSON».</li>
       <li>Lift → Sintel → Eng.Original. Отметьте начало фазы диагностики и смотрите 150 с без перемотки и фона. Сравните позицию, время обновления и счётчики collector с плеером; не перезапускайте его каждые 60 с.</li>
       <li>Пауза на 10 секунд, перемотка вперёд и назад средствами плеера. Затем ping / pong.</li>
       <li>Fullscreen, PiP, уход в фон или блокировка и возврат. Запишите результат каждого действия.</li>

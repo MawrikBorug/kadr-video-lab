@@ -1,0 +1,410 @@
+{
+  "kind": "OFFLINE_VERIFIED_METADATA_NOT_LIVE_SEARCH",
+  "packages": [
+    {
+      "infohash": "7496e402a9bde1d042505f297979b11830e4b19b",
+      "fixture": "search-fixtures/7496e402a9bde1d042505f297979b11830e4b19b.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:51:56.453493+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "4be23e453cdc4c2915fc93dd5a8982dc70516cd2",
+      "fixture": "search-fixtures/4be23e453cdc4c2915fc93dd5a8982dc70516cd2.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:51:56.454702+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "421745ef0aa3d690f967647237bd8342d346155d",
+      "fixture": "search-fixtures/421745ef0aa3d690f967647237bd8342d346155d.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:51:56.455253+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "c10d0e0a63e1cdfad8f754cf7cd56d0e39d90f28",
+      "fixture": "search-fixtures/c10d0e0a63e1cdfad8f754cf7cd56d0e39d90f28.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:51:56.455747+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "6fa24b56ddab185429f7982676a5473f4f7ff83d",
+      "fixture": "search-fixtures/6fa24b56ddab185429f7982676a5473f4f7ff83d.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:52:05.080895+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "11e3b4beb33b39e6526f961bc983ffec55057464",
+      "fixture": "search-fixtures/11e3b4beb33b39e6526f961bc983ffec55057464.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:52:05.173029+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "6f94a7407500e57b623c2c385be52bb1f228a896",
+      "fixture": "search-fixtures/6f94a7407500e57b623c2c385be52bb1f228a896.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:52:05.196915+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "233587375c21491552e04c10a3fd3b6fa05a47af",
+      "fixture": "search-fixtures/233587375c21491552e04c10a3fd3b6fa05a47af.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T11:52:05.864633+00:00",
+      "sourceHost": "d.rutor.info"
+    },
+    {
+      "infohash": "ac90e5631f8d78d8932c167743386762369eb545",
+      "fixture": "search-fixtures/ac90e5631f8d78d8932c167743386762369eb545.torrent",
+      "metadataOrigin": "research snapshot; exact info dictionary; trackers removed",
+      "observedAt": "2026-10-23T06:15:57.433452+00:00",
+      "sourceHost": "d.rutor.info"
+    }
+  ],
+  "mappings": [
+    {
+      "title_key": "dandadan",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "7496e402a9bde1d042505f297979b11830e4b19b",
+          "fileIdx": 19,
+          "filePath": "[Xspitfire911] Dan Da Dan [S01 2024]/[Xspitfire911] Dan Da Dan 01 [BDRip 1080p x265 FLAC].mkv",
+          "length": 1612645834,
+          "basis": "explicit S01 folder + episode in filename",
+          "evidence": "package_verified_dandadan_0__20261023T115156453423_fc970bfa",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "dandadan",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "7496e402a9bde1d042505f297979b11830e4b19b",
+          "fileIdx": 1,
+          "filePath": "[Xspitfire911] Dan Da Dan [S01 2024]/[Xspitfire911] Dan Da Dan 02 [BDRip 1080p x265 FLAC].mkv",
+          "length": 2021249209,
+          "basis": "explicit S01 folder + episode in filename",
+          "evidence": "package_verified_dandadan_0__20261023T115156453423_fc970bfa",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "dandadan",
+      "season": 2,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "ac90e5631f8d78d8932c167743386762369eb545",
+          "fileIdx": 0,
+          "filePath": "Dan Da Dan 2 - 01 [WEB-DL 1080p x264 AAC].mkv",
+          "length": 1649071216,
+          "basis": "explicit season 2 and relative episode in filename",
+          "evidence": "package_dandadan_1__20261023T061557433427_eab35a88",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "dandadan",
+      "season": 2,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "ac90e5631f8d78d8932c167743386762369eb545",
+          "fileIdx": 1,
+          "filePath": "Dan Da Dan 2 - 02 [WEB-DL 1080p x264 AAC].mkv",
+          "length": 1652749500,
+          "basis": "explicit season 2 and relative episode in filename",
+          "evidence": "package_dandadan_1__20261023T061557433427_eab35a88",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "frieren",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "421745ef0aa3d690f967647237bd8342d346155d",
+          "fileIdx": 0,
+          "filePath": "[VCB-Studio] Sousou no Frieren 01 [BDRip 1080p x265 FLAC].mkv",
+          "length": 1729321233,
+          "basis": "episode in filename + S01 packet title",
+          "evidence": "package_verified_frieren_1__20261023T115156455229_d8dd5711",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "frieren",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "421745ef0aa3d690f967647237bd8342d346155d",
+          "fileIdx": 1,
+          "filePath": "[VCB-Studio] Sousou no Frieren 02 [BDRip 1080p x265 FLAC].mkv",
+          "length": 1767781418,
+          "basis": "episode in filename + S01 packet title",
+          "evidence": "package_verified_frieren_1__20261023T115156455229_d8dd5711",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "frieren",
+      "season": 2,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "4be23e453cdc4c2915fc93dd5a8982dc70516cd2",
+          "fileIdx": 0,
+          "filePath": "Sousou no Frieren TV-2 - 01 (WEBRip 1920x1080 x264 AAC Rus + Jap).mkv",
+          "length": 1697980491,
+          "basis": "explicit TV-2/S2 and relative episode in file path",
+          "evidence": "package_verified_frieren_0__20261023T115156454657_be0d5424",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "frieren",
+      "season": 2,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "4be23e453cdc4c2915fc93dd5a8982dc70516cd2",
+          "fileIdx": 1,
+          "filePath": "Sousou no Frieren TV-2 - 02 (WEBRip 1920x1080 x264 AAC Rus + Jap).mkv",
+          "length": 1695850616,
+          "basis": "explicit TV-2/S2 and relative episode in file path",
+          "evidence": "package_verified_frieren_0__20261023T115156454657_be0d5424",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "deathnote",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "c10d0e0a63e1cdfad8f754cf7cd56d0e39d90f28",
+          "fileIdx": 27,
+          "filePath": "01. Перерождение.mkv",
+          "length": 1603283702,
+          "basis": "episode number in file path; S1 anime packet label",
+          "evidence": "package_verified_deathnote_0__20261023T115156455724_c61f04a3",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "deathnote",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "c10d0e0a63e1cdfad8f754cf7cd56d0e39d90f28",
+          "fileIdx": 1,
+          "filePath": "02. Конфронтация.mkv",
+          "length": 1499909643,
+          "basis": "episode number in file path; S1 anime packet label",
+          "evidence": "package_verified_deathnote_0__20261023T115156455724_c61f04a3",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "fallout",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "11e3b4beb33b39e6526f961bc983ffec55057464",
+          "fileIdx": 0,
+          "filePath": "Fallout.S01E01.1080p.WEB-DL.RGzsRutracker.mkv",
+          "length": 7973516290,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_fallout_1__20261023T115205172964_e250c14d",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "fallout",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "11e3b4beb33b39e6526f961bc983ffec55057464",
+          "fileIdx": 1,
+          "filePath": "Fallout.S01E02.1080p.WEB-DL.RGzsRutracker.mkv",
+          "length": 7128457999,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_fallout_1__20261023T115205172964_e250c14d",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "fallout",
+      "season": 2,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6fa24b56ddab185429f7982676a5473f4f7ff83d",
+          "fileIdx": 0,
+          "filePath": "Fallout.S02E01.720p.WEBDL.RGzsRutracker.mkv",
+          "length": 3511738875,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_fallout_0__20261023T115205080845_cafd86b3",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "fallout",
+      "season": 2,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6fa24b56ddab185429f7982676a5473f4f7ff83d",
+          "fileIdx": 1,
+          "filePath": "Fallout.S02E02.720p.WEBDL.RGzsRutracker.mkv",
+          "length": 3336856421,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_fallout_0__20261023T115205080845_cafd86b3",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "breakingbad",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6f94a7407500e57b623c2c385be52bb1f228a896",
+          "fileIdx": 4,
+          "filePath": "S01/101 Pilot -- Пилот.mkv",
+          "length": 3188148287,
+          "basis": "explicit season folder + matching SEE numeric episode prefix",
+          "evidence": "package_verified_breakingbad_0__20261023T115205196778_db89a297",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "breakingbad",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6f94a7407500e57b623c2c385be52bb1f228a896",
+          "fileIdx": 5,
+          "filePath": "S01/102 Cat's in the Bag...-- Кот уже в мешке....mkv",
+          "length": 2112167408,
+          "basis": "explicit season folder + matching SEE numeric episode prefix",
+          "evidence": "package_verified_breakingbad_0__20261023T115205196778_db89a297",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "breakingbad",
+      "season": 2,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6f94a7407500e57b623c2c385be52bb1f228a896",
+          "fileIdx": 11,
+          "filePath": "S02/201 Seven Thirty-Seven -- Семьсот тридцать семь.mkv",
+          "length": 3263879167,
+          "basis": "explicit season folder + matching SEE numeric episode prefix",
+          "evidence": "package_verified_breakingbad_0__20261023T115205196778_db89a297",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "breakingbad",
+      "season": 2,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "6f94a7407500e57b623c2c385be52bb1f228a896",
+          "fileIdx": 12,
+          "filePath": "S02/202 Grilled -- Попандос.mkv",
+          "length": 2968819543,
+          "basis": "explicit season folder + matching SEE numeric episode prefix",
+          "evidence": "package_verified_breakingbad_0__20261023T115205196778_db89a297",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "slovo",
+      "season": 1,
+      "episode": 1,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "233587375c21491552e04c10a3fd3b6fa05a47af",
+          "fileIdx": 0,
+          "filePath": "Slovo.Pacana.Krov'.Na.Asfal'te.s01e01.2023.WEB-DLRip-AVC.KPK.GF.mp4",
+          "length": 242466331,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_slovo_0__20261023T115205864512_94f16b02",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    },
+    {
+      "title_key": "slovo",
+      "season": 1,
+      "episode": 2,
+      "status": "VERIFIED_file_metadata_mapping",
+      "matches": [
+        {
+          "infohash": "233587375c21491552e04c10a3fd3b6fa05a47af",
+          "fileIdx": 2,
+          "filePath": "Slovo.Pacana.Krov'.Na.Asfal'te.s01e02.2023.WEB-DLRip-AVC.KPK.GF.mp4",
+          "length": 247257595,
+          "basis": "explicit SxxExx in file path",
+          "evidence": "package_verified_slovo_0__20261023T115205864512_94f16b02",
+          "verified_scope": "torrent metadata file naming, not decoded audiovisual identity"
+        }
+      ]
+    }
+  ]
+}
