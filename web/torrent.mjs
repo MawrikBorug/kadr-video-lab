@@ -35,7 +35,7 @@ export class TorrentSession {
     this.active = true; this.started = performance.now(); this.client = null; this.torrent = null;
     this.streamSession = crypto.randomUUID();
     this.handlers = []; this.bytes = {webrtc:0, http:0, unknown:0}; this.lastSnapshot = 0;
-    this.state = {metadataReady:false, metadataSource:'HTTPS .torrent (not media)', webRTCBytes:0, httpBytes:0,
+    this.state = {metadataReady:false, metadataSource:material.metadataBuffer?(material.metadataSource || 'Reused hash-verified metadata; no new network request'):'HTTPS .torrent (not media)', webRTCBytes:0, httpBytes:0,
       unknownBytes:0, peersWebRTC:0, webSeedConnections:0, uniqueFileBytes:0, fileSize:material.size,
       actualTransport:'none', playbackBeforeFull:null, firstPlayingMs:null, mode};
     this.state.trackerAnnounces=0;this.state.peersDiscovered=0;this.state.nativeIceCandidates=0;this.state.iceFailures=0;this.state.steps={library:'waiting',worker:'waiting',metadata:'waiting',signal:'waiting',rtc:'waiting',payload:'waiting',stream:'waiting'};
@@ -97,13 +97,13 @@ export class TorrentSession {
       }
       onRequest(request, respond);
     };
-    this.emit('torrent_metadata_requested', {materialId:this.material.id, transportPolicy:httpOnly?'HTTP only; tracker disabled':'WebRTC only; webSeeds disabled', downloadLimit:this.downloadLimit});
+    this.emit(this.material.metadataBuffer?'torrent_metadata_reused':'torrent_metadata_requested', {materialId:this.material.id, metadataSource:this.state.metadataSource, transportPolicy:httpOnly?'HTTP only; tracker disabled':'WebRTC only; webSeeds disabled', downloadLimit:this.downloadLimit});
     this.stage('metadata','loading');this.metadataAbort=new AbortController();
     const metadata = this.material.metadataBuffer || (await requestBytes(this.material.metadata,
       {signal:this.metadataAbort.signal,ms:this.timeoutMs,max:1048576})).bytes;
     if (!this.active) return;
     if(metadata.byteLength>1048576)throw Error('torrent_metadata_too_large');
-    this.emit('torrent_metadata_bytes', {bytes:metadata.byteLength, source:'HTTPS metadata, not media'});
+    this.emit('torrent_metadata_bytes', {bytes:metadata.byteLength, networkBytes:this.material.metadataBuffer?0:metadata.byteLength, source:this.state.metadataSource});
     this.torrent = this.client.add(metadata, {announce:httpOnly?[]:TRACKERS,deselect:true,
       urlList:httpOnly && this.material.webseed?[this.material.webseed]:[], maxWebConns:2,
       store:SessionPieceStore, storeCacheSlots:4, storeOpts:{onMode:mode=>{this.state.storageMode=mode;this.emit('piece_storage_mode',{mode});}}, destroyStoreOnDestroy:true});

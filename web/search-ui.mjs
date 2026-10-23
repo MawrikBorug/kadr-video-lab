@@ -159,7 +159,8 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
         const file=applyFile(c,locator.meta,config.mappings,locator);
         if(wrongEpisode(file,c.work))throw new SourceError('WRONG_EPISODE');
         if(mode==='B' && !locator.meta.webseeds.length)throw new SourceError('webseed-not-found');
-        const material={id:c.candidateId,infoHash:c.torrent.infoHash,metadataBuffer:locator.metadata,fileIdx:file.fileIdx,filePath:file.path,
+        const material={id:c.candidateId,infoHash:c.torrent.infoHash,metadataBuffer:locator.metadata,
+          metadataSource:c.metadataProvenance?`Reused ${c.metadataProvenance.dataMode} · ${c.metadataProvenance.host}`:'Reused hash-verified metadata in this search',fileIdx:file.fileIdx,filePath:file.path,
           filename:file.path.split('/').at(-1),size:file.length,container:c.claims.container || 'unknown',codecs:c.claims.videoCodec || 'unknown'};
         const transport=new TorrentSession({video,material,mode:mode==='B'?'wt-http':'wt-webrtc',downloadLimit:file.length<1048576?32768:524288,
           onEvent:(kind,data)=>{if(current!==session || playerEpoch!==epoch)return;session.event(kind,{candidateId:c.candidateId,...data});if(kind==='native_video')mediaEvent(c,data,session,epoch);},

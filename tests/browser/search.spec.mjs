@@ -58,6 +58,7 @@ test('automatic B verifies bytes without claiming playback, then selected file p
  await expect(page.locator('#search-play-status')).toContainText('Воспроизведение подтверждено');
  await page.locator('video').evaluate(v=>{v.currentTime=45;});await page.waitForFunction(()=>document.querySelector('video').currentTime>45 && !document.querySelector('video').seeking);
  run=(await journal(page)).runs.at(-1);expect(run.candidates[0].playerTransport.playbackBeforeFull).toBe(true);
+ expect(run.events.some(e=>e.kind==='torrent_metadata_reused')).toBe(true);expect(run.events.find(e=>e.kind==='torrent_metadata_bytes').networkBytes).toBe(0);
  expect(run.candidates[0].playerTransport.webRTCBytes).toBe(0);expect(run.candidates[0].playerTransport.httpBytes).toBeGreaterThan(0);
  expect(run.events.some(e=>e.kind==='media_range_request' && e.afterSeek && e.firstPieceHadNoBytes)).toBe(true);
  expect(run.queueState).toBe('paused');const uri=await page.locator('video').getAttribute('src');
