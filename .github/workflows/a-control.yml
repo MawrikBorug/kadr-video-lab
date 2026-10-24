@@ -37,3 +37,20 @@ jobs:
           path: artifacts/a-control
           if-no-files-found: error
           retention-days: 30
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - run: sudo apt-get update && sudo apt-get install -y python3-libtorrent
+      - name: One-shot metadata only, no media pieces
+        run: /usr/bin/python3 scripts/resolve-control-metadata.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: metadata-control-${{ github.run_id }}
+          path: artifacts/metadata-control
+          if-no-files-found: error
+          retention-days: 30
