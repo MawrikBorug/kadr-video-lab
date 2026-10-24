@@ -228,8 +228,14 @@ export async function startDeveloperSeeder(material, onStatus, onDiagnostic=()=>
     if (torrent.infoHash !== material.infoHash) {onStatus('ID раздачи не совпал; сидер остановлен.');client.destroy();return;}
     onDiagnostic({kind:'seed_ready',infoHash:torrent.infoHash});
     onStatus('Временный браузерный сидер готов. Вкладка должна оставаться открытой; это зависимость контролируемой пробы.');
-    torrent.on('peer',peer=>{if(peer?.on){peer.on('iceStateChange',(connection,gathering)=>onDiagnostic({kind:'seed_ice',connection,gathering}));peer.on('error',e=>onDiagnostic({kind:'seed_peer_error',code:safeDiagnostic(e.code || 'RTC_ERROR')}));}});
-    torrent.on('wire', () => onStatus('WebRTC-пир подключился к временному браузерному сидеру.'));
+    torrent.on('trackerAnnounce',()=>onDiagnostic({kind:'seed_tracker_response'}));
+    torrent.on('peer',peer=>{onDiagnostic({kind:'seed_peer_candidate'});if(peer?.on){peer.on('iceStateChange',(connection,gathering)=>onDiagnostic({kind:'seed_ice',connection,gathering}));peer.on('error',e=>onDiagnostic({kind:'seed_peer_error',code:safeDiagnostic(e.code || 'RTC_ERROR')}));}});
+    torrent.on('wire', wire => {
+      if(wire.type!=='webrtc'){wire.destroy();onDiagnostic({kind:'seed_transport_blocked'});return;}
+      onDiagnostic({kind:'seed_wire',transport:wire.type});
+      wire.on('upload',bytes=>onDiagnostic({kind:'seed_payload_sent',bytes}));
+      onStatus('WebRTC-пир подключился к временному браузерному сидеру.');
+    });
   });
   return client;
 }

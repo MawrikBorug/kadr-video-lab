@@ -41,6 +41,10 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   catch{storageOK=false;history={schema:1,runs:[],positions:{}};}
   let current=null,selected=null,player=null,manualAbort=null,supplementAbort=null,transition=false,renderTimer=null,shown=20,fileSignature='';
   let restoreBaseline=null,playerEpoch=0,videoHandlers=[];
+  // A visible card can outlive its session (including an already queued click).
+  // Check both the owner and candidate before every action and after awaits.
+  const active=(session=current,candidate=null)=>!!session && current===session && !session.cancelled &&
+    (!candidate || session.run.candidates.includes(candidate));
   const selectedWork=()=>workQuery(WORKS.find(w=>w.key===$('search-work').value),$('search-season').value,$('search-episode').value);
   function persist(run){
     if(run){const index=history.runs.findIndex(r=>r.searchId===run.searchId);const safe=safeSearchResult(run);if(index<0)history.runs.push(safe);else history.runs[index]=safe;}
@@ -66,9 +70,10 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   }
   function render(){
     if(!current)return;
-    const r=current.run;filters();
+    const session=current,r=session.run;filters();
     $('search-hosts').replaceChildren(...r.hostStates.map(s=>{const p=document.createElement('p');p.textContent=`${s.host} · ${s.phase} · ${label(s.code || s.state)}${s.httpStatus?' · HTTP '+s.httpStatus:''}${s.accepted!=null?' · кандидатов '+s.accepted:''}${s.retryAfter!=null?' · повтор не раньше '+s.retryAfter+' с':''} · ${s.elapsedMs} мс`;return p;}));
     $('search-status').textContent=`Поиск: ${r.searchState==='finished'?'завершён':r.searchState==='cancelled'?'отменён':'идёт'}. Проверка: ${{waiting:'ожидание',checking:'идёт',paused:'остановлена',stopped:'лимит времени / остановка','batch-complete':'первые кандидаты проверены','waiting-for-results':'ожидание выдачи','time-limit':'лимит времени'}[r.queueState] || r.queueState}.`;
+    if(session.cancelled)$('search-status').textContent='Поиск закрыт. Результаты сохранены для просмотра; для запуска выполните новый поиск.';
     $('search-limits').textContent=`Лимиты: ${LIMITS.candidates} кандидата, ${LIMITS.concurrency} активная проба, ${LIMITS.candidateMs/1000} с / кандидат, ${LIMITS.queueMs/1000} с / очередь; payload 16 МиБ на поиск; metadata 1 МиБ / файл, 4 МиБ / поиск; поиск 12 МиБ / ответ, 24 МиБ суммарно. Получено: поиск ${r.counters.searchBytes || 0} Б, metadata ${r.counters.metadataBytes || 0} Б, payload ${r.counters.payloadBytes || 0} Б. Новая ручная очередь получает 60 с, общий бюджет байтов не сбрасывается.`;
     const candidates=r.candidates.filter(matches);$('search-count').textContent=`Найдено уникальных источников: ${r.candidates.length}; по фильтрам: ${candidates.length}. Live · ${r.work.ru}${r.work.season?' · S'+r.work.season+'E'+r.work.episode:''}.`;
     $('search-results').replaceChildren(...candidates.slice(0,shown).map(c=>{
@@ -81,15 +86,17 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
       const file=document.createElement('p');file.textContent=c.torrent.infoHash?`infohash ${c.torrent.infoHash.slice(0,12)}… · ${c.torrent.metadataHashVerified?'metadata SHA-1 подтверждён':'metadata не подтверждены'} · ${c.states.file==='verified'?`fileIdx ${c.torrent.fileIdx} · ${c.torrent.filePath}`:'Файл серии не определён; fileIdx '+(c.torrent.fileIdx ?? '?')+' — заявление поставщика'}`:`Прямой ${c.delivery.kind}; совместимость не подтверждена`;
       const reason=document.createElement('p');reason.className='meta';reason.textContent=`A: ${label(c.states.A)}. B: ${label(c.states.B)}.${c.probe?` WebRTC ${c.probe.webrtcBytes} Б; HTTP ${c.probe.httpBytes} Б; проверено hash ${c.probe.verifiedBytes} Б.`:''}`;
       if(c.identity.match==='rejected')reason.textContent+=' Отклонён: '+c.identity.reason;
-      const b=document.createElement('button');b.textContent=c===selected?'Источник выбран':'Выбрать источник / файл';b.onclick=()=>{selected=c;fileSignature='';render();};
+      const b=document.createElement('button');b.disabled=!active(session,c);b.textContent=session.cancelled?'Поиск закрыт · найдите заново':c===selected?'Источник выбран':'Выбрать источник / файл';
+      b.onclick=()=>{if(!active(session,c))return;selected=c;fileSignature='';render();};
       article.append(source,title,status,playback,file,reason,b);return article;
     }));$('search-more').hidden=candidates.length<=shown;
     $('search-stop').disabled=!current || current.cancelled || current.queuePaused;
     $('search-next').disabled=!current || current.cancelled || !!player || !!manualAbort;
+    $('search-supplements').disabled=!active();
     $('search-log').textContent=JSON.stringify(r.events.slice(-10),null,2);renderSelected();
   }
   function renderSelected(){
-    $('search-selected').hidden=!selected;if(!selected)return;
+    $('search-selected').hidden=!selected || !active(current,selected);if(!selected || !active(current,selected))return;
     const c=selected,locator=current.vault.get(c),meta=locator?.meta;
     $('search-selected-title').textContent=c.identity.rawReleaseTitle.split('\n')[0];
     $('search-file-status').textContent=`${c.identity.reason || 'Выбор файла не проверен'}${c.metadataProvenance?' · '+c.metadataProvenance.dataMode+' · '+c.metadataProvenance.host:''}`;
@@ -106,8 +113,11 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
     $('search-player-stop').disabled=!player && !manualAbort;
   }
   async function cancel(reason){
-    supplementAbort?.abort();manualAbort?.abort();await stopPlayer();if(current)await current.cancel(reason);
-    selected=null;fileSignature='';$('search-selected').hidden=true;
+    const session=current;supplementAbort?.abort();manualAbort?.abort();
+    // cancel() invalidates the session synchronously, before teardown awaits.
+    const cancellation=session?.cancel(reason);
+    selected=null;fileSignature='';$('search-selected').hidden=true;render();
+    await stopPlayer();await cancellation;if(current===session)render();
   }
   async function begin(){
     if(transition)return;transition=true;$('search-start').disabled=true;
@@ -124,7 +134,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   }
   const positionKey=c=>[c.work.imdb,c.work.season ?? '-',c.work.episode ?? '-',c.torrent.infoHash || c.provenance.instanceId,c.torrent.fileIdx ?? c.delivery.kind].join(':');
   function mediaEvent(c,data,session,epoch){
-    if(current!==session || playerEpoch!==epoch)return;
+    if(!active(session,c) || playerEpoch!==epoch)return;
     session.event('player',{candidateId:c.candidateId,...data});
     if(data.event==='playing' && data.trusted){c.states.playback='playing-awaiting-time';c.playAnchor=data.time;}
     if(data.event==='seeking')c.playAnchor=null;
@@ -139,10 +149,11 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
     schedule();
   }
   async function play(mode){
-    if(!selected || !current || transition)return;transition=true;manualAbort=new AbortController();const abort=manualAbort;
+    if(!selected || !active(current,selected) || transition)return;transition=true;manualAbort=new AbortController();const abort=manualAbort;
     const c=selected,session=current;let epoch;
     try{
       await session.stopQueue('player-priority');await stopPlayer(false);await closeExisting();epoch=++playerEpoch;
+      if(!active(session,c) || abort.signal.aborted)return;
       c.states.playback='unverified';c.playbackEvidence=null;c.playAnchor=null;
       session.event('play_requested',{candidateId:c.candidateId,transport:mode});$('search-play-status').textContent='Подготовка выбранного файла. После подготовки нажмите Play в области видео ниже.';renderSelected();
       const locator=session.vault.get(c);if(!locator)throw new SourceError('SOURCE_EXPIRED_SEARCH_AGAIN');
@@ -151,7 +162,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
         const probe=new CandidateProbe({candidate:c,vault:session.vault,budget:session.budget,limits:LIMITS,mappings:config.mappings,packages:config.packages,
           signal:abort.signal,onChange:schedule,onEvent:(kind,details)=>session.event(kind,{candidateId:c.candidateId,...details})});await probe.run();
       }
-      if(abort.signal.aborted || current!==session)return;
+      if(abort.signal.aborted || !active(session,c))return;
       restoreBaseline=history.positions[positionKey(c)] || null;
       $('search-restore').disabled=!restoreBaseline;
       if(c.torrent.infoHash){
@@ -178,7 +189,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
         }
         player={stop:async()=>{video.pause();video.removeAttribute('src');video.load();},restore:time=>{video.currentTime=time;return true;}};video.src=locator.direct;
       }
-      if(abort.signal.aborted || current!==session){await stopPlayer();return;}
+      if(abort.signal.aborted || !active(session,c)){await stopPlayer();return;}
       video.hidden=false;$('placeholder').hidden=true;
       showFoundPlayer(c,mode);
       $('stop').disabled=false;
@@ -197,11 +208,13 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   $('search-work').replaceChildren(...WORKS.map(w=>new Option(`${w.ru} / ${w.title}`,w.key)));options();
   $('search-work').onchange=changedSelection;$('search-season').onchange=changedSelection;$('search-episode').onchange=changedSelection;
   $('search-start').onclick=begin;$('search-stop').onclick=()=>current?.stopQueue().then(schedule);
-  $('search-next').onclick=()=>current?.nextBatch().then(schedule);$('search-more').onclick=()=>{shown+=20;render();};
+  $('search-next').onclick=()=>{if(active())current.nextBatch().then(schedule);};$('search-more').onclick=()=>{shown+=20;render();};
   for(const id of ['search-quality','search-language'])$(id).onchange=()=>{if(current){current.filter=matches;current.queue();render();}};
   $('search-file').onchange=async()=>{
-    if(!selected || !current || $('search-file').value==='')return;
-    await current.stopQueue('explicit-file-selection');const locator=current.vault.get(selected),index=Number($('search-file').value),file=locator?.meta?.files[index];
+    if(!selected || !active(current,selected) || $('search-file').value==='')return;
+    const session=current,candidate=selected,index=Number($('search-file').value);await session.stopQueue('explicit-file-selection');
+    if(!active(session,candidate) || selected!==candidate)return;
+    const locator=session.vault.get(candidate),file=locator?.meta?.files[index];
     if(!file?.video || !explicitFileAllowed(locator.meta,file,selected.work,config.mappings))return;
     locator.explicitFileIdx=index;applyFile(selected,locator.meta,config.mappings,locator);selected.states.A='unverified';selected.states.B=locator.meta.webseeds.length?'unverified':'webseed-not-found';selected.states.playback='unverified';
     current.event('file_selected',{candidateId:selected.candidateId,infoHash:selected.torrent.infoHash,fileIdx:index,path:file.path,length:file.length,evidence:'explicit user path selection; audiovisual identity untested'});render();
@@ -209,16 +222,16 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   $('search-play-a').onclick=()=>play('A');$('search-play-b').onclick=()=>play('B');$('search-play-direct').onclick=()=>play('direct');
   $('search-player-stop').onclick=async()=>{await stopPlayer();$('search-play-status').textContent='Источник закрыт; журнал и позиция сохранены.';schedule();};
   $('search-restore').onclick=()=>{if(player && restoreBaseline && Number.isFinite(video.duration) && restoreBaseline.time<video.duration){current?.event('seek_restore_requested',{candidateId:selected?.candidateId,time:restoreBaseline.time});player.restore(restoreBaseline.time);}};
-  $('search-lift').onclick=async()=>{if(!selected)return;const work=selected.work;await cancel('explicit-Lift-fallback');await openLift(work);};
+  $('search-lift').onclick=async()=>{if(!selected || !active(current,selected))return;const work=selected.work;await cancel('explicit-Lift-fallback');await openLift(work);};
   $('search-work-lift').onclick=async()=>{const work=selectedWork();await cancel('explicit-Lift-fallback');await openLift(work);};
   $('search-export').onclick=()=>download({kind:'KADR_SEARCH_PROBE',exported:now(),...history},`KADR_SEARCH_PROBE_${current?.run.searchId || 'history'}.json`);
   $('search-supplements').onclick=async()=>{
-    if(!current){$('search-supplement-status').textContent='Сначала выполните основной поиск.';return;}
+    if(!active()){$('search-supplement-status').textContent='Выполните новый основной поиск.';return;}
     supplementAbort?.abort();supplementAbort=new AbortController();const session=current,signal=supplementAbort.signal,results=[];
     for(const id of ['rutor','nyaa']){
       try{
         const result=await checkSupplement(id,{signal,work:session.run.work,onBytes:n=>session.budget.count('searchBytes',n)});
-        if(current!==session || signal.aborted)return;
+        if(!active(session) || signal.aborted)return;
         const candidates=result.matches.map(item=>normalizeStream({name:item.title,infoHash:item.hash},session.run.work,{id,label:id,adapter:id},session.vault)).filter(Boolean);
         // Title-based index matches are ambiguous until the user examines identity.
         for(const c of candidates){c.identity.match='ambiguous';c.identity.reason='Title-based supplement; work/year/type not yet independently verified';}

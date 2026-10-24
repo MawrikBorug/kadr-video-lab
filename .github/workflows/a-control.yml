@@ -1,0 +1,39 @@
+name: Controlled WebRTC A
+on:
+  push:
+    branches: [work/metadata-control]
+  workflow_dispatch:
+    inputs:
+      published:
+        description: Test the actual published URL
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  owned-seeder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Real temporary seeder, BEP9, piece verification and A playback
+        run: node scripts/check-a-control.mjs
+        env:
+          CONTROL_BASE_URL: ${{ inputs.published && 'https://mawrikborug.github.io/kadr-video-lab/' || 'http://127.0.0.1:4173/kadr-video-lab/' }}
+          CONTROL_EVIDENCE_DIR: artifacts/a-control
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: controlled-A-${{ github.run_id }}
+          path: artifacts/a-control
+          if-no-files-found: error
+          retention-days: 30
