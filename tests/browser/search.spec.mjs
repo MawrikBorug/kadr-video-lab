@@ -48,6 +48,38 @@ async function ownedSearch(page){
  await routes(page,[{name:'SYNTHETIC owned control, not the queried movie',infoHash:'05b36bedda4c62b73af236553176141c51912689',fileIdx:0,sources:['https://metadata.fixture.invalid/control.torrent']}]);
  await page.goto('./');await ready(page);await page.selectOption('#search-work','interstellar');await page.click('#search-start');
 }
+test('closed results stay read-only after a legacy source switch, even for already captured callbacks',async({page})=>{
+ await ownedSearch(page);await expect.poll(async()=>((await journal(page)).runs.at(-1).candidates[0]?.states.B)).toBe('bytes-received');
+ await page.click('.source-result button');
+ await page.evaluate(()=>{window.stalePick=document.querySelector('.source-result button').onclick;window.stalePlay=document.querySelector('#search-play-a').onclick;window.staleProbe=document.querySelector('#search-reprobe').onclick;});
+ const before=(await journal(page)).runs.at(-1);
+ await page.selectOption('#connection','wt-webrtc');await expect(page.locator('#search-status')).toContainText('Поиск закрыт');
+ await expect(page.locator('.source-result button')).toBeDisabled();await expect(page.locator('#search-selected')).toBeHidden();
+ await page.evaluate(async()=>{window.stalePick();await window.stalePlay();await window.staleProbe();});
+ const closed=(await journal(page)).runs.at(-1);expect(closed.searchId).toBe(before.searchId);expect(closed.searchState).toBe('cancelled');
+ expect(closed.events.filter(e=>e.kind==='play_requested' || e.kind==='manual_probe_requested')).toHaveLength(0);
+ expect(closed.events.filter(e=>e.kind==='probe_started')).toHaveLength(before.events.filter(e=>e.kind==='probe_started').length);
+ await expect(page.locator('video')).not.toHaveAttribute('src',/./);
+ await page.click('#search-start');await expect.poll(async()=>((await journal(page)).runs.length)).toBe(2);
+ await page.evaluate(()=>window.stalePick());await expect(page.locator('#search-selected')).toBeHidden();
+ expect((await journal(page)).runs[0].candidates).toHaveLength(1);
+});
+test('local torrent import verifies magnet hash and shows the full list without starting playback',async({page})=>{
+ const hash='05b36bedda4c62b73af236553176141c51912689';let cacheRequests=0;
+ await page.route('https://itorrents.org/**',route=>{cacheRequests++;return route.abort();});
+ await routes(page,[{name:'SYNTHETIC owned magnet, no HTTPS metadata',infoHash:hash,fileIdx:17}]);
+ await page.goto('./');await ready(page);await page.selectOption('#search-work','interstellar');await page.click('#search-start');
+ await expect(page.locator('.source-result')).toHaveCount(1);await page.click('#search-stop');await page.click('.source-result button');
+ await page.locator('#search-metadata-file').setInputFiles('web/search-fixtures/ac90e5631f8d78d8932c167743386762369eb545.torrent');
+ await expect(page.locator('#search-metadata-status')).toContainText('INFOHASH_MISMATCH');
+ expect((await journal(page)).runs.at(-1).candidates[0].torrent.metadataHashVerified).toBe(false);
+ await page.locator('#search-metadata-file').setInputFiles('web/fixtures/kadr-control-60s.torrent');
+ await expect(page.locator('#search-metadata-status')).toContainText('SHA-1 совпал');await expect(page.locator('#search-file option')).toHaveCount(2);
+ const run=(await journal(page)).runs.at(-1);expect(run.candidates[0].torrent.fileIdx).toBe(0);expect(run.candidates[0].torrent.metadataHashVerified).toBe(true);
+ expect(run.candidates[0].metadataProvenance.dataMode).toBe('user-imported-metadata');expect(run.candidates[0].states.playback).toBe('unverified');
+ expect(run.events.filter(e=>e.kind==='play_requested')).toHaveLength(0);expect(cacheRequests).toBe(0);
+ await expect(page.locator('video')).not.toHaveAttribute('src',/./);
+});
 test('automatic B verifies bytes without claiming playback, then selected file plays, seeks and restores without full Blob',async({page})=>{
  test.setTimeout(60000);await ownedSearch(page);
  await expect.poll(async()=>((await journal(page)).runs.at(-1).candidates[0]?.states.B)).toBe('bytes-received');

@@ -33,13 +33,17 @@
     <div id="search-results"></div><button id="search-more" hidden>Показать ещё 20</button>
     <div id="search-selected" hidden>
       <h3 id="search-selected-title"></h3><p id="search-file-status"></p>
+      <label for="search-metadata-file">Открыть .torrent для этого magnet · до 1 МиБ</label><input id="search-metadata-file" type="file" accept=".torrent,application/x-bittorrent">
+      <p id="search-metadata-status" class="meta" role="status">Список файлов появится после проверки SHA-1 metadata. При недоступном HTTPS-источнике можно выбрать сохранённый .torrent в «Файлах».</p>
       <label for="search-file">Конкретный файл · исходный fileIdx, включая не-видео</label><select id="search-file" disabled></select>
+      <button id="search-reprobe">Проверить доставку выбранного источника · до 20 с</button>
       <div class="actions"><button id="search-play-a">Пробный запуск A · WebRTC</button><button id="search-play-b">Запуск B · webseed</button><button id="search-play-direct" hidden>Запуск прямой ссылки</button><button id="search-lift">Открыть этот тайтл / эпизод в Lift</button></div>
       <p id="search-play-status" role="status" aria-live="polite"></p><button id="search-player-stop" disabled>Закрыть выбранный источник</button><button id="search-restore" disabled>Восстановить сохранённую позицию этого файла</button>
       <p class="meta">Плеер появится в общей области видео ниже. Для A HTTP-медиадоставка выключена. Для B нужны webseed той же раздачи и правильный файл. Просмотр останавливает фоновые пробы; после закрытия доступны «Проверить следующие». Позиции разных релизов не переносятся.</p>
     </div>
     <details><summary>Лимиты, источники и журнал поиска</summary>
       <p>Основной: Comet · comet.feels.legal. Резерв: TorrentsDB · torrentsdb.com, при пустой выдаче, ошибке или тайм-ауте. Сторонние экземпляры без гарантии доступности и постоянной бесплатности. Серверы и платные сервисы не добавлены.</p>
+      <p>Metadata: собственная .torrent-ссылка результата / xs или as из magnet, точный снимок исследования при совпадении infohash, затем BEP9 через WebRTC. Недоступный itorrents.org больше не вызывается автоматически. Локальный .torrent также проверяется по полному SHA-1 info dictionary; импорт не запускает видео.</p>
       <p>Rutor и Nyaa доступны только через собственные браузерные интерфейсы с CORS. Кнопка ниже делает отдельную ограниченную проверку. При отказе адаптер сохраняет причину; посредник не создаётся.</p>
       <button id="search-supplements">Проверить Rutor / Nyaa</button><p id="search-supplement-status" class="meta"></p>
       <button id="search-export">Экспорт поиска JSON</button><p id="search-storage-status" class="meta"></p><pre id="search-log"></pre>

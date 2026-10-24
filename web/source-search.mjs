@@ -46,7 +46,12 @@ export function normalizeStream(stream,work,source,vault,{evidenceId=crypto.rand
     access:{registration:'unknown',mandatoryCost:'unknown',serverDependency:null,termsEvidence:null},
     states:{search:'found',file:'unresolved',A:'unverified',B:'unverified',direct:'unverified',playback:'unverified'}};
   const urls=[];
-  if(Array.isArray(stream.sources))for(const value of stream.sources)if(typeof value==='string' && /^https:\/\/[^\s]+\.torrent(?:\?|$)/i.test(value))urls.push(value);
+  const addURL=value=>{try{const u=new URL(value);if(u.protocol==='https:' && !u.username && !u.password && !urls.includes(u.href))urls.push(u.href);}catch{/* not a native metadata URL */}};
+  // BEP9 exact/acceptable source hints remain private runtime locators. Keep the
+  // WebTorrent magnet itself minimal so it cannot fetch xs outside our budget.
+  if(magnet){const params=new URL(magnet).searchParams;for(const key of ['xs','as'])for(const value of params.getAll(key))addURL(value);}
+  for(const value of [...(Array.isArray(stream.sources)?stream.sources:[]),stream.url])
+    if(typeof value==='string' && /^https:\/\/[^\s]+\.torrent(?:\?|$)/i.test(value))addURL(value);
   vault.put(c,{direct,filename,claimedIdx:idx,metadataURLs:urls,magnet:hash?'magnet:?xt=urn:btih:'+hash:null});return c;
 }
 export function validateManifest(manifest,work) {

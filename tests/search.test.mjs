@@ -64,6 +64,22 @@ test('Stremio errors distinguish invalid manifest, configure, empty, JSON parse 
   await adapter.primaryThenFallback(movie,{signal:new AbortController().signal,onState:()=>{},onCandidates:()=>{}},[source,{...source,id:'secondary',manifest:'https://secondary.invalid/manifest.json'}]);
   assert.equal(secondaryRequests,0);
 });
+test('native xs/as torrent hints stay in the private vault and must match the magnet before installing metadata',async()=>{
+  const bytes=new Uint8Array(await readFile('web/fixtures/kadr-control-60s.torrent')),hash='05b36bedda4c62b73af236553176141c51912689';
+  const vault=new LocatorVault(),c=normalizeStream({url:`magnet:?xt=urn:btih:${hash}&xs=${encodeURIComponent('https://fixture.invalid/native?token=CANARY_XS')}&as=${encodeURIComponent('http://insecure.invalid/a.torrent')}`},movie,source,vault);
+  assert.deepEqual(vault.get(c).metadataURLs,['https://fixture.invalid/native?token=CANARY_XS']);
+  assert.equal(vault.get(c).magnet,'magnet:?xt=urn:btih:'+hash);assert.ok(!JSON.stringify(safeSearchResult({candidates:[c]})).includes('CANARY_XS'));
+  const original=globalThis.fetch;let requests=0;
+  globalThis.fetch=async()=>{requests++;return new Response(bytes);};
+  const probe=new CandidateProbe({candidate:c,vault,budget:new SearchBudget(),signal:new AbortController().signal,onChange:()=>{}});
+  try{assert.equal((await probe.metadata()).infoHash,hash);assert.equal(requests,1);assert.equal(c.metadataProvenance.dataMode,'live-metadata');}
+  finally{await probe.close();globalThis.fetch=original;}
+  const wrong=normalizeStream({infoHash:'0'.repeat(40),sources:['https://fixture.invalid/a.torrent']},movie,source,vault);
+  globalThis.fetch=async()=>new Response(bytes);
+  const failed=new CandidateProbe({candidate:wrong,vault,budget:new SearchBudget(),signal:new AbortController().signal,onChange:()=>{}});
+  try{assert.equal(await failed.metadata(),null);assert.equal(vault.get(wrong).meta,undefined);assert.equal(wrong.torrent.metadataHashVerified,false);}
+  finally{await failed.close();globalThis.fetch=original;}
+});
 test('queue starts with first batch, deduplicates, runs exactly one probe, caps automatic count, and joins cancellation',async()=>{
   let active=0,peak=0,started=0,releases=[];
   const session=new SearchSession({work:movie,probeFactory:({signal})=>({run:async()=>{

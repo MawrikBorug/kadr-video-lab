@@ -24,12 +24,13 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      - run: google-chrome --version
       - name: Real temporary seeder, BEP9, piece verification and A playback
         run: node scripts/check-a-control.mjs
         env:
           CONTROL_BASE_URL: ${{ inputs.published && 'https://mawrikborug.github.io/kadr-video-lab/' || 'http://127.0.0.1:4173/kadr-video-lab/' }}
           CONTROL_EVIDENCE_DIR: artifacts/a-control
+          PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

@@ -4,7 +4,7 @@ import {CandidateProbe,applyFile} from './source-probe.mjs';
 import {TorrentSession} from './torrent.mjs';
 import {checkSupplement,normalizeStream} from './source-search.mjs';
 import {SourceError,failure,now,safeText} from './source-utils.mjs';
-import {explicitFileAllowed} from './torrent-metadata.mjs';
+import {explicitFileAllowed,parseMetadata} from './torrent-metadata.mjs';
 const $=id=>document.getElementById(id);
 const CODE_LABELS={NETWORK_OR_CORS:'Сеть / CORS / отказ сетевой среды; браузер не раскрывает точную причину',HTTP_ERROR:'HTTP-отказ',
   TIMEOUT:'Сетевой тайм-аут',MANIFEST_INVALID:'Неверный манифест',JSON_PARSE:'Ошибка JSON',CONFIGURATION_REQUIRED:'Нужна настройка подключения',
@@ -41,6 +41,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   catch{storageOK=false;history={schema:1,runs:[],positions:{}};}
   let current=null,selected=null,player=null,manualAbort=null,supplementAbort=null,transition=false,renderTimer=null,shown=20,fileSignature='';
   let restoreBaseline=null,playerEpoch=0,videoHandlers=[];
+  let metadataBusy=false,metadataEpoch=0;
   // A visible card can outlive its session (including an already queued click).
   // Check both the owner and candidate before every action and after awaits.
   const active=(session=current,candidate=null)=>!!session && current===session && !session.cancelled &&
@@ -84,7 +85,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
       const playback=document.createElement('p');playback.textContent=c.states.playback==='confirmed' || (c.states.playback==='ended' && c.playbackEvidence)?'Воспроизведение подтверждено на этом устройстве':'Воспроизведение не подтверждено';
       if(c.states.playback==='ended')playback.textContent+=' · получен настоящий ended';
       const file=document.createElement('p');file.textContent=c.torrent.infoHash?`infohash ${c.torrent.infoHash.slice(0,12)}… · ${c.torrent.metadataHashVerified?'metadata SHA-1 подтверждён':'metadata не подтверждены'} · ${c.states.file==='verified'?`fileIdx ${c.torrent.fileIdx} · ${c.torrent.filePath}`:'Файл серии не определён; fileIdx '+(c.torrent.fileIdx ?? '?')+' — заявление поставщика'}`:`Прямой ${c.delivery.kind}; совместимость не подтверждена`;
-      const reason=document.createElement('p');reason.className='meta';reason.textContent=`A: ${label(c.states.A)}. B: ${label(c.states.B)}.${c.probe?` WebRTC ${c.probe.webrtcBytes} Б; HTTP ${c.probe.httpBytes} Б; проверено hash ${c.probe.verifiedBytes} Б.`:''}`;
+      const reason=document.createElement('p');reason.className='meta';reason.textContent=`A: ${label(c.states.A)}. B: ${label(c.states.B)}.${c.probe?` Metadata ${c.probe.metadataBytes} Б; подключено пиров ${c.probe.connectedWires}; WebRTC ${c.probe.webrtcBytes} Б; HTTP ${c.probe.httpBytes} Б; проверено hash ${c.probe.verifiedBytes} Б.`:''}`;
       if(c.identity.match==='rejected')reason.textContent+=' Отклонён: '+c.identity.reason;
       const b=document.createElement('button');b.disabled=!active(session,c);b.textContent=session.cancelled?'Поиск закрыт · найдите заново':c===selected?'Источник выбран':'Выбрать источник / файл';
       b.onclick=()=>{if(!active(session,c))return;selected=c;fileSignature='';render();};
@@ -98,6 +99,9 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   function renderSelected(){
     $('search-selected').hidden=!selected || !active(current,selected);if(!selected || !active(current,selected))return;
     const c=selected,locator=current.vault.get(c),meta=locator?.meta;
+    $('search-metadata-file').hidden=!c.torrent.infoHash;$('search-metadata-file').disabled=metadataBusy || !!player || !!manualAbort;
+    $('search-reprobe').disabled=metadataBusy || transition || !!player || !!manualAbort;
+    $('search-metadata-status').textContent=c.metadataImportStatus || (meta?`Metadata SHA-1 совпал с magnet · файлов ${meta.files.length} · ${c.metadataProvenance?.dataMode || 'verified'}`:'Metadata пока не получены. Можно открыть .torrent из «Файлов»; совпадение с magnet проверится до выбора видео.');
     $('search-selected-title').textContent=c.identity.rawReleaseTitle.split('\n')[0];
     $('search-file-status').textContent=`${c.identity.reason || 'Выбор файла не проверен'}${c.metadataProvenance?' · '+c.metadataProvenance.dataMode+' · '+c.metadataProvenance.host:''}`;
     const sig=c.candidateId+':'+!!meta+':'+c.torrent.fileIdx;
@@ -106,14 +110,15 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
       if(meta)for(const f of meta.files){const allowed=explicitFileAllowed(meta,f,c.work,config.mappings);const o=new Option(`${f.fileIdx} · ${f.path} · ${f.length} Б${!f.video?' · не видео / sample':''}${!allowed && f.video?' · не выбранная серия':''}`,String(f.fileIdx));o.disabled=!allowed;$('search-file').add(o);}
       $('search-file').value=meta && c.torrent.fileIdx!=null?String(c.torrent.fileIdx):'';
     }
-    $('search-file').disabled=!meta || !!player || !!manualAbort;
+    $('search-file').disabled=!meta || !!player || !!manualAbort || metadataBusy;
     $('search-play-a').hidden=!c.torrent.infoHash;$('search-play-b').hidden=!c.torrent.infoHash;$('search-play-direct').hidden=!!c.torrent.infoHash;
-    $('search-play-b').disabled=!meta?.webseeds.length || c.states.file!=='verified' || transition;
-    $('search-play-a').disabled=transition;$('search-play-direct').disabled=transition;
+    $('search-play-b').disabled=!meta?.webseeds.length || c.states.file!=='verified' || transition || metadataBusy || !!manualAbort;
+    $('search-play-a').disabled=transition || metadataBusy || !!manualAbort;$('search-play-direct').disabled=transition || metadataBusy || !!manualAbort;
     $('search-player-stop').disabled=!player && !manualAbort;
   }
   async function cancel(reason){
     const session=current;supplementAbort?.abort();manualAbort?.abort();
+    metadataEpoch++;metadataBusy=false;
     // cancel() invalidates the session synchronously, before teardown awaits.
     const cancellation=session?.cancel(reason);
     selected=null;fileSignature='';$('search-selected').hidden=true;render();
@@ -149,7 +154,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
     schedule();
   }
   async function play(mode){
-    if(!selected || !active(current,selected) || transition)return;transition=true;manualAbort=new AbortController();const abort=manualAbort;
+    if(!selected || !active(current,selected) || transition || metadataBusy || manualAbort)return;transition=true;manualAbort=new AbortController();const abort=manualAbort;
     const c=selected,session=current;let epoch;
     try{
       await session.stopQueue('player-priority');await stopPlayer(false);await closeExisting();epoch=++playerEpoch;
@@ -174,9 +179,9 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
           metadataSource:c.metadataProvenance?`Reused ${c.metadataProvenance.dataMode} · ${c.metadataProvenance.host}`:'Reused hash-verified metadata in this search',fileIdx:file.fileIdx,filePath:file.path,
           filename:file.path.split('/').at(-1),size:file.length,container:c.claims.container || 'unknown',codecs:c.claims.videoCodec || 'unknown'};
         const transport=new TorrentSession({video,material,mode:mode==='B'?'wt-http':'wt-webrtc',downloadLimit:file.length<1048576?32768:524288,
-          onEvent:(kind,data)=>{if(current!==session || playerEpoch!==epoch)return;session.event(kind,{candidateId:c.candidateId,...data});if(kind==='native_video')mediaEvent(c,data,session,epoch);},
-          onStats:stats=>{if(current!==session || playerEpoch!==epoch)return;c.playerTransport=stats;schedule();},
-          onError:reason=>{if(current!==session || playerEpoch!==epoch)return;$('search-play-status').textContent=safeText(reason);session.event('player_failure',{candidateId:c.candidateId,reason:safeText(reason)});}});
+          onEvent:(kind,data)=>{if(!active(session,c) || playerEpoch!==epoch)return;session.event(kind,{candidateId:c.candidateId,...data});if(kind==='native_video')mediaEvent(c,data,session,epoch);},
+          onStats:stats=>{if(!active(session,c) || playerEpoch!==epoch)return;c.playerTransport=stats;schedule();},
+          onError:reason=>{if(!active(session,c) || playerEpoch!==epoch)return;$('search-play-status').textContent=safeText(reason);session.event('player_failure',{candidateId:c.candidateId,reason:safeText(reason)});}});
         player=transport;await transport.start();
       }else{
         if(new URL(locator.direct).protocol!=='https:')throw new SourceError('DIRECT_INSECURE_HTTP');
@@ -218,6 +223,38 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
     if(!file?.video || !explicitFileAllowed(locator.meta,file,selected.work,config.mappings))return;
     locator.explicitFileIdx=index;applyFile(selected,locator.meta,config.mappings,locator);selected.states.A='unverified';selected.states.B=locator.meta.webseeds.length?'unverified':'webseed-not-found';selected.states.playback='unverified';
     current.event('file_selected',{candidateId:selected.candidateId,infoHash:selected.torrent.infoHash,fileIdx:index,path:file.path,length:file.length,evidence:'explicit user path selection; audiovisual identity untested'});render();
+  };
+  $('search-metadata-file').onchange=async()=>{
+    const session=current,c=selected,input=$('search-metadata-file'),file=input.files?.[0];input.value='';
+    if(!file || !c || !active(session,c) || player || manualAbort || metadataBusy)return;
+    const epoch=++metadataEpoch;metadataBusy=true;
+    try{
+      if(file.size>LIMITS.metadataBytes)throw new SourceError('METADATA_SIZE_LIMIT');
+      await session.stopQueue('explicit-metadata-import');
+      if(!active(session,c) || selected!==c || epoch!==metadataEpoch)return;
+      session.budget.count('metadataBytes',file.size);
+      const bytes=new Uint8Array(await file.arrayBuffer()),meta=await parseMetadata(bytes,c.torrent.infoHash,{maxBytes:LIMITS.metadataBytes,maxFiles:LIMITS.maxFiles});
+      if(!active(session,c) || selected!==c || epoch!==metadataEpoch)return;
+      const locator=session.vault.get(c);Object.assign(locator,{metadata:bytes,meta});
+      c.metadataProvenance={host:'local .torrent import',dataMode:'user-imported-metadata',checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length};
+      session.metadataCache.set(meta.infoHash,{metadata:bytes,meta});
+      try{applyFile(c,meta,config.mappings,locator);}catch(e){if(e.code!=='FILE_UNRESOLVED')throw e;}
+      c.metadataImportStatus=`Metadata SHA-1 совпал с magnet · файлов ${meta.files.length}. ${c.states.file==='verified'?'Файл определён.':'Выберите точный файл из полного списка.'} Доставка и воспроизведение ещё не подтверждены.`;
+      c.states.A='unverified';c.states.B=meta.webseeds.length?'unverified':'webseed-not-found';c.states.playback='unverified';
+      session.event('metadata_import_verified',{candidateId:c.candidateId,...c.metadataProvenance,fileCount:meta.files.length});
+    }catch(e){if(active(session,c) && epoch===metadataEpoch){c.metadataImportStatus=`.torrent не принят: ${label(failure(e).code)}.`;session.event('metadata_import_failed',{candidateId:c.candidateId,...failure(e)});}}
+    finally{if(epoch===metadataEpoch)metadataBusy=false;render();}
+  };
+  $('search-reprobe').onclick=async()=>{
+    const session=current,c=selected;if(!c || !active(session,c) || player || manualAbort || transition || metadataBusy)return;
+    const abort=manualAbort=new AbortController();
+    try{
+      await session.stopQueue('explicit-selected-probe');if(!active(session,c) || abort.signal.aborted)return;
+      session.event('manual_probe_requested',{candidateId:c.candidateId});
+      const probe=new CandidateProbe({candidate:c,vault:session.vault,budget:session.budget,limits:LIMITS,mappings:config.mappings,packages:config.packages,metadataCache:session.metadataCache,
+        signal:abort.signal,onChange:schedule,onEvent:(kind,details)=>session.event(kind,{candidateId:c.candidateId,...details})});
+      await probe.run();
+    }finally{if(manualAbort===abort)manualAbort=null;render();}
   };
   $('search-play-a').onclick=()=>play('A');$('search-play-b').onclick=()=>play('B');$('search-play-direct').onclick=()=>play('direct');
   $('search-player-stop').onclick=async()=>{await stopPlayer();$('search-play-status').textContent='Источник закрыт; журнал и позиция сохранены.';schedule();};

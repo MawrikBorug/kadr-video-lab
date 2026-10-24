@@ -37,9 +37,8 @@ export class CandidateProbe {
     const cached=this.metadataCache?.get(c.torrent.infoHash);
     if(cached){Object.assign(locator,cached);this.emit('metadata_reused',{infoHash:c.torrent.infoHash,source:'same search; hash-verified metadata'});return locator.meta;}
     const known=this.packages.find(p=>p.infohash===c.torrent.infoHash);
-    const urls=known?[{url:known.fixture,host:'same-origin research snapshot',mode:'offline-metadata-verified-hash'}]:
-      [...locator.metadataURLs.slice(0,1).map(url=>({url,host:safeOrigin(url),mode:'live-metadata'})),
-        {url:`https://itorrents.org/torrent/${c.torrent.infoHash.toUpperCase()}.torrent`,host:'itorrents.org (metadata cache)',mode:'live-metadata'}];
+    const urls=[...locator.metadataURLs.slice(0,1).map(url=>({url,host:safeOrigin(url),mode:'live-metadata'})),
+      ...(known?[{url:known.fixture,host:'same-origin research snapshot',mode:'offline-metadata-verified-hash'}]:[])];
     for(const source of urls){
       try {
         this.emit('metadata_requested',{host:source.host,dataMode:source.mode,infoHash:c.torrent.infoHash});
@@ -48,11 +47,13 @@ export class CandidateProbe {
         if(this.signal.aborted)throw new SourceError('CANCELLED');
         locator.metadata=bytes;locator.meta=meta;
         this.metadataCache?.set(c.torrent.infoHash,{metadata:bytes,meta});
-        c.metadataProvenance={host:source.host,dataMode:source.mode,checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length};
+        c.metadataProvenance={host:source.host,dataMode:source.mode,checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length,
+          ...(known?.retrievedAt && source.mode!=='live-metadata'?{snapshotRetrievedAt:known.retrievedAt}:{})};
         this.emit('metadata_verified',{...c.metadataProvenance,fileCount:meta.files.length});return meta;
       }catch(e){this.emit('metadata_failure',{host:source.host,...failure(e)});if(this.signal.aborted || /BUDGET|SIZE_LIMIT/.test(e.code))throw e;}
     }
-    return null; // A can still obtain BEP9 metadata over a compatible WebRTC peer.
+    this.emit('metadata_deferred',{code:'BEP9_OR_LOCAL_TORRENT_REQUIRED',infoHash:c.torrent.infoHash});
+    return null; // No working native HTTPS source: try BEP9, or explicit local import.
   }
   async run() {
     const c=this.candidate;c.states.transport='checking';this.change();this.emit('probe_started',{limits:this.limits});
