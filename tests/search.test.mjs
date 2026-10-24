@@ -46,6 +46,13 @@ test('ambiguous packages, wrong provider index and sample/bonus never choose the
   }
   assert.equal(explicitFileAllowed({files:[]},{video:true,path:'Collection/Shrek.2.2004.mp4'},WORKS.find(w=>w.key==='shrek')),false);
 });
+test('fresh native Nyaa torrent snapshot retains all twelve files and independently resolves S01E02',async()=>{
+  const config=JSON.parse(await readFile('web/search-fixtures/metadata-sources.json','utf8')),p=config.packages[0];
+  const meta=await parseMetadata(new Uint8Array(await readFile('web/'+p.fixture)),p.infohash);
+  assert.equal(meta.files.length,12);assert.equal(meta.files[1].length,1682464444);
+  assert.equal(resolveFile(meta,workQuery(WORKS[0],1,2),99).index,1);
+  assert.equal(meta.webseeds.length,0);assert.equal(p.dataMode,'developer-metadata-snapshot');
+});
 test('Stremio errors distinguish invalid manifest, configure, empty, JSON parse and 429; reserve only runs when needed',async()=>{
   for(const [response,code] of [[{streams:[]},'EMPTY_STREAMS'],[{streams:[{name:'Please configure addon',url:'https://fixture.invalid/notice.mp4'}]},'CONFIGURATION_NOTICE'],[{},'STREAMS_INVALID']]){
     const states=[],vault=new LocatorVault(),adapter=new SearchAdapter({vault,fetchBytes:async url=>wrap(url.includes('manifest')?manifest:response)});

@@ -9,7 +9,7 @@ async function read(path) {
 const html = await read('./');
 assert.ok(html.includes('Проверка Lift') && html.includes('id="export"'));
 const build = JSON.parse(await read('build-info.json'));
-assert.equal(build.version, 'search-1'); assert.equal(build.commit, process.env.GITHUB_SHA);
+assert.equal(build.version, 'search-2'); assert.equal(build.commit, process.env.GITHUB_SHA);
 const config = await read('config.js');
 assert.ok(config.includes('https://api.liftw.ws/info/') && !config.includes('embedUrl'));
 const worker = await read('sw.js');

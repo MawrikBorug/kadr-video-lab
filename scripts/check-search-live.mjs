@@ -20,7 +20,7 @@ const waitLegacy=()=>page.waitForFunction(()=>!document.querySelector('#connecti
 try{
  await page.goto(base,{waitUntil:'networkidle',timeout:30000});await page.waitForFunction(()=>!document.querySelector('#search-start').disabled);
  const build=await page.evaluate(async()=>await(await fetch('./build-info.json',{cache:'no-store'})).json());
- if(build.version!=='search-1' || (process.env.GITHUB_SHA && build.commit!==process.env.GITHUB_SHA))throw Error('wrong_build');
+ if(build.version!=='search-2' || (process.env.GITHUB_SHA && build.commit!==process.env.GITHUB_SHA))throw Error('wrong_build');
  await save('build',{build,base,utc:new Date().toISOString(),scope:'Actual app; managed Chromium, not iPhone Safari/PWA'});console.log('Build',build.version,build.commit);
  const works=await page.evaluate(async()=>{const {WORKS}=await import('./search-config.mjs');return WORKS;});
  const matrix=[];

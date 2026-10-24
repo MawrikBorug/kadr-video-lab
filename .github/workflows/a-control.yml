@@ -8,6 +8,10 @@ on:
         description: Test the actual published URL
         type: boolean
         default: false
+      metadata:
+        description: Repeat the one-shot native metadata diagnostic
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -31,6 +35,13 @@ jobs:
           CONTROL_BASE_URL: ${{ inputs.published && 'https://mawrikborug.github.io/kadr-video-lab/' || 'http://127.0.0.1:4173/kadr-video-lab/' }}
           CONTROL_EVIDENCE_DIR: artifacts/a-control
           PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
+          CONTROL_HOLD_MS: ${{ inputs.published && '180000' || '0' }}
+      - name: Recheck actual found releases and closed search actions
+        run: node scripts/check-followup-live.mjs
+        env:
+          CONTROL_BASE_URL: ${{ inputs.published && 'https://mawrikborug.github.io/kadr-video-lab/' || 'http://127.0.0.1:4173/kadr-video-lab/' }}
+          FOLLOWUP_EVIDENCE_DIR: artifacts/a-control/found-delivery
+          PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -39,6 +50,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   metadata:
+    if: github.event_name == 'workflow_dispatch' && inputs.metadata
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "Developer-retrieved metadata snapshots; not live swarm or playback evidence",
+  "packages": [
+    {
+      "infohash": "f288db0e01560e7989b105a494a1d8e3674faaa8",
+      "fixture": "search-fixtures/f288db0e01560e7989b105a494a1d8e3674faaa8.torrent",
+      "dataMode": "developer-metadata-snapshot",
+      "retrievedAt": "2026-10-24T00:15:36.324372+00:00",
+      "source": "https://nyaa.si/download/1955560.torrent",
+      "fullFiles": 12,
+      "originalWebseeds": 0
+    }
+  ],
+  "mappings": []
+}

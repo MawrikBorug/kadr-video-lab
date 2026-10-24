@@ -2,7 +2,7 @@
 Native cache GETs first, then bounded BEP9 in upload-only/default-don't-download mode.
 Not an app server, persistent service, webseed or browser delivery claim.
 """
-import hashlib, json, os, pathlib, tempfile, time, urllib.request
+import hashlib, json, pathlib, re, tempfile, time, urllib.request
 import libtorrent as lt
 OUT=pathlib.Path('artifacts/metadata-control');OUT.mkdir(parents=True,exist_ok=True)
 HASHES=['f288db0e01560e7989b105a494a1d8e3674faaa8','7eebe91290da5dc0e209296e654a71d0aa8d73e2','13978ae18c7b67fba9ee4ea2863d832943c955c2']
@@ -19,12 +19,19 @@ def accept(raw,expected,method):
     return {'infoHash':actual,'hashVerified':True,'method':method,'metadataBytes':len(clean),'files':[{'fileIdx':i,'path':fs.file_path(i),'length':fs.file_size(i)} for i in range(fs.num_files())]}
 for infohash in HASHES:
     row={'infoHash':infohash,'attempts':[],'videoPayloadBytes':0};rows.append(row)
+    if infohash==HASHES[0]:
+        try:
+            with urllib.request.urlopen('https://nyaa.si/?q='+infohash,timeout=10) as r: html=r.read(CAP).decode()
+            path=re.search(r'href="(/download/[0-9]+\.torrent)"',html).group(1)
+            with urllib.request.urlopen('https://nyaa.si'+path,timeout=10) as r: raw=r.read(CAP+1)
+            row.update(accept(raw,infohash,'native HTTPS Nyaa '+path));continue
+        except Exception as e: row['attempts'].append({'host':'nyaa.si','error':type(e).__name__})
     for host,url in [('itorrents.net',f'https://itorrents.net/torrent/{infohash.upper()}.torrent'),('itorrents.org',f'https://itorrents.org/torrent/{infohash.upper()}.torrent'),('torrage.info',f'https://torrage.info/torrent.php?h={infohash}'),('btcache.me',f'https://btcache.me/torrent/{infohash.upper()}')]:
         try:
             with urllib.request.urlopen(url,timeout=8) as r:
                 raw=r.read(CAP+1);row['attempts'].append({'host':host,'status':r.status,'bytes':len(raw),'acao':r.headers.get('access-control-allow-origin')})
             row.update(accept(raw,infohash,'native HTTPS '+host));break
-        except Exception as e: row['attempts'].append({'host':host,'error':type(e).__name__})
+        except Exception as e: row['attempts'].append({'host':host,'error':type(e).__name__,'status':getattr(e,'code',None)})
     (OUT/'metadata.json').write_text(json.dumps({'utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'rows':rows},ensure_ascii=False,indent=2)+'\n')
 pending=[r for r in rows if not r.get('hashVerified')]
 if pending:

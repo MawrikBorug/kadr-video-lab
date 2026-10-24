@@ -52,7 +52,15 @@ try{
  result.proof={metadata:result.bep9.metadataHashVerified===true && result.bep9.stats.metadataBytes>0,peer:result.bep9.stats.connectedWires>0,verifiedPayload:result.bep9.stats.verifiedBytes>0 && result.bep9.stats.webrtcBytes>0,
   nativePlaying:!playerError && result.player.run.events.some(e=>e.kind==='native_video' && e.event==='playing' && e.trusted) && result.player.native.time>1,
   noHTTPMedia:result.bep9.stats.httpBytes===0 && result.player.run.transport?.httpBytes===0,
-  freshViewer:result.player.run.transport?.preexistingBytesAtReady===0,seederSentPayload:result.seed.some(e=>e.kind==='seed_payload_sent' && e.bytes>0)};
+  freshViewer:result.player.run.transport?.preexistingBytesAtReady===0,playingBeforeFull:result.player.run.transport?.playbackBeforeFull===true,
+  seederSentPayload:result.seed.some(e=>e.kind==='seed_payload_sent' && e.bytes>0)};
+ const hold=Math.min(180000,Math.max(0,Number(process.env.CONTROL_HOLD_MS)||0));
+ if(hold && Object.values(result.proof).every(v=>v===true)){
+  result.externalWindow={started:new Date().toISOString(),maximumMs:hold};await save('control',result);
+  console.log('Verified seeder remains available for the external viewer window',hold);
+  await new Promise(resolve=>setTimeout(resolve,hold));result.externalWindow.ended=new Date().toISOString();
+  result.seed=await seed.evaluate(()=>window.seedEvents);
+ }
  await seed.evaluate(()=>new Promise(resolve=>window.controlSeed.destroy(resolve)));result.seederClosed=true;
  await save('control',result);console.log('A control proof',JSON.stringify(result.proof));
  if(Object.values(result.proof).some(v=>v!==true))process.exitCode=1;

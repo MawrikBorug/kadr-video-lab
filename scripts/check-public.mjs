@@ -10,7 +10,7 @@ for (const item of await readdir('dist')) {
   assert.ok(!/CANARY_PRIVATE_VALUE|PRIVATE_FIXTURE/.test(text), 'Test secret in build');
 }
 const build = JSON.parse(await readFile('dist/build-info.json'));
-assert.match(build.commit, /^[a-f0-9]{40}$/); assert.equal(build.version, 'search-1');
+assert.match(build.commit, /^[a-f0-9]{40}$/); assert.equal(build.version, 'search-2');
 const worker = await readFile('dist/sw.js', 'utf8');
 assert.ok(!worker.includes('caches.delete(key)') || worker.includes('requests.every'));
 assert.ok(!worker.includes("addEventListener('fetch'"));

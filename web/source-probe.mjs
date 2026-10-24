@@ -35,10 +35,11 @@ export class CandidateProbe {
     const c=this.candidate,locator=this.vault.get(c);
     if(locator.metadata && locator.meta)return locator.meta;
     const cached=this.metadataCache?.get(c.torrent.infoHash);
-    if(cached){Object.assign(locator,cached);this.emit('metadata_reused',{infoHash:c.torrent.infoHash,source:'same search; hash-verified metadata'});return locator.meta;}
+    if(cached){Object.assign(locator,{metadata:cached.metadata,meta:cached.meta});c.metadataProvenance={...cached.provenance,reusedInSearch:true};
+      this.emit('metadata_reused',{infoHash:c.torrent.infoHash,source:'same search; hash-verified metadata'});return locator.meta;}
     const known=this.packages.find(p=>p.infohash===c.torrent.infoHash);
     const urls=[...locator.metadataURLs.slice(0,1).map(url=>({url,host:safeOrigin(url),mode:'live-metadata'})),
-      ...(known?[{url:known.fixture,host:'same-origin research snapshot',mode:'offline-metadata-verified-hash'}]:[])];
+      ...(known?[{url:known.fixture,host:'same-origin verified metadata snapshot',mode:known.dataMode || 'offline-metadata-verified-hash'}]:[])];
     for(const source of urls){
       try {
         this.emit('metadata_requested',{host:source.host,dataMode:source.mode,infoHash:c.torrent.infoHash});
@@ -46,9 +47,9 @@ export class CandidateProbe {
         const meta=await parseMetadata(bytes,c.torrent.infoHash,{maxBytes:this.limits.metadataBytes,maxFiles:this.limits.maxFiles});
         if(this.signal.aborted)throw new SourceError('CANCELLED');
         locator.metadata=bytes;locator.meta=meta;
-        this.metadataCache?.set(c.torrent.infoHash,{metadata:bytes,meta});
         c.metadataProvenance={host:source.host,dataMode:source.mode,checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length,
           ...(known?.retrievedAt && source.mode!=='live-metadata'?{snapshotRetrievedAt:known.retrievedAt}:{})};
+        this.metadataCache?.set(c.torrent.infoHash,{metadata:bytes,meta,provenance:c.metadataProvenance});
         this.emit('metadata_verified',{...c.metadataProvenance,fileCount:meta.files.length});return meta;
       }catch(e){this.emit('metadata_failure',{host:source.host,...failure(e)});if(this.signal.aborted || /BUDGET|SIZE_LIMIT/.test(e.code))throw e;}
     }
@@ -153,7 +154,7 @@ export class CandidateProbe {
             const bytes=new Uint8Array(torrent.torrentFile);meta=await parseMetadata(bytes,c.torrent.infoHash,{maxBytes:this.limits.metadataBytes,maxFiles:this.limits.maxFiles});
             if(this.signal.aborted || torrent.destroyed)return;
             locator.meta=meta;locator.metadata=bytes;c.metadataProvenance={host:'WebRTC BEP9',dataMode:'live-metadata',checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length};
-            this.metadataCache?.set(c.torrent.infoHash,{metadata:bytes,meta});
+            this.metadataCache?.set(c.torrent.infoHash,{metadata:bytes,meta,provenance:c.metadataProvenance});
             c.states.B=meta.webseeds.length?'available-not-probed':'webseed-not-found';this.emit('metadata_verified',{...c.metadataProvenance,fileCount:meta.files.length});
           }
           const file=applyFile(c,meta,this.mappings,locator),piece=Math.floor(file.offset/meta.pieceLength);

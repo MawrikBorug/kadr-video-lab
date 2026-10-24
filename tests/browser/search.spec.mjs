@@ -80,6 +80,15 @@ test('local torrent import verifies magnet hash and shows the full list without 
  expect(run.events.filter(e=>e.kind==='play_requested')).toHaveLength(0);expect(cacheRequests).toBe(0);
  await expect(page.locator('video')).not.toHaveAttribute('src',/./);
 });
+test('new verified metadata snapshot exposes the full file order and correct episode instead of the provider index',async({page})=>{
+ await routes(page,[{name:'SYNTHETIC lookup of real Nyaa metadata snapshot',infoHash:'f288db0e01560e7989b105a494a1d8e3674faaa8',fileIdx:99}]);
+ await page.goto('./');await ready(page);await page.selectOption('#search-episode','2');await page.click('#search-start');
+ await expect.poll(async()=>((await journal(page)).runs.at(-1).candidates[0]?.torrent.metadataHashVerified)).toBe(true);
+ await page.click('#search-stop');await page.click('.source-result button');
+ await expect(page.locator('#search-file option')).toHaveCount(13);await expect(page.locator('#search-file')).toHaveValue('1');
+ const c=(await journal(page)).runs.at(-1).candidates[0];expect(c.torrent.fileLength).toBe(1682464444);expect(c.torrent.filePath).toContain('S01E02');
+ expect(c.metadataProvenance.dataMode).toBe('developer-metadata-snapshot');expect(c.states.playback).toBe('unverified');
+});
 test('automatic B verifies bytes without claiming playback, then selected file plays, seeks and restores without full Blob',async({page})=>{
  test.setTimeout(60000);await ownedSearch(page);
  await expect.poll(async()=>((await journal(page)).runs.at(-1).candidates[0]?.states.B)).toBe('bytes-received');

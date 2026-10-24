@@ -1,1 +1,1 @@
-export const BUILD = {version: 'search-1', commit: '__COMMIT__', builtAt: '__BUILT_AT__'};
+export const BUILD = {version: 'search-2', commit: '__COMMIT__', builtAt: '__BUILT_AT__'};

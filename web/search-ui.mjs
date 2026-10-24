@@ -33,7 +33,12 @@ function wrongEpisode(file,work){
 }
 export async function mountSearch({video,closeExisting,openLift,download,showFoundPlayer=()=>{},restoreContext=()=>{}}) {
   let config={mappings:[],packages:[]};
-  try{const r=await fetch('./search-fixtures/packages.json');if(r.ok)config=await r.json();}catch{/* Online metadata remains available. */}
+  const snapshots=await Promise.allSettled(['packages.json','metadata-sources.json'].map(async name=>{
+    const r=await fetch('./search-fixtures/'+name);if(!r.ok)throw Error('metadata snapshot unavailable');return r.json();
+  }));
+  for(const snapshot of snapshots)if(snapshot.status==='fulfilled'){
+    config.packages.push(...(snapshot.value.packages || []));config.mappings.push(...(snapshot.value.mappings || []));
+  }
   const environment={mode:matchMedia('(display-mode: standalone)').matches || navigator.standalone===true?'standalone':'browser',
     onlineAtStart:navigator.onLine,secureContext:isSecureContext,deviceVerification:'Physical device is not inferred from viewport or UA'};
   let history={schema:1,runs:[],positions:{}},storageOK=true;
@@ -99,6 +104,9 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
   function renderSelected(){
     $('search-selected').hidden=!selected || !active(current,selected);if(!selected || !active(current,selected))return;
     const c=selected,locator=current.vault.get(c),meta=locator?.meta;
+    const nativeNyaa=!!c.torrent.infoHash && c.provenance.upstreamLabels.some(s=>/^Nyaa$/i.test(s));
+    $('search-metadata-origin').hidden=!nativeNyaa;
+    if(nativeNyaa)$('search-metadata-origin').href='https://nyaa.si/?q='+c.torrent.infoHash;else $('search-metadata-origin').removeAttribute('href');
     $('search-metadata-file').hidden=!c.torrent.infoHash;$('search-metadata-file').disabled=metadataBusy || !!player || !!manualAbort;
     $('search-reprobe').disabled=metadataBusy || transition || !!player || !!manualAbort;
     $('search-metadata-status').textContent=c.metadataImportStatus || (meta?`Metadata SHA-1 совпал с magnet · файлов ${meta.files.length} · ${c.metadataProvenance?.dataMode || 'verified'}`:'Metadata пока не получены. Можно открыть .torrent из «Файлов»; совпадение с magnet проверится до выбора видео.');
@@ -237,7 +245,7 @@ export async function mountSearch({video,closeExisting,openLift,download,showFou
       if(!active(session,c) || selected!==c || epoch!==metadataEpoch)return;
       const locator=session.vault.get(c);Object.assign(locator,{metadata:bytes,meta});
       c.metadataProvenance={host:'local .torrent import',dataMode:'user-imported-metadata',checkedAt:now(),infoHash:meta.infoHash,bytes:bytes.length};
-      session.metadataCache.set(meta.infoHash,{metadata:bytes,meta});
+      session.metadataCache.set(meta.infoHash,{metadata:bytes,meta,provenance:c.metadataProvenance});
       try{applyFile(c,meta,config.mappings,locator);}catch(e){if(e.code!=='FILE_UNRESOLVED')throw e;}
       c.metadataImportStatus=`Metadata SHA-1 совпал с magnet · файлов ${meta.files.length}. ${c.states.file==='verified'?'Файл определён.':'Выберите точный файл из полного списка.'} Доставка и воспроизведение ещё не подтверждены.`;
       c.states.A='unverified';c.states.B=meta.webseeds.length?'unverified':'webseed-not-found';c.states.playback='unverified';
