@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import path from 'node:path';
+import {buildA01} from './build-a01.mjs';
 
 const root = new URL('../', import.meta.url);
 const dist = new URL('dist/', root);
@@ -70,6 +71,7 @@ async function hashFiles(dir) {
   }
   await walk(dir); return hash.digest('hex').slice(0, 12);
 }
+await buildA01(dist, root);
 const buildId = await hashFiles(dist.pathname);
 await writeFile(new URL('.nojekyll', dist), '');
 console.log(`Static build ready: dist/ (${buildId})`);
