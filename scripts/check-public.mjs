@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
 const allowed = new Set(['index.html','harness.mjs','collector.mjs','lift-api.mjs','journal.mjs','legacy.mjs','config.js','build.js','build-info.json','style.css','sw.js','manifest.webmanifest','.nojekyll','icons','catalog.json','torrent.mjs','torrent-materials.js','piece-store.mjs','transport-diagnostics.mjs','fixtures','vendor','search-config.mjs','source-utils.mjs','source-search.mjs','torrent-metadata.mjs','source-probe.mjs','search-session.mjs','search-ui.mjs','search-fixtures']);
 for (const dir of ['dist','dist/a01']) {
-for (const item of await readdir(dir)) assert.ok(allowed.has(item) || (dir==='dist' && item==='a01') || (dir==='dist/a01' && item==='lift-settings-probe.mjs'), `Unexpected public asset: ${item}`);
+for (const item of await readdir(dir)) assert.ok(allowed.has(item) || (dir==='dist' && item==='a01') || (dir==='dist/a01' && ['lift-settings-probe.mjs','resume-query.mjs'].includes(item)), `Unexpected public asset: ${item}`);
 for (const item of await readdir(dir)) {
   if (['icons','vendor','fixtures','search-fixtures','a01'].includes(item)) continue;
   const text = await readFile(`${dir}/${item}`, 'utf8');
