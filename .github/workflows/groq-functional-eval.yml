@@ -1,0 +1,57 @@
+name: Groq functional eval (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: One diagnostic mode only; never full product acceptance
+        type: choice
+        required: true
+        default: recommendations
+        options:
+          - recommendations
+          - labels
+          - analysis-film
+          - analysis-season
+          - vision-one
+          - vision-three
+          - vision-unknown
+      confirm_budget:
+        description: Up to 6 Free Groq requests and 48000 reserved tokens; ZDR enabled; no other runs
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: groq-access-probe
+  cancel-in-progress: false
+jobs:
+  eval:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.repository == 'MawrikBorug/kadr-video-lab' &&
+      github.actor == github.repository_owner &&
+      github.ref == 'refs/heads/main' &&
+      github.workflow_ref == 'MawrikBorug/kadr-video-lab/.github/workflows/groq-functional-eval.yml@refs/heads/main' &&
+      github.run_attempt == 1 && inputs.confirm_budget
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - name: Offline safety and domain controls
+        run: python3 -m unittest discover -s tests -p 'groq*test.py'
+      - name: One bounded diagnostic mode
+        run: python3 scripts/groq-functional-eval.py "$EVAL_MODE"
+        env:
+          EVAL_MODE: ${{ inputs.mode }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      - name: Evidence for independent review, no public website
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: groq-functional-eval-${{ github.run_id }}
+          path: artifacts/groq-functional-eval/report.json
+          retention-days: 7
+          if-no-files-found: ignore

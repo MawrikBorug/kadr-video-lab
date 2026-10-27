@@ -1,0 +1,73 @@
+{
+  "schema": "kadr.eval.media-source-manifest.v1",
+  "status": "LICENSE_PROVENANCE_READ_BYTES_NOT_MATERIALIZED",
+  "assets": [
+    {
+      "id": "sintel-frame-2",
+      "work": "Sintel",
+      "year": 2010,
+      "description": "Real film screenshot, not generated imagery or a character rig",
+      "page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-2.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Sintel-screenshot-2.jpg",
+      "mime": "image/jpeg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "checkedAt": "2026-10-27",
+      "retrievedLocal": false,
+      "observed_sha1": "2a9cace3381df85b418aeae04df13bc06940e598",
+      "observed_bytes": 93971,
+      "hashProvenance": "Commons file metadata, independently inspect downloaded bytes before inference",
+      "modifications": "none; future preprocessing must be recorded"
+    },
+    {
+      "id": "sintel-frame-3",
+      "work": "Sintel",
+      "year": 2010,
+      "description": "Real film screenshot, not generated imagery or a character rig",
+      "page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-3.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Sintel-screenshot-3.jpg",
+      "mime": "image/jpeg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "checkedAt": "2026-10-27",
+      "retrievedLocal": false,
+      "observed_sha1": "d395fd8b1aa5310b07f4bb6fd10bf6260b551636",
+      "observed_bytes": 80427,
+      "hashProvenance": "Commons file metadata, independently inspect downloaded bytes before inference",
+      "modifications": "none; future preprocessing must be recorded"
+    },
+    {
+      "id": "sintel-frame-4",
+      "work": "Sintel",
+      "year": 2010,
+      "description": "Real film screenshot, not generated imagery or a character rig",
+      "page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-4.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Sintel-screenshot-4.jpg",
+      "mime": "image/jpeg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "checkedAt": "2026-10-27",
+      "retrievedLocal": false,
+      "observed_sha1": null,
+      "observed_bytes": null,
+      "hashProvenance": "Commons file metadata, independently inspect downloaded bytes before inference",
+      "modifications": "none; future preprocessing must be recorded"
+    }
+  ],
+  "blockers": [
+    "Direct local public download returned HTTPError in this environment. No local image bytes were obtained.",
+    "First two SHA-1 and byte sizes are read from Commons; third requires additional hash verification.",
+    "Do not mark vision fixture ready until exact local bytes/hash/size and preprocessing are validated; never substitute generated imagery."
+  ],
+  "sourceRefs": [
+    "web turn26view0",
+    "web turn26view1",
+    "web turn26view2",
+    "web turn27view0",
+    "web turn27view1",
+    "web turn27view2"
+  ]
+}
