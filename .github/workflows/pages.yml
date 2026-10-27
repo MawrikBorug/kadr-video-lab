@@ -22,7 +22,7 @@ on:
       - 'tests/groq-functional-eval.test.mjs'
       - 'tests/groq_functional_eval_test.py'
       - 'docs/groq-functional-eval.md'
-      - 'fixtures/groq-eval/**'
+      - 'tests/fixtures/groq-eval/**'
   workflow_dispatch:
 
 permissions:

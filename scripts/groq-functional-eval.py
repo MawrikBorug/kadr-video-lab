@@ -14,7 +14,7 @@ import ssl
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / 'fixtures/groq-eval'
+FIXTURES = ROOT / 'tests/fixtures/groq-eval'
 ARTIFACT = ROOT / 'artifacts/groq-functional-eval/report.json'
 TEXT_MODEL = 'openai/gpt-oss-120b'
 VISION_MODEL = 'qwen/qwen3.8-27b'

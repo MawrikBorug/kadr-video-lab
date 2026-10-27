@@ -71,6 +71,8 @@ claiming any diagnostic success. Local watched/finality/composition gates are no
 
 ## Scope and rights
 
+Fixtures live under `tests/fixtures/groq-eval` so the existing laboratory ZIP includes them.
+
 Source claims were actually read and paraphrased on 2026-10-27. Each source record carries URL,
 read locator, tier, rights and attribution. Wikipedia-derived paraphrases: CC-BY-SA, attribution to
 Wikipedia contributors and linked article/history. Keep attribution and applicable share-alike terms
