@@ -4,6 +4,14 @@ name: Publish GitHub Pages
 on:
   push:
     branches: [main]
+    # Probe-only changes do not publish the media lab. Manual publish is retained.
+    paths-ignore:
+      - '.github/workflows/groq-probe.yml'
+      - '.github/workflows/pages.yml'
+      - 'scripts/groq-probe.py'
+      - 'tests/groq-probe.test.mjs'
+      - 'tests/groq_probe_test.py'
+      - 'docs/groq-probe.md'
   workflow_dispatch:
 
 permissions:
