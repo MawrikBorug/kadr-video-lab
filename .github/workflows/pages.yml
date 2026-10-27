@@ -12,6 +12,11 @@ on:
       - 'tests/groq-probe.test.mjs'
       - 'tests/groq_probe_test.py'
       - 'docs/groq-probe.md'
+      - '.github/workflows/gemini-probe.yml'
+      - 'scripts/gemini-probe.py'
+      - 'tests/gemini-probe.test.mjs'
+      - 'tests/gemini_probe_test.py'
+      - 'docs/gemini-probe.md'
   workflow_dispatch:
 
 permissions:
