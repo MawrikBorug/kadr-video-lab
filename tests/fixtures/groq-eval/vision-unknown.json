@@ -1,0 +1,9 @@
+{
+  "ready": false,
+  "blocker": "Independent non-film distractor fixture not yet materialized",
+  "images": [],
+  "identity_snapshots": [],
+  "expected": {
+    "status": "unknown"
+  }
+}

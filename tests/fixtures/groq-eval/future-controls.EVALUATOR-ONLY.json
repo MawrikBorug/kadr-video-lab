@@ -1,0 +1,52 @@
+{
+  "schema": "kadr.eval.future-negative.v1",
+  "evaluatorOnly": true,
+  "exclude_from_all_model_inputs": true,
+  "scope": {
+    "work": "Fallout",
+    "season": 2
+  },
+  "sources": [
+    {
+      "id": "N1",
+      "url": "https://www.cosmopolitan.com/entertainment/tv/a70248876/fallout-season-2-ending-explained/",
+      "title": "Fallout season2 ending — Cosmopolitan",
+      "tier": "secondary",
+      "checkedAt": "2026-10-27",
+      "rights": "Copyright Hearst; two short paraphrased negative controls, total<100words",
+      "summary": "",
+      "read_locator": "lines338-345; web turn25view6",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    }
+  ],
+  "forbidden_claims": [
+    {
+      "id": "FN01",
+      "text": "В финале второго сезона Хэнк активирует собственный имплант и стирает себе память.",
+      "source_ids": [
+        "N1"
+      ],
+      "aliases": [
+        "Хэнк стирает себе память",
+        "Hank erases his memories",
+        "Hank wipes his memory"
+      ]
+    },
+    {
+      "id": "FN02",
+      "text": "Второй сезон раскрывает, что Стеф является первой женой Хэнка.",
+      "source_ids": [
+        "N1"
+      ],
+      "aliases": [
+        "Стеф первая жена Хэнка",
+        "Steph is Hank’s first wife",
+        "Steph is Hank's first wife"
+      ]
+    }
+  ],
+  "limitations": [
+    "Exact phrase matching is an additional negative control, not a complete semantic spoiler detector. Independent review must inspect actual generated text."
+  ]
+}

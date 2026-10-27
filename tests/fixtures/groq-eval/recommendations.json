@@ -1,0 +1,91 @@
+{
+  "catalog": [
+    {
+      "id": "sintel-2010",
+      "title": "Sintel",
+      "format": "film",
+      "evidence": "Fantasy animation about a long search for an injured dragon; tragic recognition and loss.",
+      "source_pack": "analysis-film.json",
+      "claim_ids": [
+        "SI01",
+        "SI02",
+        "SI05",
+        "SI06"
+      ]
+    },
+    {
+      "id": "fallout-s1",
+      "title": "Fallout S1",
+      "format": "series",
+      "evidence": "Post-apocalyptic adaptation mixing comedy and drama; Lucy follows the golden rule amid violent conflict.",
+      "source_pack": "analysis-season.json",
+      "claim_ids": [
+        "FO03",
+        "FO05",
+        "FO06"
+      ]
+    }
+  ],
+  "allowed_moods": [
+    "relax",
+    "laugh",
+    "inspire",
+    "sad",
+    "tense",
+    "surprise",
+    "adventure",
+    "think"
+  ],
+  "cases": [
+    {
+      "id": "cold-start",
+      "excluded_ids": [],
+      "format": "any",
+      "profile": {
+        "ratings": [],
+        "favorites": []
+      },
+      "moods": [
+        "adventure",
+        "think"
+      ]
+    },
+    {
+      "id": "explicit-taste-exclusion",
+      "excluded_ids": [
+        "fallout-s1"
+      ],
+      "format": "film",
+      "profile": {
+        "favorites": [
+          "sintel-2010"
+        ],
+        "ratings": {
+          "sintel-2010": 9
+        }
+      },
+      "moods": [
+        "sad",
+        "surprise"
+      ]
+    },
+    {
+      "id": "empty-pool",
+      "excluded_ids": [
+        "sintel-2010",
+        "fallout-s1"
+      ],
+      "format": "any",
+      "profile": {
+        "ratings": [],
+        "favorites": []
+      },
+      "moods": [
+        "relax",
+        "laugh",
+        "inspire",
+        "tense"
+      ]
+    }
+  ]
+}

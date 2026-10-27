@@ -17,6 +17,12 @@ on:
       - 'tests/gemini-probe.test.mjs'
       - 'tests/gemini_probe_test.py'
       - 'docs/gemini-probe.md'
+      - '.github/workflows/groq-functional-eval.yml'
+      - 'scripts/groq-functional-eval.py'
+      - 'tests/groq-functional-eval.test.mjs'
+      - 'tests/groq_functional_eval_test.py'
+      - 'docs/groq-functional-eval.md'
+      - 'tests/fixtures/groq-eval/**'
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,9 @@
+{
+  "ready": false,
+  "blocker": "Licensed real Sintel frames identified but exact bytes/hashes/preprocessing not materialized. No generated frame substitution.",
+  "images": [],
+  "identity_snapshots": [],
+  "expected": {
+    "work_id": "sintel-2010"
+  }
+}

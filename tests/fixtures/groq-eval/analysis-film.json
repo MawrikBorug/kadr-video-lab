@@ -1,0 +1,172 @@
+{
+  "schema": "kadr.eval.source-pack.v1",
+  "fixtureId": "sintel-2010",
+  "scope": {
+    "id": "sintel-2010",
+    "title": "Sintel",
+    "year": 2010,
+    "season": null
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://en.wikipedia.org/wiki/Sintel",
+      "title": "Sintel — Wikipedia",
+      "tier": "secondary",
+      "checkedAt": "2026-10-27",
+      "rights": "CC-BY-SA; attributed bounded original Russian summary, not a copied article",
+      "summary": "",
+      "read_locator": "Overview, Plot, infobox; web turn24view0/turn25view3",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    },
+    {
+      "id": "S2",
+      "url": "https://studio.blender.org/characters/5d403c21ee3219164b952e20/v2/",
+      "title": "Scales adult dragon — Blender Studio",
+      "tier": "primary",
+      "checkedAt": "2026-10-27",
+      "rights": "CC-BY page metadata; no downloaded rig or replicated model",
+      "summary": "",
+      "read_locator": "title and description; web turn22search3",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200,
+      "read_scope": "metadata/search_excerpt_only; exact page full text unavailable in this environment"
+    }
+  ],
+  "claims": [
+    {
+      "id": "SI01",
+      "text": "Sintel nurses an injured young dragon and names him Scales.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "summary",
+        "plot_ending",
+        "characters"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI02",
+      "text": "An adult dragon takes Scales. Sintel begins a long search.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "summary",
+        "plot_ending",
+        "meaning"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI03",
+      "text": "After an attack in the mountains she takes her attacker’s spear and meets a shaman.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "details_references"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI04",
+      "text": "She reaches a cave with an adult dragon and a young one. The adult recognizes her scent and hesitates.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "characters"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI05",
+      "text": "She fatally wounds the adult. Its scar reveals that she killed the grown Scales.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "meaning",
+        "details_references"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI06",
+      "text": "Her reflection reveals how much she aged during the search. She leaves; the young dragon follows her.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "visual_language",
+        "theories"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI07",
+      "text": "The 2010 Blender Institute film was directed by Colin Levy, written by Esther Wouda, produced by Ton Roosendaal, with music by Jan Morgenstern.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "creation",
+        "sources"
+      ],
+      "scope": "sintel-2010"
+    },
+    {
+      "id": "SI08",
+      "text": "The official Blender Studio page identifies the adult dragon as Scales and licenses that character rig under CC-BY.",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "fact",
+      "sections": [
+        "creation",
+        "sources"
+      ],
+      "scope": "sintel-2010"
+    }
+  ],
+  "required_sections": [
+    "summary",
+    "plot_ending",
+    "meaning",
+    "details_references",
+    "creation",
+    "characters",
+    "visual_language",
+    "theories",
+    "sources"
+  ],
+  "coverage_gaps": [
+    "Нет прочитанного первичного сценария или собственного полного покадрового просмотра. Сюжет в этом диагностическом пакете опирается на вторичный источник.",
+    "Нет источника для внешних пасхалок; допустим анализ внутреннего повторения шрама.",
+    "Намерения автора и будущее героев не установлены: интерпретации и теории должны оставаться явно помеченными.",
+    "Blender Studio S2 is metadata/search excerpt only, not a full page read. Only the stated title/description/licence metadata is used."
+  ],
+  "interpretation_policy": "Свободно анализировать только указанные факты; выводы об одержимости, потере времени, цикле заботы — интерпретации, а не подтверждённое намерение создателей. Не выдумывать цитат, внешних отсылок или событий после финала.",
+  "eligible_state": {
+    "watched": true
+  },
+  "prompt_limits": [
+    "Interpretations and theories must be explicitly labelled; author intent is not established.",
+    "Do not invent quotations, external references or events after the scope."
+  ]
+}

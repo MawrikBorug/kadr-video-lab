@@ -1,0 +1,266 @@
+{
+  "schema": "kadr.eval.source-pack.v1",
+  "fixtureId": "fallout-s1",
+  "scope": {
+    "id": "fallout-s1",
+    "title": "Fallout",
+    "year": 2024,
+    "season": 1,
+    "composition_revision": 1,
+    "main_episode_ids": [
+      "fallout-s1:e1",
+      "fallout-s1:e2",
+      "fallout-s1:e3",
+      "fallout-s1:e4",
+      "fallout-s1:e5",
+      "fallout-s1:e6",
+      "fallout-s1:e7",
+      "fallout-s1:e8"
+    ]
+  },
+  "sources": [
+    {
+      "id": "F1",
+      "url": "https://www.aboutamazon.com/news/entertainment/fallout-tv-series-cast",
+      "title": "Fallout cast and creators reveal secrets — Amazon",
+      "tier": "primary",
+      "checkedAt": "2026-10-27",
+      "rights": "Copyright Amazon; bounded factual paraphrases, no copied dialogue/images",
+      "summary": "",
+      "read_locator": "lines11-60; web turn21view3",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    },
+    {
+      "id": "F2",
+      "url": "https://www.primevideo.com/-/de/detail/0HAQAA7JM43QWX0H6GUD3IOF70?tr=pr",
+      "title": "Fallout season 1 — Prime Video",
+      "tier": "primary",
+      "checkedAt": "2026-10-27",
+      "rights": "Copyright Amazon; bounded catalogue facts only",
+      "summary": "",
+      "read_locator": "season selector, 8 Folgen and episode list; web turn25view5",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    },
+    {
+      "id": "F3",
+      "url": "https://www.gamesradar.com/fallout-season-1-ending-explained-hank-new-vegas/",
+      "title": "Fallout season 1 ending explained — GamesRadar",
+      "tier": "secondary",
+      "checkedAt": "2026-10-27",
+      "rights": "Copyright Future; bounded original Russian summary <=200words, no full recap or quotes",
+      "summary": "",
+      "read_locator": "Season1 episode8 recap and character headings, web turn18search0/turn25view4",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    },
+    {
+      "id": "F4",
+      "url": "https://readysteadycut.com/2024/04/11/fallout-season-1-recap/",
+      "title": "Fallout season 1 recap — Ready Steady Cut",
+      "tier": "secondary",
+      "checkedAt": "2026-10-27",
+      "rights": "Copyright publisher; bounded original summary and episode titles, no copied paragraphs",
+      "summary": "",
+      "read_locator": "episode list and S1 synopsis, web turn24view3",
+      "verbatim_words": 0,
+      "derived_summary_word_limit": 200
+    }
+  ],
+  "claims": [
+    {
+      "id": "FO01",
+      "text": "Amazon confirms all eight season-one episodes are available and refers to its final episode.",
+      "source_ids": [
+        "F1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "sources"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO02",
+      "text": "The eight episode titles are The End, The Target, The Head, The Ghouls, The Past, The Trap, The Radio and The Beginning.",
+      "source_ids": [
+        "F4"
+      ],
+      "kind": "fact",
+      "sections": [
+        "sources"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO03",
+      "text": "The creators chose an independent story within the game world and emphasized its mixture of comedy and drama.",
+      "source_ids": [
+        "F1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "creation",
+        "meaning"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO04",
+      "text": "Nolan describes realizing the world in front of the camera to reduce necessary visual effects. Stuart Dryburgh, Howard Cummings, Amy Westcott and Jay Worth are named.",
+      "source_ids": [
+        "F1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "creation",
+        "visual_language"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO05",
+      "text": "Lucy follows the golden rule; her actor connects that belief with her integrity through the finale.",
+      "source_ids": [
+        "F1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "characters",
+        "meaning"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO06",
+      "text": "The opening shows Cooper Howard with his daughter at a birthday party when nuclear disaster begins.",
+      "source_ids": [
+        "F1"
+      ],
+      "kind": "fact",
+      "sections": [
+        "summary",
+        "plot_ending",
+        "characters"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO07",
+      "text": "Lucy finds Hank held by Moldaver at the observatory. Norm discovers cryogenic Vault-Tec employees in Vault 31, including Hank.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "details_references"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO08",
+      "text": "Moldaver explains that Rose took the children to Shady Sands. Hank brought them back and destroyed the town. Rose became a ghoul.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "characters",
+        "meaning"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO09",
+      "text": "The object in Wilzig’s head enables cold fusion. Moldaver needs Hank’s code to activate it.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "details_references"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO10",
+      "text": "Maximus frees Hank. Hank takes the power armour, knocks Maximus unconscious and escapes after the Ghoul confronts him.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "characters"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO11",
+      "text": "Lucy kills her ghoulified mother and leaves with the Ghoul. Moldaver activates cold fusion; the Brotherhood finds Maximus and calls him a knight.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "meaning"
+      ],
+      "scope": "fallout-s1"
+    },
+    {
+      "id": "FO12",
+      "text": "The final shot shows Hank heading toward New Vegas. The Ghoul’s family and Lucy’s next journey remain unresolved within season one.",
+      "source_ids": [
+        "F3"
+      ],
+      "kind": "fact",
+      "sections": [
+        "plot_ending",
+        "theories"
+      ],
+      "scope": "fallout-s1"
+    }
+  ],
+  "required_sections": [
+    "summary",
+    "plot_ending",
+    "meaning",
+    "details_references",
+    "creation",
+    "characters",
+    "visual_language",
+    "theories",
+    "sources"
+  ],
+  "coverage_gaps": [
+    "Подтверждён диагностический состав S1, а не работа production release monitor или episode mapping.",
+    "Пакет не содержит подробного пересказа каждого эпизода; не выдавать анализ за исчерпывающий покадровый разбор.",
+    "Будущие факты изS2 хранятся отдельно и не входят в generation или verifier input.",
+    "Не утверждать, что Vault-Tec действительно первым сбросил бомбы: показанная вS1 готовность/план и установленное фактическое исполнение различаются."
+  ],
+  "interpretation_policy": "Смысл/теории свободные, но явно помеченные и выведенные изS1. Не превращать предположения о будущих ответах в факты. Ссылки/цитаты не выдумывать.",
+  "eligible_state": {
+    "final_confirmed": true,
+    "composition_revision": 1,
+    "watched_episode_ids": [
+      "fallout-s1:e1",
+      "fallout-s1:e2",
+      "fallout-s1:e3",
+      "fallout-s1:e4",
+      "fallout-s1:e5",
+      "fallout-s1:e6",
+      "fallout-s1:e7",
+      "fallout-s1:e8"
+    ]
+  },
+  "prompt_limits": [
+    "Interpretations and theories must be explicitly labelled; author intent is not established.",
+    "Do not invent quotations, external references or events after the scope.",
+    "S1 does not establish that Vault-Tec actually dropped the first bomb; willingness or plans are not proven execution."
+  ]
+}
