@@ -23,7 +23,7 @@ One run, maximum **20 API calls / 160000 reserved tokens** across both models:
 There are no inference retries. 65 seconds minimum separates API starts; each request has a
 45-second socket timeout. The 2400-second limit is checked between operations; the workflow has
 an independent hard **45-minute** timeout. Sources have separate 20-second socket bounds and
-2MB maximum bodies. The theoretical 20×7900=158000 envelope fits the run's 160000 ceiling.
+4MB maximum bodies. The theoretical 20×7900=158000 envelope fits the run's 160000 ceiling.
 Published Free limits are 8K TPM/200K TPD per selected model, not a guarantee of remaining quota.
 The existing recommendation run used 2385 actual tokens. Other account load is unknown; select
 this run only with sufficient daily quota. 429, unauthorized, billing-required or uncertain transport
@@ -63,8 +63,12 @@ The new source adapter performs **current HTTPS retrieval → work/season-specif
 → scope/rights/hash metadata → RAM-only bounded input**. It does not return old stored claims
 when a source is unavailable. Fixed source URLs are deliberate adapters for these two real control
 works, not a universal source-discovery implementation. Transport failure is distinguishable from
-scope rejection. Direct stdlib requests in the preparation environment were unavailable; no real
-HTML-parser PASS was claimed before this manual runner observation.
+scope rejection. Direct native HTTPS connections in the preparation environment were unavailable. A later public
+urllib retrieval using the environment network configuration successfully fetched all five real
+HTML sources and passed the same scoped parsers. Hashes, actual signals and eight release events
+are recorded in source-acquisition-observation.json; no source text is stored there and the runtime
+never falls back to that observation. The manual GitHub runner still measures its fixed native
+HTTPS transport and current sources independently.
 
 Sources: Sintel Wikipedia (CC-BY-SA; plot prioritized, bounded420 words), optional Blender Studio
 character metadata; Fallout S1's official Amazon creator panel, selected S1 Prime catalogue,
@@ -116,7 +120,7 @@ remain separate implementation/integration obligations. There is no automatic pr
 | Row | This package supplies | Admission boundary |
 |---|---|---|
 | A03 | Executable automatic current-source acquisition, exact-span grounding, free prose for all nine sections, verification and candidate gate for one film/season | Requires actual run + independent source/scope/prose inspection; not universal source discovery or production publication |
-| B04 | Specific publisher availability/finale + selected-season composition adapter, versioned evidence, unknown/date-change policy | Requires actual runner parser/evidence; production scheduler and generic source assignment remain implementation obligations |
+| B04 | Specific publisher availability/finale + selected-season composition adapter, versioned evidence, unknown/date-change policy | Real public HTML parser/evidence is recorded; current runner refresh remains measured by this run; production scheduler and generic source assignment remain implementation obligations |
 | B07 | One/three-frame and unknown routes, actual text/vision usage/latency/header collection, sequential budget reservation and failures | Own-account remaining daily quota/ZDR not independently inspected; sample proves specific paths, not broad quality percentages |
 | A02 | Existing accepted foreground RAM/image-job contract preserved | Netlify/RLS/iPhone integration remains implementation acceptance |
 | A04 | Gemini excluded by owner | No Gemini runtime capacity or new attempts |

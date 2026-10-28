@@ -9,7 +9,7 @@ import ssl
 import time
 from urllib.parse import urlsplit
 
-MAX_BODY = 2000000
+MAX_BODY = 4000000
 SOURCES = {
  'film': [
   {'id':'S1','url':'https://en.wikipedia.org/wiki/Sintel','title':'Sintel — Wikipedia','rights':'CC-BY-SA; Wikipedia contributors; retain article/history attribution','tier':'secondary','parser':'sintel'},
@@ -33,7 +33,7 @@ class Blocks(HTMLParser):
   if self.skip:return
   if tag in ('area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'):return
   if self.active is not None:self.depth+=1
-  elif tag in ('p','h1','h2','h3','h4','title'):
+  elif tag in ('p','h1','h2','h3','h4','title') or (tag=='div' and 'contentItem-role-text' in dict(attrs).get('class','').split()):
    self.active=tag;self.depth=1;self.parts=[]
  def handle_endtag(self,tag):
   if tag in ('script','style','noscript','svg') and self.skip:self.skip-=1;return
@@ -42,7 +42,7 @@ class Blocks(HTMLParser):
    self.depth-=1
    if self.depth<=0:
     value=re.sub(r'\s+',' ',' '.join(self.parts)).strip()
-    if value:self.rows.append((self.active,value))
+    if value:self.rows.append(('p' if self.active=='div' else self.active,value))
     self.active=None;self.parts=[];self.depth=0
  def handle_data(self,value):
   if self.active and not self.skip:self.parts.append(value)

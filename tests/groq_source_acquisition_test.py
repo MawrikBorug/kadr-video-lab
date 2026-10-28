@@ -59,4 +59,11 @@ class Tests(unittest.TestCase):
  def test_void_tag_does_not_swallow_following_paragraphs(self):
   parser=m.Blocks();parser.feed('<p>text<br>more<img src="x"></p><p>next</p>')
   self.assertEqual(parser.rows,[('p','text more'),('p','next')])
+ def test_actual_amazon_rich_text_structure(self):
+  html='<h1>Fallout cast and creators</h1><div class="contentItem-role-text"><span class="text v2"><div class="text"><a><span>watch all eight episodes of </span><span><span>Fallout </span></span><span>Season 1</span></a></div></span></div><div class="contentItem-role-text"><span>In the final episode of </span><span><span>Fallout</span></span><span> Season 1, Lucy learns the truth.</span></div>'
+  _,proof,_=m._extract(html,'amazon')
+  self.assertTrue(proof['all_eight_available']);self.assertTrue(proof['final_episode_mentioned'])
+ def test_known_large_article_bound_is_still_finite(self):
+  self.assertEqual(m.MAX_BODY,4000000)
+  self.assertLessEqual(m.MAX_BODY,4*1024*1024)
 if __name__=='__main__':unittest.main()
