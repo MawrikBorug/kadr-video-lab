@@ -75,7 +75,7 @@ class Tests(unittest.TestCase):
   claims,_,basis=m.group_evidence(pack,('theories',))
   self.assertEqual(claims,[]);self.assertEqual(basis,{'theories':[]})
  def test_actual_run_pack_routing_and_numeric_envelope_without_network(self):
-  fixture=json.loads((ROOT/'tests/fixtures/closure-run-40697006417-packs.json').read_text())
+  fixture=json.loads((ROOT/'tests/fixtures/groq-eval/closure-run-40697006417-packs.json').read_text())
   class C:
    def call(self,prompt,output):
     data=json.loads(prompt)
@@ -90,7 +90,7 @@ class Tests(unittest.TestCase):
     self.assertEqual(len(result['preflight']),3);self.assertTrue(result['complete_section_coverage']);self.assertFalse(result['automatic_gate_candidate'])
     self.assertTrue(all(max(p['generation_reserved'],p['review_reserved'])<=7900 for p in result['preflight']))
  def test_expected_visual_pack_envelope_keeps_frame_scope_and_primary_report_type(self):
-  fixture=json.loads((ROOT/'tests/fixtures/closure-run-40697006417-packs.json').read_text())
+  fixture=json.loads((ROOT/'tests/fixtures/groq-eval/closure-run-40697006417-packs.json').read_text())
   class C:
    def call(self,prompt,output):
     data=json.loads(prompt)
