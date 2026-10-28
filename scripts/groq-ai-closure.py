@@ -15,10 +15,14 @@ def module(name,file):
     obj=importlib.util.module_from_spec(spec);spec.loader.exec_module(obj);return obj
 m=module('closure_functional','groq-functional-eval.py')
 # Existing diagnostic modes retain their original ceilings. Only this new entry point
-# reserves the entire closure suite; <=20*7900=158000, below this 160000 ceiling.
-m.MAX_REQUESTS=20;m.MAX_RESERVED=160000;m.DEADLINE=2400
+# reserves 20 existing requests at <=7900 plus4 description requests at <=3000:
+# 158000+12000=170000, below this172000 ceiling.
+m.MAX_REQUESTS=24;m.MAX_RESERVED=172000;m.DEADLINE=2400
 REPORT=ROOT/'artifacts/groq-ai-closure/report.json'
-CASE_ORDER=('vision-one','vision-three','vision-unknown','analysis-film','analysis-season')
+DESCRIPTION_REQUEST_CAP=3000
+SUITE_RESERVED_BOUND=20*m.MAX_WINDOW+4*DESCRIPTION_REQUEST_CAP
+assert SUITE_RESERVED_BOUND<=m.MAX_RESERVED
+CASE_ORDER=('description-known','description-unknown','vision-one','vision-three','vision-unknown','analysis-film','analysis-season')
 FATAL={'RATE_LIMITED_STOP','UNAUTHORIZED','FORBIDDEN','PAYMENT_REQUIRED_STOP','HTTP_ERROR_STOP',
        'OUTCOME_UNKNOWN_TIMEOUT','OUTCOME_UNKNOWN_TRANSPORT','TLS_ERROR','DEADLINE','BUDGET_EXCEEDED',
        'NOT_RUN_MISSING_OR_INVALID_SECRET','INTERNAL_ERROR'}
@@ -83,6 +87,53 @@ def vision_case(client,name,media):
     return {'identify':found,'verify':checked,'diagnostic_assertion_pass':passed,
             'identity_route':'CONFIRMED_TITLE_YEAR_FIXTURE_NOT_LIVE_TMDB',
             'media_provenance':[clean({k:v for k,v in a.items()if k!='base64'})for a,_ in (media[3:]if name=='vision-unknown'else media[:len(raw)])]}
+
+
+def resolve_description_identities(hypotheses,identities):
+    seen=set()
+    for card in identities:
+        for external in card['external_ids']:
+            if set(external)!={'namespace','entity_type','value'}:raise m.Stop('IDENTITY_FIXTURE_SCHEMA')
+            key=(external['namespace'],external['entity_type'],external['value'])
+            if key in seen:raise m.Stop('IDENTITY_FIXTURE_COLLISION')
+            seen.add(key)
+            if external['namespace']=='tmdb' and (external['entity_type']not in('movie','tv')or not re.fullmatch(r'[0-9]+',external['value'])):raise m.Stop('IDENTITY_FIXTURE_SCHEMA')
+        if not any(e['namespace']=='tmdb'and e['entity_type']==('movie'if card['format']=='film'else'tv') for e in card['external_ids']):raise m.Stop('IDENTITY_FIXTURE_TYPE')
+    return [card for card in identities if any(h['title'].casefold()in[t.casefold()for t in card['titles']]and h['year']==card['year']and h['format']==card['format']for h in hypotheses)]
+
+def description_case(client,name):
+    fixture=json.loads((m.FIXTURES/'description-context.json').read_text())
+    case=next(c for c in fixture['cases']if c['id']==name)
+    description=case['description']
+    identify=m.dump({'task':'Identify a film or series from this text description only. No images. Unknown is valid; do not invent a title.',
+        'description':description,'shape':{'hypotheses':[{'title':'title','year':2000,'format':'film|series','description_evidence':'matching clues or conflict'}],'unknown':False}})
+    identities=fixture['identities']
+    def verify(cards):
+        candidates=[{k:c[k]for k in('id','titles','year','format','external_ids','cast')}for c in cards]
+        return m.dump({'task':'Verify candidates against text clues. Identity existence alone is not description proof. Reject conflicts; unknown/ambiguous allowed.',
+            'description':description,'candidates':candidates,
+            'shape':{'status':'matched|ambiguous|unknown','work_id':'candidate id or empty','reason':'matching text clues or conflicts'}})
+    # Preflight both phases, including every possible limited-pool candidate.
+    for prompt in (identify,verify(identities)):
+        if len((m.SYSTEM+prompt).encode())+512+384>DESCRIPTION_REQUEST_CAP:raise m.Stop('DESCRIPTION_PAIR_PREFLIGHT_BUDGET')
+    def bounded_call(prompt):
+        if len((m.SYSTEM+prompt).encode())+512+384>DESCRIPTION_REQUEST_CAP:raise m.Stop('DESCRIPTION_REQUEST_BUDGET')
+        return client.call(prompt,384)
+    found=bounded_call(identify)
+    if set(found)!={'hypotheses','unknown'}or type(found['unknown'])is not bool or not isinstance(found['hypotheses'],list)or len(found['hypotheses'])>5:raise m.Stop('DESCRIPTION_IDENTIFY_SCHEMA')
+    for h in found['hypotheses']:
+        if not isinstance(h,dict)or set(h)!={'title','year','format','description_evidence'}or not m.safe_text(h['title'],160)or not m.integer(h['year'],2100)or h['format']not in('film','series')or not m.safe_text(h['description_evidence'],500):raise m.Stop('DESCRIPTION_IDENTIFY_SCHEMA')
+    candidates=resolve_description_identities(found['hypotheses'],identities)
+    checked=bounded_call(verify(candidates))
+    if set(checked)!={'status','work_id','reason'}or checked['status']not in('matched','ambiguous','unknown')or not m.safe_text(checked['reason'],1500):raise m.Stop('DESCRIPTION_VERIFY_SCHEMA')
+    if checked['status']=='matched'and checked['work_id']not in{c['id']for c in candidates}:raise m.Stop('DESCRIPTION_UNVERIFIED_ID')
+    if checked['status']!='matched'and checked['work_id']!='':raise m.Stop('DESCRIPTION_AMBIGUOUS_ID')
+    expected=case['expected']
+    passed=checked['status']==expected['status']and checked['work_id']==expected['work_id']
+    return {'identify':found,'identity_candidates':candidates,'identity_route':fixture['identity_route'],
+            'identity_provenance':fixture['provenance'],'verify':checked,'expected':expected,
+            'diagnostic_assertion_pass':passed,'no_images':True,
+            'false_certainty_in_unknown_case':name=='description-unknown'and checked['status']=='matched'}
 
 
 def extract_source_pack(client,acquired):
@@ -174,9 +225,11 @@ def run(secret,acquire,media,client_factory=EvidenceClient):
     for name in CASE_ORDER:
         case={'id':name,'state':'RUNNING'};report['cases'].append(case);checkpoint()
         try:
-            if name.startswith('vision') and blocked_vision:
+            if name.startswith('description'):
+                case['result']=description_case(client,name)
+            elif name.startswith('vision') and blocked_vision:
                 case.update(state='NOT_RUN',reason='VISION_REQUEST_PREVIOUSLY_REJECTED_NO_RETRY');checkpoint();continue
-            if name.startswith('vision'):case['result']=vision_case(client,name,media)
+            elif name.startswith('vision'):case['result']=vision_case(client,name,media)
             else:
                 kind='film'if name=='analysis-film'else'season'
                 collected=acquire(kind);case['acquisition']=clean(collected)

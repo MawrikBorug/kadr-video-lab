@@ -1,0 +1,111 @@
+{
+  "schema": "kadr.description-context-fixture.v1",
+  "identity_route": "RECORDED_TMDB_API_IDENTITY_PROJECTION_NOT_LIVE_LOOKUP",
+  "provenance": {
+    "url": "https://drive.google.com/file/d/1g_VPiOaZctWJKdvvC4dqNFq_0WCcrIqc/view",
+    "title": "Direct TMDB to Lift report, revision2",
+    "checked_at": "2026-10-28",
+    "basis": "Current report records prior authorized TMDB responses and identity metadata. This is a limited evidence projection, not a new API request or the original raw response body. Lift bindings are not used."
+  },
+  "identities": [
+    {
+      "id": "tmdb:movie:438631",
+      "titles": [
+        "Dune",
+        "Дюна"
+      ],
+      "year": 2021,
+      "format": "film",
+      "external_ids": [
+        {
+          "namespace": "tmdb",
+          "entity_type": "movie",
+          "value": "438631"
+        },
+        {
+          "namespace": "imdb",
+          "entity_type": "title",
+          "value": "tt1160419"
+        }
+      ],
+      "cast": [
+        "Timothée Chalamet",
+        "Тимоти Шаламе"
+      ],
+      "director": [
+        "Denis Villeneuve",
+        "Дени Вильнёв"
+      ]
+    },
+    {
+      "id": "tmdb:movie:841",
+      "titles": [
+        "Dune",
+        "Дюна"
+      ],
+      "year": 1984,
+      "format": "film",
+      "external_ids": [
+        {
+          "namespace": "tmdb",
+          "entity_type": "movie",
+          "value": "841"
+        },
+        {
+          "namespace": "imdb",
+          "entity_type": "title",
+          "value": "tt0087182"
+        }
+      ],
+      "cast": [
+        "Francesca Annis",
+        "Patrick Stewart"
+      ],
+      "director": [
+        "David Lynch"
+      ]
+    },
+    {
+      "id": "tmdb:tv:106379",
+      "titles": [
+        "Fallout"
+      ],
+      "year": 2024,
+      "format": "series",
+      "external_ids": [
+        {
+          "namespace": "tmdb",
+          "entity_type": "tv",
+          "value": "106379"
+        },
+        {
+          "namespace": "imdb",
+          "entity_type": "title",
+          "value": "tt12637874"
+        }
+      ],
+      "cast": [],
+      "director": []
+    }
+  ],
+  "cases": [
+    {
+      "id": "description-known",
+      "description": "Фильм начала 2020-х: герой Тимоти Шаламе прибывает на пустынную планету за пряностью, теряет семью из-за предательства и скрывается у местных жителей среди огромных песчаных червей.",
+      "expected": {
+        "status": "matched",
+        "work_id": "tmdb:movie:438631"
+      },
+      "description_origin": "Original diagnostic paraphrase; no image, no exact title in input."
+    },
+    {
+      "id": "description-unknown",
+      "description": "Придуманный контроль: немая комедия о груше-нотариусе на Юпитере, которая оформляет наследство стае синих кальмаров. Если произведение не подтверждается, нужен отказ от уверенного выбора.",
+      "expected": {
+        "status": "unknown",
+        "work_id": ""
+      },
+      "description_origin": "Original fictional negative control, not asserted as an existing work."
+    }
+  ]
+}

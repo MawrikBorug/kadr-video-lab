@@ -56,20 +56,24 @@ class Tests(unittest.TestCase):
     self.assertEqual(calls,['vision-one']);self.assertEqual(r['classification'],'STOPPED_OUTCOME_UNKNOWN_TIMEOUT');self.assertEqual(r['reserved_tokens'],100)
   finally:m.CASE_ORDER=previous;m.vision_case=old;m.REPORT=old_report
  def test_total_reservation_and_timeout_contract(self):
-  self.assertEqual(m.m.MAX_REQUESTS,20);self.assertEqual(m.m.MAX_RESERVED,160000)
-  self.assertLessEqual(20*m.m.MAX_WINDOW,m.m.MAX_RESERVED)
+  self.assertEqual(m.m.MAX_REQUESTS,24);self.assertEqual(m.m.MAX_RESERVED,172000)
+  self.assertLessEqual(20*m.m.MAX_WINDOW+4*m.DESCRIPTION_REQUEST_CAP,m.m.MAX_RESERVED)
   workflow=(ROOT/'.github/workflows/groq-ai-closure.yml').read_text();self.assertIn('timeout-minutes: 45',workflow);self.assertIn('github.run_attempt == 1',workflow)
  def test_source_extraction_not_a_stored_claims_fallback(self):
   class C:
    def call(self,*a,**k):raise AssertionError('no calls allowed')
   with self.assertRaises(m.m.Stop)as cm:m.extract_source_pack(C(),{'documents':[]})
   self.assertEqual(cm.exception.code,'SOURCE_ACQUISITION_UNAVAILABLE')
- def test_complete_suite_has_twenty_distinct_calls_no_recommendations(self):
+ def test_complete_suite_has_twentyfour_distinct_calls_no_recommendations(self):
   class C:
    def __init__(self,secret,checkpoint):self.secret=secret;self.requests=0;self.reserved=0;self.evidence=[];self.generated=[];self.checkpoint=checkpoint
    def call(self,prompt,output=2200,images=()):
     self.requests+=1;self.reserved+=1000;data=json.loads(prompt);task=data['task']
-    if task.startswith('Identify'):
+    if task.startswith('Identify')and'description'in data:
+     value={'hypotheses':[{'title':'Dune','year':2021,'format':'film','description_evidence':'actor and year'}],'unknown':False}
+    elif task.startswith('Verify candidates'):
+     value={'status':'matched','work_id':'tmdb:movie:438631','reason':'matching actor and year'}
+    elif task.startswith('Identify'):
      value={'hypotheses':[{'title':'Sintel','year':2010,'format':'film','observed_features':'drawn dragon'}],'unknown':False}
     elif task.startswith('Compare'):
      value={'status':'matched','work_id':'sintel-2010','reason':'test pixels'}
@@ -87,11 +91,11 @@ class Tests(unittest.TestCase):
   try:
    with tempfile.TemporaryDirectory()as directory:
     m.REPORT=Path(directory)/'report.json';r=m.run('fake',acquire,m.load_media(),client_factory=C)
-    self.assertEqual(r['attempted_requests'],20);self.assertEqual(len(r['cases']),5)
-    self.assertEqual(len(r['cases'][3]['result']['sections']),9);self.assertEqual(len(r['cases'][4]['result']['sections']),9)
+    self.assertEqual(r['attempted_requests'],24);self.assertEqual(len(r['cases']),7)
+    self.assertEqual(len(r['cases'][5]['result']['sections']),9);self.assertEqual(len(r['cases'][6]['result']['sections']),9)
     self.assertFalse(r['recs_repeated']);self.assertFalse(r['accepted_quality']);self.assertFalse(r['actual_product_publication'])
     # Unknown fixture was deliberately misidentified; record failure, not a suite PASS.
-    self.assertFalse(r['cases'][2]['result']['diagnostic_assertion_pass'])
+    self.assertFalse(r['cases'][4]['result']['diagnostic_assertion_pass'])
   finally:m.REPORT=old
  def test_unvalidated_extraction_dict_never_enters_artifact_buffer(self):
   old=m.m.Client.call
@@ -106,4 +110,43 @@ class Tests(unittest.TestCase):
    self.assertEqual(client.generated,[])
    self.assertNotIn('PROTECTED_SOURCE_SENTINEL',json.dumps(snapshots))
   finally:m.m.Client.call=old
+ def test_description_only_known_resolves_typed_id_without_images(self):
+  class C:
+   def __init__(self):self.calls=[]
+   def call(self,prompt,output=0,images=()):
+    self.calls.append((prompt,output,images))
+    self_outer.assertEqual(images,())
+    self_outer.assertLessEqual(len((m.m.SYSTEM+prompt).encode())+512+output,3000)
+    if len(self.calls)==1:return {'hypotheses':[{'title':'Dune','year':2021,'format':'film','description_evidence':'actor/year'}],'unknown':False}
+    return {'status':'matched','work_id':'tmdb:movie:438631','reason':'matching actor/year'}
+  self_outer=self;c=C();r=m.description_case(c,'description-known')
+  self.assertTrue(r['diagnostic_assertion_pass']);self.assertEqual(len(c.calls),2);self.assertTrue(r['no_images'])
+  self.assertEqual(r['identity_candidates'][0]['external_ids'][0],{'namespace':'tmdb','entity_type':'movie','value':'438631'})
+  self.assertIn('NOT_LIVE',r['identity_route'])
+ def test_description_unknown_false_certainty_is_recorded_not_passed(self):
+  class C:
+   def __init__(self):self.n=0
+   def call(self,*a,**k):
+    self.n+=1
+    return {'hypotheses':[{'title':'Dune','year':2021,'format':'film','description_evidence':'unsupported guess'}],'unknown':False}if self.n==1 else {'status':'matched','work_id':'tmdb:movie:438631','reason':'unsupported guess'}
+  r=m.description_case(C(),'description-unknown');self.assertFalse(r['diagnostic_assertion_pass']);self.assertTrue(r['false_certainty_in_unknown_case'])
+ def test_description_unknown_abstains_without_invented_id(self):
+  class C:
+   def __init__(self):self.n=0
+   def call(self,*a,**k):
+    self.n+=1
+    return {'hypotheses':[],'unknown':True}if self.n==1 else {'status':'unknown','work_id':'','reason':'no confirmed candidate'}
+  r=m.description_case(C(),'description-unknown');self.assertTrue(r['diagnostic_assertion_pass']);self.assertEqual(r['identity_candidates'],[])
+ def test_description_cannot_match_unverified_provider_id(self):
+  class C:
+   def __init__(self):self.n=0
+   def call(self,*a,**k):
+    self.n+=1
+    return {'hypotheses':[],'unknown':True}if self.n==1 else {'status':'matched','work_id':'tmdb:movie:999999','reason':'invented identity'}
+  with self.assertRaises(m.m.Stop)as cm:m.description_case(C(),'description-known')
+  self.assertEqual(cm.exception.code,'DESCRIPTION_UNVERIFIED_ID')
+ def test_typed_identity_does_not_confuse_tmdb_movie_and_tv(self):
+  identities=[{'id':'movie:7','titles':['Name'],'year':2020,'format':'film','external_ids':[{'namespace':'tmdb','entity_type':'movie','value':'7'}]},{'id':'tv:7','titles':['Name'],'year':2020,'format':'series','external_ids':[{'namespace':'tmdb','entity_type':'tv','value':'7'}]}]
+  found=m.resolve_description_identities([{'title':'Name','year':2020,'format':'series'}],identities)
+  self.assertEqual([x['id']for x in found],['tv:7'])
 if __name__=='__main__':unittest.main()
