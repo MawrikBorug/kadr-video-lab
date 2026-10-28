@@ -10,10 +10,12 @@ recommendations or replace the product with a benchmark framework.
 
 ## Bound and results
 
-One run, maximum **20 API calls / 160000 reserved tokens** across both models:
+One run, maximum **24 API calls / 172000 reserved tokens** across both models:
 
 | Case | Maximum calls |
 |---|---:|
+| Description-only known film: identify → typed recorded API-identity projection → verify | 2 |
+| Description-only fictional unknown: identify → same identity route → verify/abstain | 2 |
 | One real Sintel frame: identify → confirmed identity fixture → independent pixel verification | 2 |
 | Three distinct real Sintel frames: same complete route | 2 |
 | Original non-film chart: unknown/abstention control | 2 |
@@ -23,7 +25,13 @@ One run, maximum **20 API calls / 160000 reserved tokens** across both models:
 There are no inference retries. 65 seconds minimum separates API starts; each request has a
 45-second socket timeout. The 2400-second limit is checked between operations; the workflow has
 an independent hard **45-minute** timeout. Sources have separate 20-second socket bounds and
-4MB maximum bodies. The theoretical 20×7900=158000 envelope fits the run's 160000 ceiling.
+4MB maximum bodies. The existing20 requests remain capped at7900 each (158000). Each of the four new description
+requests has an independently preflighted and runtime-enforced3000 ceiling (12000). The full-suite
+170000 envelope fits172000;24×7900 is deliberately NOT the admitted bound. Worst-case text
+reservation is14×7900+4×3000=122600, vision6×7900=47400, each below the documented200KTPD.
+All calls serialize with65-second spacing, below8KTPM per model.24 starts plus source/network
+time fit the existing45-minute workflow and40-minute between-call deadline; the approximate
+planning duration is27–30 minutes, not a guaranteed latency.
 Published Free limits are 8K TPM/200K TPD per selected model, not a guarantee of remaining quota.
 The existing recommendation run used 2385 actual tokens. Other account load is unknown; select
 this run only with sufficient daily quota. 429, unauthorized, billing-required or uncertain transport
@@ -35,10 +43,28 @@ Content/schema/relevance failure is recorded and independent remaining cases con
 structured model rejection inside an analysis does not suppress later section groups. No result
 is labelled product-quality PASS: every output needs independent coordinator-agent review, and
 `accepted_quality=false`, `actual_product_publication=false` remain true constraints. A completed
-workflow means that evidence was collected, not that all five cases succeeded. Check every case.
+workflow means that evidence was collected, not that all seven cases succeeded. Check every case.
 Partial reports checkpoint after requests/cases. Arbitrary model JSON is never checkpointed before
 caller validation; only validated case results and span-validated source packs are retained. A hard runner kill leaves RUNNING/incomplete
 rather than silently granting acceptance. Only one report.json is uploaded for seven days.
+
+## Description-only context search
+
+This is a distinct input scenario, not recommendations or an image caption. Two original text
+fixtures contain no images: a known Dune2021 description without its title, and an explicitly
+invented unknown work. The route is description → model hypotheses → typed external-identity
+projection lookup → independent model verification against text clues. A negative result, ambiguity
+or unsupported candidate cannot select an unverified card. A confident false match on the unknown
+fixture is explicitly recorded as failure, even if the ID belongs to a real work.
+
+The tiny identity pool records the current project's evidence of prior authorized TMDB responses:
+movie/438631, movie/841 and tv/106379, each retaining namespace/entity_type/value and source
+provenance. Movie and TV ID namespaces never merge. This is **not a fresh live TMDB lookup or
+a raw response-body snapshot**. Current runtime metadata API integration is a separate acceptance
+obligation. A real identity proves the work exists, not that every description clue is correct; the
+second call checks consistency and may abstain. The first diagnostic inference for description-only
+is still NOT_RUN until this combined workflow actually runs. Direct title search remains the normal
+metadata API path without LLM; no title-search or AnalysisVersion redesign is introduced.
 
 ## Real input and identity
 
