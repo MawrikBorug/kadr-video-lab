@@ -23,6 +23,13 @@ on:
       - 'tests/groq_functional_eval_test.py'
       - 'docs/groq-functional-eval.md'
       - 'tests/fixtures/groq-eval/**'
+      - '.github/workflows/groq-ai-closure.yml'
+      - 'scripts/groq-ai-closure.py'
+      - 'scripts/groq-source-acquisition.py'
+      - 'tests/groq-ai-closure.test.mjs'
+      - 'tests/groq_ai_closure_test.py'
+      - 'tests/groq_source_acquisition_test.py'
+      - 'docs/groq-ai-closure.md'
   workflow_dispatch:
 
 permissions:

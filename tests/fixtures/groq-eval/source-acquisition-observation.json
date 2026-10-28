@@ -1,0 +1,235 @@
+{
+  "schema": "kadr.source-acquisition-observation.v1",
+  "checked_at": "2026-10-28T08:19:38.398303+00:00",
+  "observation_only_not_runtime_fallback": true,
+  "transport": "Public urllib using environment network configuration; no authorization/secret. Runtime fixed HTTPS transport remains separately measured in manual run.",
+  "works": [
+    {
+      "kind": "film",
+      "scope": {
+        "id": "sintel-2010",
+        "title": "Sintel",
+        "year": 2010,
+        "season": null
+      },
+      "documents": [
+        {
+          "id": "S1",
+          "url": "https://en.wikipedia.org/wiki/Sintel",
+          "title": "Sintel — Wikipedia",
+          "rights": "CC-BY-SA; Wikipedia contributors; retain article/history attribution",
+          "tier": "secondary",
+          "sha256": "379900760beabb64b629eeb6dca49b006b30131058849acd799717f41e85a860",
+          "checked_at": "2026-10-28T08:19:43.700326+00:00",
+          "scope_id": "sintel-2010",
+          "scope_evidence": {
+            "identity": "Sintel",
+            "scope": "standalone"
+          },
+          "maximum_input_words": 420,
+          "excerpt_characters": 2321,
+          "excerpt_words": 418
+        },
+        {
+          "id": "S2",
+          "url": "https://studio.blender.org/characters/5d403c21ee3219164b952e20/v2/",
+          "title": "Scales adult dragon — Blender Studio",
+          "rights": "Public metadata only; no model/rig redistribution",
+          "tier": "primary",
+          "sha256": "1dc2476e7057f638a808fe733e580b40e7afe295faad4e7b1ac33e39d0e66464",
+          "checked_at": "2026-10-28T08:19:49.880305+00:00",
+          "scope_id": "sintel-2010",
+          "scope_evidence": {
+            "identity": "Sintel",
+            "scope": "standalone"
+          },
+          "maximum_input_words": 100,
+          "excerpt_characters": 45,
+          "excerpt_words": 8
+        }
+      ],
+      "failures": [],
+      "finality": {
+        "state": "confirmed",
+        "basis": "standalone work"
+      },
+      "release_evidence": []
+    },
+    {
+      "kind": "season",
+      "scope": {
+        "id": "fallout-s1",
+        "title": "Fallout",
+        "year": 2024,
+        "season": 1,
+        "composition_revision": 1,
+        "main_episode_ids": [
+          "fallout-s1:e1",
+          "fallout-s1:e2",
+          "fallout-s1:e3",
+          "fallout-s1:e4",
+          "fallout-s1:e5",
+          "fallout-s1:e6",
+          "fallout-s1:e7",
+          "fallout-s1:e8"
+        ]
+      },
+      "documents": [
+        {
+          "id": "F1",
+          "url": "https://www.aboutamazon.com/news/entertainment/fallout-tv-series-cast",
+          "title": "Fallout cast and creators — Amazon",
+          "rights": "Copyright Amazon; RAM-only bounded source input; no raw text in artifacts",
+          "tier": "primary",
+          "sha256": "23ad665c114dc0cb98b2d976526d205c79c1ee5eea5bed8b0362a2821b761d93",
+          "checked_at": "2026-10-28T08:19:55.461018+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "all_eight_available": true,
+            "final_episode_mentioned": true,
+            "identity": "Fallout"
+          },
+          "maximum_input_words": 200,
+          "excerpt_characters": 1145,
+          "excerpt_words": 199
+        },
+        {
+          "id": "F2",
+          "url": "https://www.primevideo.com/-/de/detail/0HAQAA7JM43QWX0H6GUD3IOF70?tr=pr",
+          "title": "Fallout season 1 — Prime Video",
+          "rights": "Copyright Amazon; catalogue facts only; RAM-only text",
+          "tier": "primary",
+          "sha256": "0d6415b7f4ef13b6c240a153dfacf64df3d62b60692dd7d6c83df40b337399f9",
+          "checked_at": "2026-10-28T08:20:02.094440+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "selected_season_one": true,
+            "episode_numbers": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          "maximum_input_words": 160,
+          "excerpt_characters": 237,
+          "excerpt_words": 48
+        },
+        {
+          "id": "F3",
+          "url": "https://www.gamesradar.com/fallout-season-1-ending-explained-hank-new-vegas/",
+          "title": "Fallout S1 ending explained — GamesRadar",
+          "rights": "Copyright Future; RAM-only bounded source input; no raw text in artifacts",
+          "tier": "secondary",
+          "sha256": "4879625a6036fbab08a18a9e3f9f22a20d716d7d3262ede16b1074a656fa3cfa",
+          "checked_at": "2026-10-28T13:03:39.252646+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "identity": "Fallout",
+            "season": 1
+          },
+          "maximum_input_words": 200,
+          "excerpt_characters": 1176,
+          "excerpt_words": 200
+        }
+      ],
+      "failures": [],
+      "finality": {
+        "state": "confirmed",
+        "basis": "Current official publisher evidence: all eight available + final episode; season-one catalogue entries1..8",
+        "source_ids": [
+          "F1",
+          "F2"
+        ],
+        "composition_revision": 1
+      },
+      "release_evidence": [
+        {
+          "episode_id": "fallout-s1:e1",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167578+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e2",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167582+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e3",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167584+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e4",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167586+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e5",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167587+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e6",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167590+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e7",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167591+00:00"
+        },
+        {
+          "episode_id": "fallout-s1:e8",
+          "state": "publisher_confirmed_released",
+          "source_ids": [
+            "F1",
+            "F2"
+          ],
+          "composition_revision": 1,
+          "checked_at": "2026-10-28T08:20:08.167592+00:00"
+        }
+      ]
+    }
+  ],
+  "future_scope_filter": "Whole future-heading subtrees excluded until nonfuture sibling/ancestor boundary; actual F3 refreshed after this fix. Other source/release observations unchanged."
+}
