@@ -81,6 +81,7 @@ class Client:
         body = {'model':model,'messages':[{'role':'system','content':system},{'role':'user','content':content}],
                 'max_completion_tokens':output,'temperature':0,'stream':False,'response_format':{'type':'json_object'}}
         if not images: body.update(reasoning_effort='low', include_reasoning=False)
+        else: body.update(reasoning_effort='none', include_reasoning=False)
         conn = None
         entry = {'model':model,'reserved_tokens':reserve,'status':None,'usage':{},'quota_headers':{}}
         try:

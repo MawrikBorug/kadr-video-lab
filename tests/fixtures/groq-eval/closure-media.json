@@ -1,0 +1,96 @@
+{
+  "schema": "kadr.eval.materialized-media.v1",
+  "checkedAt": "2026-10-27",
+  "assets": [
+    {
+      "id": "sintel-2",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-2.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Sintel-screenshot-2.jpg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "original_path": "sintel-2.jpg",
+      "original_sha1": "2a9cace3381df85b418aeae04df13bc06940e598",
+      "original_sha256": "718657bc276bd702cfa2a01486d17f10dedc21cecc152618bde051feba4c8772",
+      "original_bytes": 93971,
+      "original_dimensions": [
+        1280,
+        544
+      ],
+      "path": "closure-media/sintel-2-1024.jpg",
+      "sha256": "9a00455b782951eade4f72726512301c5ab7c7ddd0aabdea7a0a4b3bd0192f84",
+      "bytes": 70094,
+      "dimensions": [
+        1024,
+        435
+      ],
+      "mime": "image/jpeg",
+      "modifications": "Resized 1280x544 to 1024x435 with Pillow LANCZOS; RGB JPEG quality90; EXIF/ICC not copied. Distinct original screenshot retained separately."
+    },
+    {
+      "id": "sintel-3",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-3.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Sintel-screenshot-3.jpg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "original_path": "sintel-3.jpg",
+      "original_sha1": "d395fd8b1aa5310b07f4bb6fd10bf6260b551636",
+      "original_sha256": "e1313b47e399b6c6152a4033e4391cb3d31ea7c2165483308cd7275b51d028a2",
+      "original_bytes": 80427,
+      "original_dimensions": [
+        1280,
+        544
+      ],
+      "path": "closure-media/sintel-3-1024.jpg",
+      "sha256": "d399d4d66b7baf50a978040237ac1e517b84f15f909fc05bbfc952aa342e7704",
+      "bytes": 60856,
+      "dimensions": [
+        1024,
+        435
+      ],
+      "mime": "image/jpeg",
+      "modifications": "Resized 1280x544 to 1024x435 with Pillow LANCZOS; RGB JPEG quality90; EXIF/ICC not copied. Distinct original screenshot retained separately."
+    },
+    {
+      "id": "sintel-4",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Sintel-screenshot-4.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Sintel-screenshot-4.jpg",
+      "license": "CC-BY-3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "attribution": "© copyright Blender Foundation www.sintel.org",
+      "original_path": "sintel-4.jpg",
+      "original_sha1": "5d69aa9b7fcc560a28429d96118bbeb990319cdc",
+      "original_sha256": "5f1f1d2381f8e60682118a0e0ad21af1cb02a851633b0cfd3601570ab3767aba",
+      "original_bytes": 61922,
+      "original_dimensions": [
+        1280,
+        544
+      ],
+      "path": "closure-media/sintel-4-1024.jpg",
+      "sha256": "8d2658bd1b364beb47df2e67d3757fb027e61167d4bdaeed69df5b43c130d227",
+      "bytes": 50387,
+      "dimensions": [
+        1024,
+        435
+      ],
+      "mime": "image/jpeg",
+      "modifications": "Resized 1280x544 to 1024x435 with Pillow LANCZOS; RGB JPEG quality90; EXIF/ICC not copied. Distinct original screenshot retained separately."
+    }
+  ],
+  "fixture_kind": "real licensed film screenshots; deterministic nonfilm negative control",
+  "unknown": {
+    "id": "nonfilm-chart",
+    "path": "closure-media/nonfilm-chart.jpg",
+    "sha256": "b2fa1cef6ea8ea205041d47c612eda9d65600b88ffb41e929d1bdc76faef73f4",
+    "bytes": 16812,
+    "dimensions": [
+      640,
+      360
+    ],
+    "mime": "image/jpeg",
+    "license": "CC0-1.0",
+    "source": "Original deterministic evaluation chart created by Codex for KADR. It is not a film frame and not claimed to depict a known work.",
+    "expected_status": "unknown"
+  }
+}
