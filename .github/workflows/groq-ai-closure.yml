@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       confirm_budget:
-        description: Up to24 Free Groq requests/172000 reserved tokens; run alone with sufficient daily quota and ZDR enabled
+        description: "Remaining analyses and vision only: up to20 Free Groq requests/158000 reserved tokens; run alone with sufficient daily quota and ZDR enabled"
         type: boolean
         required: true
         default: false

@@ -1,0 +1,361 @@
+{
+  "provenance": "Sanitized source-pack metadata and paraphrased claims from actual run40697006417. Quotes were never exported; tests use ASCII placeholders of recorded span length ONLY for routing/envelope regression, never as evidence.",
+  "packs": [
+    {
+      "scope": {
+        "id": "sintel-2010",
+        "title": "Sintel",
+        "year": 2010,
+        "season": null
+      },
+      "eligible_state": {
+        "watched": true
+      },
+      "claims": [
+        {
+          "id": "C1",
+          "text": "Главная героиня фильма – молодая женщина по имени Синтель.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "characters"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 0,
+              "end": 46
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        },
+        {
+          "id": "C2",
+          "text": "Синтель ищет дракона, которого назвала Скалз.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "plot_ending"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 246,
+              "end": 292
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        },
+        {
+          "id": "C3",
+          "text": "Синтель убивает взрослого дракона, который оказывается её другом Скалзом.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "plot_ending"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 1307,
+              "end": 1377
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        },
+        {
+          "id": "C4",
+          "text": "Работа над фильмом началась в мае 2009 года.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "creation"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 2125,
+              "end": 2147
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        },
+        {
+          "id": "C5",
+          "text": "Фильм официально вышел 27 сентября 2010 года на Нидерландском кинофестивале.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "creation"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 2149,
+              "end": 2235
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        },
+        {
+          "id": "C6",
+          "text": "Онлайн‑версия фильма была доступна для скачивания 30 сентября 2010 года.",
+          "source_ids": [
+            "S1"
+          ],
+          "sections": [
+            "creation"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "S1",
+              "start": 2243,
+              "end": 2314
+            }
+          ],
+          "kind": "fact",
+          "scope": "sintel-2010"
+        }
+      ],
+      "sources": [
+        {
+          "id": "S1",
+          "url": "https://en.wikipedia.org/wiki/Sintel",
+          "title": "Sintel — Wikipedia",
+          "rights": "CC-BY-SA; Wikipedia contributors; retain article/history attribution",
+          "tier": "secondary",
+          "sha256": "abfc728b9b5d51892b8b51c771cf981c9d7e9a9db59e58be92aed45e55451723",
+          "checked_at": "2026-10-28T13:40:08.949283+00:00",
+          "scope_id": "sintel-2010",
+          "scope_evidence": {
+            "identity": "Sintel",
+            "scope": "standalone"
+          },
+          "maximum_input_words": 420
+        },
+        {
+          "id": "S2",
+          "url": "https://studio.blender.org/characters/5d403c21ee3219164b952e20/v2/",
+          "title": "Scales adult dragon — Blender Studio",
+          "rights": "Public metadata only; no model/rig redistribution",
+          "tier": "primary",
+          "sha256": "d62e5cbc2860af972005d0e99dbe3e682014d6e8b672982e89bca3e0a7c35cc5",
+          "checked_at": "2026-10-28T13:40:09.500029+00:00",
+          "scope_id": "sintel-2010",
+          "scope_evidence": {
+            "identity": "Sintel",
+            "scope": "standalone"
+          },
+          "maximum_input_words": 100
+        }
+      ],
+      "coverage_gaps": [
+        "Отсутствуют доказательства о визуальном стиле, теоретических интерпретаций и значении фильма; такие разделы не поддерживаются предоставленными выдержками.",
+        "Narrow allowlisted diagnostic source adapter; not a universal source-discovery service.",
+        "Excerpts remain RAM-only. Source failure never silently falls back to stored claims."
+      ]
+    },
+    {
+      "scope": {
+        "id": "fallout-s1",
+        "title": "Fallout",
+        "year": 2024,
+        "season": 1,
+        "composition_revision": 1,
+        "main_episode_ids": [
+          "fallout-s1:e1",
+          "fallout-s1:e2",
+          "fallout-s1:e3",
+          "fallout-s1:e4",
+          "fallout-s1:e5",
+          "fallout-s1:e6",
+          "fallout-s1:e7",
+          "fallout-s1:e8"
+        ]
+      },
+      "eligible_state": {
+        "final_confirmed": true,
+        "composition_revision": 1,
+        "watched_episode_ids": [
+          "fallout-s1:e1",
+          "fallout-s1:e2",
+          "fallout-s1:e3",
+          "fallout-s1:e4",
+          "fallout-s1:e5",
+          "fallout-s1:e6",
+          "fallout-s1:e7",
+          "fallout-s1:e8"
+        ]
+      },
+      "claims": [
+        {
+          "id": "C1",
+          "text": "The series creators intentionally did not copy any specific story from the Fallout video games.",
+          "source_ids": [
+            "F1"
+          ],
+          "sections": [
+            "creation"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "F1",
+              "start": 601,
+              "end": 737
+            }
+          ],
+          "kind": "fact",
+          "scope": "fallout-s1"
+        },
+        {
+          "id": "C2",
+          "text": "Fallout Season 1 is streaming on Prime Video and has accumulated 3 billion minutes viewed according to Nielsen.",
+          "source_ids": [
+            "F1"
+          ],
+          "sections": [
+            "summary"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "F1",
+              "start": 902,
+              "end": 1073
+            }
+          ],
+          "kind": "fact",
+          "scope": "fallout-s1"
+        },
+        {
+          "id": "C3",
+          "text": "In the final episode, Lucy learns that her father Hank is responsible for razing a city after rescuing her and her brother from the Vault.",
+          "source_ids": [
+            "F3"
+          ],
+          "sections": [
+            "plot_ending"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "F3",
+              "start": 194,
+              "end": 267
+            }
+          ],
+          "kind": "fact",
+          "scope": "fallout-s1"
+        },
+        {
+          "id": "C4",
+          "text": "Lucy’s mother escaped the Vault with her children to Shady Sands after discovering surface civilization had returned.",
+          "source_ids": [
+            "F3"
+          ],
+          "sections": [
+            "characters"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "F3",
+              "start": 74,
+              "end": 192
+            }
+          ],
+          "kind": "fact",
+          "scope": "fallout-s1"
+        },
+        {
+          "id": "C5",
+          "text": "Hank tells Lucy that his actions were “necessary” to save his people.",
+          "source_ids": [
+            "F3"
+          ],
+          "sections": [
+            "meaning"
+          ],
+          "evidence_spans": [
+            {
+              "source_id": "F3",
+              "start": 495,
+              "end": 558
+            }
+          ],
+          "kind": "fact",
+          "scope": "fallout-s1"
+        }
+      ],
+      "sources": [
+        {
+          "id": "F1",
+          "url": "https://www.aboutamazon.com/news/entertainment/fallout-tv-series-cast",
+          "title": "Fallout cast and creators — Amazon",
+          "rights": "Copyright Amazon; RAM-only bounded source input; no raw text in artifacts",
+          "tier": "primary",
+          "sha256": "23ad665c114dc0cb98b2d976526d205c79c1ee5eea5bed8b0362a2821b761d93",
+          "checked_at": "2026-10-28T13:41:15.236725+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "all_eight_available": true,
+            "final_episode_mentioned": true,
+            "identity": "Fallout"
+          },
+          "maximum_input_words": 200
+        },
+        {
+          "id": "F2",
+          "url": "https://www.primevideo.com/-/de/detail/0HAQAA7JM43QWX0H6GUD3IOF70?tr=pr",
+          "title": "Fallout season 1 — Prime Video",
+          "rights": "Copyright Amazon; catalogue facts only; RAM-only text",
+          "tier": "primary",
+          "sha256": "02e987a424adf0bd1ee1f4843bf408e90d54801e383867f88cc04475ea679f80",
+          "checked_at": "2026-10-28T13:41:16.110786+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "selected_season_one": true,
+            "episode_numbers": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          "maximum_input_words": 160
+        },
+        {
+          "id": "F3",
+          "url": "https://www.gamesradar.com/fallout-season-1-ending-explained-hank-new-vegas/",
+          "title": "Fallout S1 ending explained — GamesRadar",
+          "rights": "Copyright Future; RAM-only bounded source input; no raw text in artifacts",
+          "tier": "secondary",
+          "sha256": "4879625a6036fbab08a18a9e3f9f22a20d716d7d3262ede16b1074a656fa3cfa",
+          "checked_at": "2026-10-28T13:41:17.337515+00:00",
+          "scope_id": "fallout-s1",
+          "scope_evidence": {
+            "identity": "Fallout",
+            "season": 1
+          },
+          "maximum_input_words": 200
+        }
+      ],
+      "coverage_gaps": [
+        "No evidence provided for episode titles listed in F2; the German list contains no contextual information about the series content.",
+        "Narrow allowlisted diagnostic source adapter; not a universal source-discovery service.",
+        "Excerpts remain RAM-only. Source failure never silently falls back to stored claims."
+      ]
+    }
+  ]
+}

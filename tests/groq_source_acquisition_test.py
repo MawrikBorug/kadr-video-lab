@@ -18,6 +18,17 @@ class Factory:
 AMAZON='<h1>Fallout cast and creators</h1><p>All eight episodes of Fallout Season 1 are available to watch.</p><p>In the final episode of Fallout Season 1, the story concludes.</p>'
 PRIME='<title>Prime Video: Fallout – Staffel 1</title>'+''.join('<h3>'+str(i)+'. Example '+str(i)+'</h3>'for i in range(1,9))
 class Tests(unittest.TestCase):
+ def test_amazon_visual_subsection_not_starved_by_cast_but_finality_preserved(self):
+  # Synthetic source structure, not copied source prose.
+  noise='<p>Fallout cast discussion '+('filler '*220)+'.</p>'
+  html=AMAZON+noise+'<h2>Less was more visually</h2><p>Nolan said the team wanted a restrained photographic approach.</p><p>The visual effects team supported the camera work.</p><h2>Other topics</h2><p>Fallout unrelated closing discussion.</p>'
+  excerpt,proof,limit=m._extract(html,'amazon')
+  self.assertTrue(proof['all_eight_available']);self.assertTrue(proof['final_episode_mentioned']);self.assertTrue(proof['visual_subsection_present'])
+  self.assertIn('visual effects team',excerpt);self.assertIn('Nolan said',excerpt);self.assertLessEqual(len(excerpt.split()),200);self.assertEqual(limit,200)
+ def test_amazon_visual_subsection_in_future_heading_tree_excluded(self):
+  html=AMAZON+'<h2>Season 2</h2><h3>Less was more visually</h3><p>The camera renders FUTURE_VISUAL.</p>'
+  excerpt,proof,_=m._extract(html,'amazon')
+  self.assertNotIn('FUTURE_VISUAL',excerpt);self.assertFalse(proof['visual_subsection_present'])
  def test_scope_and_official_finality(self):
   f=Factory({'www.aboutamazon.com':Response(AMAZON),'www.primevideo.com':Response(PRIME)})
   result=m.acquire('season',f)

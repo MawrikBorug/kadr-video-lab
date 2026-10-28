@@ -10,12 +10,12 @@ recommendations or replace the product with a benchmark framework.
 
 ## Bound and results
 
-One run, maximum **24 API calls / 172000 reserved tokens** across both models:
+The targeted follow-up runs only the five failed/blocked cases from run40697006417.
+Description-only known/unknown passed there and are not repeated; recommendations are not repeated.
+Maximum **20 API calls / 158000 reserved tokens** across the unchanged two models:
 
 | Case | Maximum calls |
 |---|---:|
-| Description-only known film: identify → typed recorded API-identity projection → verify | 2 |
-| Description-only fictional unknown: identify → same identity route → verify/abstain | 2 |
 | One real Sintel frame: identify → confirmed identity fixture → independent pixel verification | 2 |
 | Three distinct real Sintel frames: same complete route | 2 |
 | Original non-film chart: unknown/abstention control | 2 |
@@ -25,13 +25,10 @@ One run, maximum **24 API calls / 172000 reserved tokens** across both models:
 There are no inference retries. 65 seconds minimum separates API starts; each request has a
 45-second socket timeout. The 2400-second limit is checked between operations; the workflow has
 an independent hard **45-minute** timeout. Sources have separate 20-second socket bounds and
-4MB maximum bodies. The existing20 requests remain capped at7900 each (158000). Each of the four new description
-requests has an independently preflighted and runtime-enforced3000 ceiling (12000). The full-suite
-170000 envelope fits172000;24×7900 is deliberately NOT the admitted bound. Worst-case text
-reservation is14×7900+4×3000=122600, vision6×7900=47400, each below the documented200KTPD.
-All calls serialize with65-second spacing, below8KTPM per model.24 starts plus source/network
-time fit the existing45-minute workflow and40-minute between-call deadline; the approximate
-planning duration is27–30 minutes, not a guaranteed latency.
+4MB maximum bodies. The exact envelope is (6 vision + 2 extraction + 12 analysis/review) ×7900
+=158000 reserved tokens: text14×7900=110600 and vision6×7900=47400. All starts serialize.
+Recognition success and safe abstention are reported separately; a known frame returning unknown
+never counts as recognition success. A conservative prompt is not evidence of improved recognition.
 Published Free limits are 8K TPM/200K TPD per selected model, not a guarantee of remaining quota.
 The existing recommendation run used 2385 actual tokens. Other account load is unknown; select
 this run only with sufficient daily quota. 429, unauthorized, billing-required or uncertain transport
@@ -43,7 +40,7 @@ Content/schema/relevance failure is recorded and independent remaining cases con
 structured model rejection inside an analysis does not suppress later section groups. No result
 is labelled product-quality PASS: every output needs independent coordinator-agent review, and
 `accepted_quality=false`, `actual_product_publication=false` remain true constraints. A completed
-workflow means that evidence was collected, not that all seven cases succeeded. Check every case.
+workflow means that evidence was collected, not that all five remaining cases succeeded. Check every case.
 Partial reports checkpoint after requests/cases. Arbitrary model JSON is never checkpointed before
 caller validation; only validated case results and span-validated source packs are retained. A hard runner kill leaves RUNNING/incomplete
 rather than silently granting acceptance. Only one report.json is uploaded for seven days.
@@ -62,8 +59,7 @@ movie/438631, movie/841 and tv/106379, each retaining namespace/entity_type/valu
 provenance. Movie and TV ID namespaces never merge. This is **not a fresh live TMDB lookup or
 a raw response-body snapshot**. Current runtime metadata API integration is a separate acceptance
 obligation. A real identity proves the work exists, not that every description clue is correct; the
-second call checks consistency and may abstain. The first diagnostic inference for description-only
-is still NOT_RUN until this combined workflow actually runs. Direct title search remains the normal
+second call checks consistency and may abstain. Description-only known/unknown both passed in run40697006417; those calls are excluded from the targeted follow-up. Direct title search remains the normal
 metadata API path without LLM; no title-search or AnalysisVersion redesign is introduced.
 
 ## Real input and identity
@@ -163,3 +159,26 @@ https://console.groq.com/docs/vision
 https://console.groq.com/docs/reasoning
 https://console.groq.com/docs/rate-limits
 https://console.groq.com/docs/models
+
+## Analysis evidence routing
+
+The bibliography is built deterministically from retrieved references with matching scope and SHA-256,
+without asking a model to invent a factual claim about bibliography. Reference IDs cannot support
+narrative paragraphs. Interpretations and labelled hypotheses reason from specific in-scope plot or
+character claim IDs; they may not introduce events, future canon or author intent. The reviewer sees
+exact RAM-only evidence quotes and the section basis map. Visual language requires claims explicitly
+supported as visual observations; production dates are not a substitute. An absent visual basis must
+remain an evidence gap, so nine returned section IDs alone cannot pass the quality gate.
+
+The targeted visual input uses the existing official Amazon creator panel. Its parser now reserves
+space for the explicit visual-production subsection as well as the finality statements inside the
+same200-word limit. Creator-reported camera/VFX choices support only that reported approach,
+not invented shot, color or editing analysis. The route and raw-byte SHA-256 fetch remain unchanged.
+
+For Sintel, `closure-frame-observations.json` contains original agent annotations after inspection
+of the three existing licensed JPEGs. Their bytes/hashes are rechecked before those notes augment
+successful fresh text acquisition. The source record separately identifies the annotation text hash,
+all three image hashes, attribution and the limited frame scope. These are prepared diagnostic
+observations, **not automatic visual extraction for arbitrary films**; the annotation title is never
+passed to vision identification. No inference call is added. Missing, altered or out-of-scope evidence
+still blocks acceptance. No new live inference has validated the generated analyses or recognition.
