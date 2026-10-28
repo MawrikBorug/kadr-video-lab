@@ -108,12 +108,39 @@ def _extract(html,kind):
  if kind=='amazon':
   if not any('fallout'in h.lower()for h in headings[:3]):raise SourceError('WORK_IDENTITY_UNCONFIRMED')
   # Entire article is the original S1 creator panel; exclude future paragraphs.
-  selected=[p for p in paragraphs if not FUTURE.search(p) and any(k in p.lower()for k in ('fallout','nolan','geneva','wagner','lucy','eight','final episode','finale','camera','visual'))]
+  scoped=[];future_level=None
+  for tag,text in rows:
+   if re.fullmatch(r'h[1-4]',tag):
+    level=int(tag[1])
+    if FUTURE.search(text):future_level=level if future_level is None else min(level,future_level);continue
+    if future_level is not None and level<=future_level:future_level=None
+   if tag=='p'and future_level is None and not FUTURE.search(text):scoped.append(text)
+  selected=[p for p in scoped if any(k in p.lower()for k in ('fallout','nolan','geneva','wagner','lucy','eight','final episode','finale','camera','visual'))]
   all_text=' '.join(selected)
-  selected.sort(key=lambda p:0 if re.search(r'final episode|all eight episodes',p,re.I)else 1)
+  # Preserve finality signals from the entire scoped selection, then allocate the
+  # existing200-word input budget to finality AND the explicit visual subsection.
+  # Article order previously starved the latter behind unrelated cast paragraphs.
   available=bool(re.search(r'watch\s+all\s+eight\s+episodes\s+of\s+Fallout\s+Season\s+1|all\s+eight\s+episodes\s+of\s+Fallout\s+Season\s+1\s+are\s+(?:now\s+)?available',all_text,re.I))
   final=bool(re.search(r'final\s+episode\s+of\s+Fallout\s+Season\s+1',all_text,re.I))
-  return _bound(selected,200),{'all_eight_available':available,'final_episode_mentioned':final,'identity':'Fallout'},200
+  visual=[];inside_visual=False;visual_level=None;future_level=None
+  for tag,text in rows:
+   if re.fullmatch(r'h[1-4]',tag):
+    level=int(tag[1])
+    if FUTURE.search(text):future_level=level if future_level is None else min(level,future_level);inside_visual=False;continue
+    if future_level is not None:
+     if level>future_level:continue
+     future_level=None
+    if re.search(r'^Less was more visually$',text,re.I):inside_visual=True;visual_level=level;continue
+    if inside_visual and level<=visual_level:inside_visual=False
+   if tag=='p'and inside_visual and future_level is None and not FUTURE.search(text):visual.append(text)
+  finality=[p for p in selected if re.search(r'final episode of Fallout Season 1|all eight episodes of Fallout Season 1',p,re.I)]
+  # Bound each priority independently; a long finality paragraph cannot consume
+  # the visual allocation. The last pass fills remaining words without duplicates.
+  visual_sentences=[s for p in visual for s in re.split(r'(?<=[.!?])\s+',p)]
+  visual_sentences.sort(key=lambda s:0 if re.search(r'photograph|visual effects|Nolan said',s,re.I)else 1)
+  priority=_bound(finality,65).splitlines()+_bound(visual_sentences,125).splitlines()
+  remainder=[s for p in selected for s in re.split(r'(?<=[.!?])\s+',p)if s not in priority]
+  return _bound(priority+remainder,200),{'all_eight_available':available,'final_episode_mentioned':final,'identity':'Fallout','visual_subsection_present':bool(visual)},200
  if kind=='prime':
   selected_season=bool(re.search(r'Fallout.{0,40}(?:Staffel\s*1|Season\s*1)',title,re.I))
   numbers=set()

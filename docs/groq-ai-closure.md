@@ -169,3 +169,16 @@ character claim IDs; they may not introduce events, future canon or author inten
 exact RAM-only evidence quotes and the section basis map. Visual language requires claims explicitly
 supported as visual observations; production dates are not a substitute. An absent visual basis must
 remain an evidence gap, so nine returned section IDs alone cannot pass the quality gate.
+
+The targeted visual input uses the existing official Amazon creator panel. Its parser now reserves
+space for the explicit visual-production subsection as well as the finality statements inside the
+same200-word limit. Creator-reported camera/VFX choices support only that reported approach,
+not invented shot, color or editing analysis. The route and raw-byte SHA-256 fetch remain unchanged.
+
+For Sintel, `closure-frame-observations.json` contains original agent annotations after inspection
+of the three existing licensed JPEGs. Their bytes/hashes are rechecked before those notes augment
+successful fresh text acquisition. The source record separately identifies the annotation text hash,
+all three image hashes, attribution and the limited frame scope. These are prepared diagnostic
+observations, **not automatic visual extraction for arbitrary films**; the annotation title is never
+passed to vision identification. No inference call is added. Missing, altered or out-of-scope evidence
+still blocks acceptance. No new live inference has validated the generated analyses or recognition.

@@ -6,6 +6,28 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('closure',ROOT/'scripts/groq-ai-closure.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 class Tests(unittest.TestCase):
+ def test_frame_observations_have_exact_media_hashes_original_provenance_and_limits(self):
+  media=m.load_media();doc=m.frame_observation_document(media)
+  self.assertEqual(doc['evidence_type'],'original_frame_annotation');self.assertEqual(doc['sha256_kind'],'annotation_utf8_not_remote_page')
+  self.assertEqual(len(doc['media_provenance']),3);self.assertLessEqual(len(doc['excerpt'].split()),100)
+  self.assertIn('not the whole film',doc['observation_scope']);self.assertNotIn('nonfilm-chart',json.dumps(doc))
+  media[0][0]['sha256']='0'*64
+  with self.assertRaises(m.m.Stop)as cm:m.frame_observation_document(media)
+  self.assertEqual(cm.exception.code,'FRAME_OBSERVATION_HASH')
+ def test_frame_annotation_scope_survives_extraction_and_reviewer_projection(self):
+  doc=m.frame_observation_document(m.load_media())
+  class C:
+   def call(self,prompt,*args):
+    data=json.loads(prompt);self_outer.assertEqual(data['documents'][0]['evidence_type'],'original_frame_annotation')
+    return {'claims':[{'id':'C1','text':'Screenshot2 places a golden dragon head in the right foreground.','source_ids':['V1'],'sections':['visual_language'],'evidence_spans':[{'source_id':'V1','quote':'Screenshot2: a golden dragon head fills the right foreground'}]}],'coverage_gaps':[]}
+  self_outer=self
+  pack=m.extract_source_pack(C(),{'scope':{'id':'sintel-2010','season':None},'documents':[doc]})
+  _,evidence,_=m.group_evidence(pack,('visual_language',))
+  self.assertEqual(evidence[0]['observation_scope'],[doc['observation_scope']])
+  # Additive input over the actual run's6058 film extraction reservation stays
+  # below the unchanged7900 cap; source text is not re-created or copied here.
+  projection={'id':doc['id'],'excerpt':doc['excerpt'],'evidence_type':doc['evidence_type'],'observation_scope':doc['observation_scope']}
+  self.assertLessEqual(6058+len(m.m.dump(projection).encode())+1,7900)
  def sparse_pack(self):
   return {'scope':{'id':'film','title':'Film','season':None},'eligible_state':{'watched':True},
    'sources':[{'id':'S1','title':'Retrieved source','url':'https://public.example/source','sha256':'a'*64,'scope_id':'film'}],
@@ -66,6 +88,30 @@ class Tests(unittest.TestCase):
      for span in claim['evidence_spans']:span['quote']='x'*(span['end']-span['start'])
     result=m.closure_analysis(C(),pack)
     self.assertEqual(len(result['preflight']),3);self.assertTrue(result['complete_section_coverage']);self.assertFalse(result['automatic_gate_candidate'])
+    self.assertTrue(all(max(p['generation_reserved'],p['review_reserved'])<=7900 for p in result['preflight']))
+ def test_expected_visual_pack_envelope_keeps_frame_scope_and_primary_report_type(self):
+  fixture=json.loads((ROOT/'tests/fixtures/closure-run-40697006417-packs.json').read_text())
+  class C:
+   def call(self,prompt,output):
+    data=json.loads(prompt)
+    if data['task'].startswith('Write'):
+     return {'sections':[{'id':section,'paragraphs':[{'kind':'hypothesis' if section=='theories' else 'interpretation','text':'Test scoped reasoning from the supplied observations.','claim_ids':data['policy']['section_basis'][section]}],'insufficient_evidence':False}for section in data['requested_sections']]}
+    return {'verdict':'pass','issues':[],'accepted_claim_ids':[x['id']for x in data['evidence']]+[x['id']for x in data['references']]}
+  for pack in fixture['packs']:
+   for claim in pack['claims']:
+    for span in claim['evidence_spans']:span['quote']='x'*(span['end']-span['start'])
+   if pack['scope']['id']=='sintel-2010':
+    doc=m.frame_observation_document(m.load_media());pack['sources'].append(m.clean(doc))
+    claim={'id':'C7','kind':'fact','scope':pack['scope']['id'],'text':'In screenshots2 and3, dragons occupy the foreground/center; screenshot4 places a human face and hands against pale haze.','source_ids':['V1'],'sections':['visual_language'],'observation_scope':[doc['observation_scope']],
+      'evidence_spans':[{'source_id':'V1','quote':q}for q in ('Screenshot2: a golden dragon head fills the right foreground','Screenshot3: a winged dragon occupies the center','Screenshot4: a dark-clothed human face and extended hands')]}
+   else:
+    # Expected primary-creator-reported production approach; placeholder quote
+    # length, not actual copyrighted source text or an observed shot/style claim.
+    claim={'id':'C6','kind':'fact','scope':pack['scope']['id'],'text':'Nolan said production aimed to give the visual effects team as little work as possible.','source_ids':['F1'],'sections':['visual_language','creation'],'evidence_spans':[{'source_id':'F1','quote':'x'*85}]}
+   pack['claims'].append(claim)
+   with self.subTest(scope=pack['scope']['id']):
+    result=m.closure_analysis(C(),pack)
+    self.assertTrue(result['complete_section_coverage']);self.assertFalse(result['accepted_quality'])
     self.assertTrue(all(max(p['generation_reserved'],p['review_reserved'])<=7900 for p in result['preflight']))
  def test_licensed_media_integrity_distinct_unknown(self):
   media=m.load_media();self.assertEqual(len(media),4)

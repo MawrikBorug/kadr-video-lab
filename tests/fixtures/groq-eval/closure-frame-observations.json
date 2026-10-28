@@ -1,0 +1,23 @@
+{
+  "schema": "kadr.frame-observations.v1",
+  "scope_id": "sintel-2010",
+  "basis": "Original visual observations by Codex after inspecting the three licensed, resized JPEGs; not external textual quotations or model recognition results.",
+  "limitations": "These observations apply only to screenshots2,3,4, not the whole film, camera motion, editing, symbolism, character identity or author intent.",
+  "observations": [
+    {
+      "asset_id": "sintel-2",
+      "sha256": "9a00455b782951eade4f72726512301c5ab7c7ddd0aabdea7a0a4b3bd0192f84",
+      "text": "Screenshot2: a golden dragon head fills the right foreground against a darker, cool, blurred background."
+    },
+    {
+      "asset_id": "sintel-3",
+      "sha256": "d399d4d66b7baf50a978040237ac1e517b84f15f909fc05bbfc952aa342e7704",
+      "text": "Screenshot3: a winged dragon occupies the center, above an out-of-focus reaching hand; the sky is warm and pale."
+    },
+    {
+      "asset_id": "sintel-4",
+      "sha256": "8d2658bd1b364beb47df2e67d3757fb027e61167d4bdaeed69df5b43c130d227",
+      "text": "Screenshot4: a dark-clothed human face and extended hands stand against a hazy, pale blue-gray background."
+    }
+  ]
+}
