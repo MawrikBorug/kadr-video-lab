@@ -126,12 +126,22 @@ def _extract(html,kind):
   return _bound(labels,160),{'selected_season_one':selected_season,'episode_numbers':sorted(numbers)},160
  if kind=='gamesradar':
   if not any(re.search(r'Fallout season\s*1 ending',h,re.I)for h in headings[:4]):raise SourceError('SEASON_IDENTITY_UNCONFIRMED')
-  selected=[];inside=False
+  selected=[];inside=False;future_level=None
   for tag,text in rows:
-   if tag.startswith('h'):
+   if re.fullmatch(r'h[1-4]',tag):
+    level=int(tag[1])
     if re.search(r'Fallout season\s*1 ending explained',text,re.I):inside=True
-    if inside and tag=='h2' and re.search(r'^(?:latest|most popular|related|more about|comments)',text,re.I):break
-   if tag=='p'and inside and not FUTURE.search(text)and any(w in text.lower()for w in ('hank','lucy','moldaver','maximus','ghoul','vault','rose','wilzig','fusion','vegas')):selected.append(text)
+    if not inside:continue
+    if FUTURE.search(text):
+     # Exclude the entire future-heading subtree. Paragraphs without their own
+     # season marker remain out of scope until a nonfuture sibling/ancestor.
+     future_level=level if future_level is None else min(level,future_level)
+     continue
+    if future_level is not None:
+     if level>future_level:continue
+     future_level=None
+    if tag=='h2' and re.search(r'^(?:latest|most popular|related|more about|comments)',text,re.I):break
+   if tag=='p'and inside and future_level is None and not FUTURE.search(text)and any(w in text.lower()for w in ('hank','lucy','moldaver','maximus','ghoul','vault','rose','wilzig','fusion','vegas')):selected.append(text)
   if not selected:raise SourceError('NO_SCOPED_PARAGRAPHS')
   selected.sort(key=lambda p:0 if any(k in p.lower()for k in ('lucy shoots','maximus arrives','hank then destroyed','cold fusion device','rose','mother'))else 1)
   return _bound(selected,200),{'identity':'Fallout','season':1},200

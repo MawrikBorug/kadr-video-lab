@@ -39,10 +39,9 @@ class EvidenceClient(m.Client):
     def __init__(self,secret,checkpoint=lambda:None,**kwargs):
         super().__init__(secret,**kwargs);self.generated=[];self.checkpoint=checkpoint
     def call(self,prompt,output=2200,images=()):
-        try:
-            result=super().call(prompt,output,images)
-            self.generated.append({'operation':self.requests,'content':clean(result,self.secret)})
-            return result
+        # Never persist arbitrary parsed model JSON before caller validation.
+        # Validated case.result/source_pack carries the reviewable evidence.
+        try:return super().call(prompt,output,images)
         finally:self.checkpoint()
 
 
@@ -182,6 +181,7 @@ def run(secret,acquire,media,client_factory=EvidenceClient):
                 kind='film'if name=='analysis-film'else'season'
                 collected=acquire(kind);case['acquisition']=clean(collected)
                 pack=extract_source_pack(client,collected)
+                case['source_pack']=clean({k:v for k,v in pack.items()if k!='documents_ram'});checkpoint()
                 case['result']=closure_analysis(client,pack)
             case['state']='COMPLETED_PENDING_INDEPENDENT_REVIEW'
         except m.Stop as exc:

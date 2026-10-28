@@ -38,10 +38,15 @@ class Tests(unittest.TestCase):
   f=Factory({})
   with self.assertRaises(m.SourceError):m._fetch('https://attacker.example/',f)
   self.assertEqual(f.calls,[])
- def test_gamesradar_future_filtered_not_promoted_stop(self):
-  html='<h1>Fallout season 1 ending explained</h1><p>Lucy meets Hank in a room.</p><h3>Fallout season 3 promoted article</h3><p>Season 2 reveals FUTURE_SECRET.</p><p>Lucy shoots a target in this synthetic parser case.</p>'
+ def test_gamesradar_future_heading_excludes_unmarked_paragraph_subtree(self):
+  html='<h1>Fallout season 1 ending explained</h1><p>Lucy meets Hank in a room.</p><h3>Fallout season 2</h3><p>Hank erases FUTURE_SECRET.</p><h4>Character details</h4><p>Lucy learns FUTURE_NESTED.</p><h3>Fallout season 1 ending details</h3><p>Lucy shoots a target in this synthetic parser case.</p>'
   excerpt,_,_=m._extract(html,'gamesradar')
-  self.assertNotIn('FUTURE_SECRET',excerpt);self.assertIn('Lucy shoots',excerpt)
+  self.assertNotIn('FUTURE_SECRET',excerpt);self.assertNotIn('FUTURE_NESTED',excerpt)
+  self.assertIn('Lucy meets Hank',excerpt);self.assertIn('Lucy shoots',excerpt)
+ def test_gamesradar_future_subtree_does_not_resume_without_heading_boundary(self):
+  html='<h1>Fallout season 1 ending explained</h1><p>Lucy meets Hank.</p><h3>Fallout season 3 promoted article</h3><p>Lucy shoots FUTURE_UNMARKED.</p>'
+  excerpt,_,_=m._extract(html,'gamesradar')
+  self.assertNotIn('FUTURE_UNMARKED',excerpt);self.assertIn('Lucy meets Hank',excerpt)
  def test_sintel_full_plot_selected_before_navigation(self):
   html='<title>Sintel</title><p>Sintel is a film.</p><h2>Plot</h2><p>Sintel meets Scales.<br> A dragon waits.</p><h2>References</h2><p>Unrelated film navigation should not enter input.</p>'
   excerpt,_,_=m._extract(html,'sintel')

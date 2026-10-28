@@ -93,4 +93,17 @@ class Tests(unittest.TestCase):
     # Unknown fixture was deliberately misidentified; record failure, not a suite PASS.
     self.assertFalse(r['cases'][2]['result']['diagnostic_assertion_pass'])
   finally:m.REPORT=old
+ def test_unvalidated_extraction_dict_never_enters_artifact_buffer(self):
+  old=m.m.Client.call
+  malicious={'claims':[],'coverage_gaps':[],'unexpected_copied_source':'PROTECTED_SOURCE_SENTINEL'}
+  m.m.Client.call=lambda *a,**k:malicious
+  snapshots=[]
+  client=m.EvidenceClient('fake-key',checkpoint=lambda:snapshots.append(list(client.generated)))
+  acquired={'scope':{'id':'film','title':'Sintel','season':None},'documents':[{'id':'S1','excerpt':'The heroine saves a young dragon.'}],'finality':{'state':'confirmed'}}
+  try:
+   with self.assertRaises(m.m.Stop)as cm:m.extract_source_pack(client,acquired)
+   self.assertEqual(cm.exception.code,'SOURCE_EXTRACTION_SCHEMA')
+   self.assertEqual(client.generated,[])
+   self.assertNotIn('PROTECTED_SOURCE_SENTINEL',json.dumps(snapshots))
+  finally:m.m.Client.call=old
 if __name__=='__main__':unittest.main()

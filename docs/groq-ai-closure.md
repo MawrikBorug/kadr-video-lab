@@ -36,7 +36,8 @@ structured model rejection inside an analysis does not suppress later section gr
 is labelled product-quality PASS: every output needs independent coordinator-agent review, and
 `accepted_quality=false`, `actual_product_publication=false` remain true constraints. A completed
 workflow means that evidence was collected, not that all five cases succeeded. Check every case.
-Partial reports checkpoint after requests/cases. A hard runner kill leaves RUNNING/incomplete
+Partial reports checkpoint after requests/cases. Arbitrary model JSON is never checkpointed before
+caller validation; only validated case results and span-validated source packs are retained. A hard runner kill leaves RUNNING/incomplete
 rather than silently granting acceptance. Only one report.json is uploaded for seven days.
 
 ## Real input and identity
@@ -75,7 +76,9 @@ character metadata; Fallout S1's official Amazon creator panel, selected S1 Prim
 and a season-one-specific GamesRadar ending explanation (copyrighted input ≤200 words/source,
 RAM only). Bibliographic records accompany results. Source text/quotes/raw HTML/headers never
 enter the artifact. Source hashes, quote offsets and attributable bounded generated paraphrases do.
-Full copyrighted pages, scripts and copied recaps are not packaged.
+Full copyrighted pages, scripts and copied recaps are not packaged. Future-season headings exclude
+their entire paragraph subtree, including text without an explicit season marker, until a valid
+nonfuture sibling/ancestor heading resumes the scope.
 
 For season one, **publisher-confirmed released** evidence requires the official Amazon page's
 affirmative availability of all eight S1 episodes and current Prime's selected S1 episode entries.

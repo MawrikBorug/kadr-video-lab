@@ -126,7 +126,7 @@
           "rights": "Copyright Future; RAM-only bounded source input; no raw text in artifacts",
           "tier": "secondary",
           "sha256": "4879625a6036fbab08a18a9e3f9f22a20d716d7d3262ede16b1074a656fa3cfa",
-          "checked_at": "2026-10-28T08:20:08.167548+00:00",
+          "checked_at": "2026-10-28T13:03:39.252646+00:00",
           "scope_id": "fallout-s1",
           "scope_evidence": {
             "identity": "Fallout",
@@ -230,5 +230,6 @@
         }
       ]
     }
-  ]
+  ],
+  "future_scope_filter": "Whole future-heading subtrees excluded until nonfuture sibling/ancestor boundary; actual F3 refreshed after this fix. Other source/release observations unchanged."
 }
