@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import {readFile} from 'node:fs/promises';
-import {Admission} from '../server/admission.mjs';
+import {Admission,DAILY_SLOTS} from '../server/admission.mjs';
 import {execute} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
 import {Models,validateImages,generateAnalysis,recognize,reviewText,VISUAL_GAP_NOTICE} from '../server/models.mjs';
@@ -20,7 +20,7 @@ test('admission is global atomic create, duplicate is not a new AI spend, quota 
  const a=new Admission({job:'00000000-0000-0000-0000-000000000001',operation:'recognize',storage});await a.reserve();
  await assert.rejects(a.reserve(),{code:'DUPLICATE'});assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,0);
  await a.reserveCall();assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,1);
- for(let i=1;i<50;i++)await a.reserveCall();await assert.rejects(a.reserveCall(),{code:'DAILY_BUDGET'});
+ for(let i=1;i<DAILY_SLOTS;i++)await a.reserveCall();await assert.rejects(a.reserveCall(),{code:'DAILY_BUDGET'});
  assert.ok([...records.values()].every(x=>!JSON.stringify(x).includes('image')));
  const failing=new Admission({job:'00000000-0000-0000-0000-000000000002',operation:'recognize',storage:{put:async()=>{throw Error('offline');}}});
  await assert.rejects(failing.reserve(),{code:'LEDGER_UNAVAILABLE'});
@@ -48,9 +48,13 @@ test('semantic rejection gets exactly one repair/re-review; rejected prose never
  assert.equal(calls.length,4);assert.equal(result.status,'rejected');assert.equal(result.text,null);assert.equal(result.reviews.length,2);
 });
 test('catalog existence alone is not a verified frame match; no fixture lookup',async()=>{
- const replies=[{hypotheses:[{title:'Example',year:2000,type:'movie',clues:'ambiguous'}]},{candidates:[{index:0,assessment:'ambiguous',reason:'insufficient distinguishing detail'}]}];
- const models={progress:()=>{},call:async()=>replies.shift()},catalog={search:async()=>[{id:1,type:'movie',year:2000,title:'Example',catalogVerified:true}]};
+ const replies=['Example | 2000 | movie'];
+ const models={progress:()=>{},call:async()=>replies.shift()},catalog={search:async()=>[
+  {id:2,type:'movie',year:2000,title:'Unrelated result',original:'Unrelated result',catalogVerified:true},
+  {id:3,type:'movie',year:2001,title:'Example',original:'Example',catalogVerified:true},
+  {id:1,type:'movie',year:2000,title:'Example',original:'Example',catalogVerified:true}]};
  const result=await recognize(models,catalog,{frames:[],description:'A synthetic story description.'});
+ assert.equal(result.candidates.length,1);assert.equal(result.candidates[0].id,1);
  assert.equal(result.candidates[0].frameMatchVerified,false);assert.equal(result.candidates[0].assessment,'ambiguous');
 });
 test('B04 publisher port admits only matching eight episodes and excludes future subtree',async()=>{

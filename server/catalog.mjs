@@ -20,29 +20,10 @@ export class Catalog {
       poster:row.poster_path&&/^\/[\w.-]+$/.test(row.poster_path)?'https://image.tmdb.org/t/p/w342'+row.poster_path:null,
       overview:cut(row.overview,1100),catalogVerified:true,frameMatchVerified:false,url:`https://www.themoviedb.org/${kind}/${row.id}`};
   }
-  async search(query){
+  async search(query,language='ru-RU'){
     demand(typeof query==='string'&&query.trim().length>=2&&query.length<=250,'QUERY','Введите название или используйте описание для AI-поиска.');
-    const data=await this.get('/search/multi',{query:query.trim(),include_adult:'false'});
+    const data=await this.get('/search/multi',{query:query.trim(),include_adult:'false',language});
     return (data.results||[]).filter(x=>['movie','tv'].includes(x.media_type)).slice(0,6).map(x=>this.project(x));
-  }
-  async visualSearch(queries){
-    const headers={'User-Agent':'KADR-Video-Lab/3 (https://github.com/MawrikBorug/kadr-video-lab)'},result=[];
-    for(const text of queries){
-      if(typeof text!=='string'||text.length<3||text.length>150)continue;
-      const query=new URLSearchParams({action:'query',generator:'search',gsrsearch:'hastemplate:"Infobox film" '+text,gsrlimit:'6',prop:'pageprops',format:'json'});
-      let pages;try{pages=Object.values((await jsonFetch('https://en.wikipedia.org/w/api.php?'+query,{signal:this.signal,headers})).query?.pages||{}).sort((a,b)=>(a.index||0)-(b.index||0));}catch{continue;}
-      for(const page of pages.slice(0,4)){
-        const id=page.pageprops?.wikibase_item;if(!/^Q\d+$/.test(id||''))continue;
-        let entity;try{entity=(await jsonFetch('https://www.wikidata.org/w/api.php?'+new URLSearchParams({action:'wbgetentities',ids:id,props:'claims',format:'json'}),{signal:this.signal,headers})).entities?.[id];}catch{continue;}
-        const movie=entity?.claims?.P4947?.[0]?.mainsnak?.datavalue?.value,tv=entity?.claims?.P4983?.[0]?.mainsnak?.datavalue?.value;
-        if(!movie&&!tv)continue;
-        const type=movie?'movie':'tv',value=Number(movie||tv);
-        if(result.some(x=>x.id===value&&x.type===type))continue;
-        try{const {cast,crew,...card}=await this.detail(type,value);result.push({...card,retrievedBy:'visual-keyword-search'});}catch(e){if(e.code==='TMDB_NOT_CONFIGURED')throw e;}
-        if(result.length>=3)return result;
-      }
-    }
-    return result;
   }
   async detail(type,id){
     demand(['movie','tv'].includes(type)&&Number.isSafeInteger(id)&&id>0,'IDENTITY','Неверная карточка.');

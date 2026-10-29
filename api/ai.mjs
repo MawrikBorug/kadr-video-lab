@@ -15,7 +15,7 @@ export default async function handler(req,res){
     if(req.method==='GET'){
       let budget;try{budget=process.env.BLOB_READ_WRITE_TOKEN?await budgetSummary():null;}catch{budget=null;}
       res.setHeader('Content-Type','application/json; charset=utf-8');res.end(JSON.stringify({ready:Boolean(process.env.GROQ_API_KEY&&(process.env.TMDB_READ_ACCESS_TOKEN||process.env.TMDB_API_KEY)&&process.env.BLOB_READ_WRITE_TOKEN),
-        models:{vision:process.env.KADR_VISION_MODEL||'qwen/qwen3.8-27b',text:process.env.KADR_TEXT_MODEL||'openai/gpt-oss-120b'},
+        models:{recognition:process.env.KADR_RECOGNITION_MODEL||'openai/gpt-oss-20b',vision:process.env.KADR_VISION_MODEL||'qwen/qwen3.8-27b',text:process.env.KADR_TEXT_MODEL||'openai/gpt-oss-120b'},
         maxFrames:3,privacy:'RAM/foreground',dailyReservedCap:DAILY_RESERVED_CAP,budget,commit:process.env.VERCEL_GIT_COMMIT_SHA||process.env.KADR_BUILD_SHA||null}));return;
     }
     demand(req.method==='POST','METHOD','Метод не поддерживается.',405);
