@@ -30,7 +30,7 @@ async function call(body,{long=false}={}){
   controller=new AbortController();const current=++epoch;busy=true;ready();
   try{
     const response=await fetch(api,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:controller.signal});
-    if(!long){const value=await response.json();if(value.error)throw Error(value.error.message);if(!response.ok)throw Error('Сервер отклонил запрос.');return value;}
+    if(!long){const value=await response.json();if(current!==epoch)throw new DOMException('Отменено','AbortError');if(value.error)throw Error(value.error.message);if(!response.ok)throw Error('Сервер отклонил запрос.');return value;}
     const reader=response.body.getReader(),decoder=new TextDecoder();let pending='',result;
     while(true){const {value,done}=await reader.read();pending+=decoder.decode(value||new Uint8Array(),{stream:!done});
       let pos;while((pos=pending.indexOf('\n'))>=0){const line=pending.slice(0,pos);pending=pending.slice(pos+1);if(!line)continue;const event=JSON.parse(line);
@@ -38,8 +38,9 @@ async function call(body,{long=false}={}){
         if(event.type==='progress')status(event.message);if(event.type==='error'){const e=Error(event.error.message);e.evidence=event.error;throw e;}if(event.type==='result')result=event.result;
       }if(done)break;
     }
-    if(!result)throw Error('Ответ прерван. Автоматического повтора нет; исходные кадры нужно выбрать заново.');return result;
-  }finally{if(current===epoch){busy=false;controller=null;ready();}}
+    if(current!==epoch)throw new DOMException('Отменено','AbortError');if(!result)throw Error('Ответ прерван. Автоматического повтора нет; исходные кадры нужно выбрать заново.');return result;
+  }catch(e){if(current!==epoch)throw new DOMException('Отменено','AbortError');throw e;}
+  finally{if(current===epoch){busy=false;controller=null;ready();}}
 }
 function showCandidates(result){
   $('ai-candidates').replaceChildren();status(result.message||'Выберите проверенную карточку. Совпадение с кадрами ещё требует вашего выбора.');
@@ -55,14 +56,14 @@ function showCandidates(result){
   }
 }
 $('ai-find').onclick=async()=>{
-  if(busy||processing)return;activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();$('ai-selection').hidden=true;selection=null;ready();
+  if(busy||processing)return;const job=crypto.randomUUID();activeJob=job;$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();$('ai-selection').hidden=true;selection=null;ready();
   const metadata=frames.map(({width,height,bytes,original})=>({width,height,bytes,original}));
-  try{const result=await call({op:'recognize',job:activeJob,frames:frames.map(f=>f.data),description:$('ai-description').value},{long:true});
+  try{const result=await call({op:'recognize',job,frames:frames.map(f=>f.data),description:$('ai-description').value},{long:true});if(activeJob!==job)return;
     evidence={kind:'recognition',at:new Date().toISOString(),inputMetadata:metadata,result};$('ai-export').hidden=false;showCandidates(result);
-  }catch(e){status(e.name==='AbortError'?'Поиск отменён. Выберите кадры заново.':e.message);if(e.evidence)evidence={kind:'recognition-error',at:new Date().toISOString(),error:e.evidence};}
-  finally{clearFrames();activeJob=null;}
+  }catch(e){if(activeJob===job){status(e.name==='AbortError'?'Поиск отменён. Выберите кадры заново.':e.message);if(e.evidence)evidence={kind:'recognition-error',at:new Date().toISOString(),error:e.evidence};}}
+  finally{if(activeJob===job){clearFrames();activeJob=null;}}
 };
-$('ai-catalog').onclick=async()=>{if(busy||processing)return;selection=null;$('ai-selection').hidden=true;$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();ready();try{showCandidates(await call({op:'catalog',query:$('ai-title-query').value}));}catch(e){status(e.message);}};
+$('ai-catalog').onclick=async()=>{if(busy||processing)return;selection=null;$('ai-selection').hidden=true;$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();ready();try{showCandidates(await call({op:'catalog',query:$('ai-title-query').value}));}catch(e){if(e.name!=='AbortError')status(e.message);}};
 async function prepare(card,number){
   if(busy)return;selection=null;$('ai-analysis').hidden=true;ready();
   try{
@@ -80,18 +81,18 @@ async function prepare(card,number){
       $('ai-gate').textContent=value.finality.state==='confirmed'?(value.season?'Выпуск сезона подтверждён официальными источниками. Нужен просмотр всех перечисленных основных серий.':'Полный просмотр подтверждаете вы. Будут раскрыты все спойлеры фильма.'):(value.finality.reason||'Выпуск сезона не подтверждён.');
     }
     ready();$('ai-selection').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){status(e.message);}
+  }catch(e){if(e.name!=='AbortError')status(e.message);}
 }
 $('ai-analyze').onclick=async()=>{
-  if(busy||!selection?.proof)return;const selected=selection;
+  if(busy||!selection?.proof)return;const selected=selection,job=crypto.randomUUID();activeJob=job;
   try{
     const checked=[...$('ai-watched').querySelectorAll('input:checked')].map(x=>Number(x.value));
     const watched=await call({op:'confirm',proof:selected.proof,watched:!selected.season&&document.querySelector('#ai-watched input')?.checked===true,watchedIds:checked});
-    activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;
-    const result=await call({op:'analysis',job:activeJob,type:selected.card.type,id:selected.card.id,season:selected.season?.number,proof:watched.proof},{long:true});
+    if(activeJob!==job)return;$('ai-analysis').hidden=true;
+    const result=await call({op:'analysis',job,type:selected.card.type,id:selected.card.id,season:selected.season?.number,proof:watched.proof},{long:true});if(activeJob!==job)return;
     evidence={kind:'analysis',at:new Date().toISOString(),card:selected.card,result};renderAnalysis(result);
-  }catch(e){status(e.name==='AbortError'?'Разбор отменён. Непринятый текст не показывается.':e.message);if(e.evidence){evidence={kind:'analysis-error',error:e.evidence};renderAnalysis({status:'error',reviewSummary:e.message,usage:e.evidence.usage});}}
-  finally{activeJob=null;}
+  }catch(e){if(activeJob===job){status(e.name==='AbortError'?'Разбор отменён. Непринятый текст не показывается.':e.message);if(e.evidence){evidence={kind:'analysis-error',error:e.evidence};renderAnalysis({status:'error',reviewSummary:e.message,usage:e.evidence.usage});}}}
+  finally{if(activeJob===job)activeJob=null;}
 };
 function renderAnalysis(result){
   $('ai-export').hidden=false;

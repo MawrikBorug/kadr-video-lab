@@ -76,6 +76,10 @@ test('a model false pass cannot admit visual prose without visual evidence',asyn
  const models={call:async()=>({checks:headings.map((_,index)=>({index,status:'supported',source_ids:['S1'],basis:'Synthetic model falsely declares all paragraphs supported.'})),issues:[]})};
  const r=await reviewText(models,{documents:[{id:'S1',text:'Plot prose only.'}],visualEvidenceIds:[]},text);
  assert.equal(r.verdict,'fail');assert.equal(r.checks[6].modelStatus,'supported');assert.equal(r.checks[6].status,'unsupported');assert.equal(r.serverIssues.length,1);
+ const gapText=text.replace('Synthetic factual paragraph 6.','В источниках отсутствуют данные для анализа света и цвета.');
+ models.call=async()=>({checks:headings.map((_,index)=>({index,status:'supported',evidence_gap_only:index===6,source_ids:['S1'],basis:'The source contains only plot prose and no visual observations.'})),issues:[]});
+ const honest=await reviewText(models,{documents:[{id:'S1',text:'Plot prose only.'}],visualEvidenceIds:[]},gapText);
+ assert.equal(honest.verdict,'pass');assert.equal(honest.serverIssues.length,0);
 });
 test('season materials retain cast roles and every episode plot while excluding future content',async()=>{
  const source=new Sources(AbortSignal.timeout(1000)),qid='Q1';
