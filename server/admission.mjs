@@ -1,6 +1,13 @@
-import {put,head} from '@vercel/blob';
+import {put,head,list} from '@vercel/blob';
 import {setTimeout as delay} from 'node:timers/promises';
 import {Failure,demand} from './core.mjs';
+
+export async function budgetSummary(){
+  const day=new Date().toISOString().slice(0,10),prefix=`kadr/budget/${day}/`;
+  const result=await list({prefix,limit:21});
+  const used=result.blobs.filter(x=>/^\d+\.json$/.test(x.pathname.slice(prefix.length))).length;
+  return {day,reservedSlots:used,remainingSlots:Math.max(0,20-used),reservedTokens:used*7900,maxReservedTokens:158000};
+}
 
 // Atomic create-only objects. Only typed accounting metadata; NEVER prompts/images/text.
 export class Admission {
