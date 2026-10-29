@@ -13,10 +13,11 @@ export class Admission {
     demand(/^[a-f0-9-]{36}$/i.test(this.job),'JOB_ID','Недействительный номер операции.');
     demand(await this.create(`kadr/requests/${this.day}/${this.job}.json`,{operation:this.operation,at:this.clock(),expires:this.clock()+86400000}),
       'DUPLICATE','Этот запрос уже запускался. Его повтор не расходует AI; начните новый поиск.',409);
-    const needed=this.operation==='analysis'?4:this.operation==='recognize'?3:0;let got=0;
+  }
+  async reserveCall(){
     // 20 slots × 7900 = 158000 reserved tokens/day across ALL deployed instances.
-    for(let i=0;i<20&&got<needed;i++)if(await this.create(`kadr/budget/${this.day}/${i}.json`,{job:this.job,reserved:7900,at:this.clock()}))got++;
-    demand(got===needed,'DAILY_BUDGET','Дневной бюджет лаборатории исчерпан. Повторите завтра.',429);
+    for(let i=0;i<20;i++)if(await this.create(`kadr/budget/${this.day}/${i}.json`,{job:this.job,reserved:7900,at:this.clock()}))return;
+    throw new Failure('DAILY_BUDGET','Дневной бюджет лаборатории исчерпан. Повторите завтра.',429);
   }
   async checkpoint(){
     if(this.signal?.aborted)throw new Failure('CANCELLED','Операция отменена.',499);
@@ -25,6 +26,7 @@ export class Admission {
   }
   async beforeCall(){
     await this.checkpoint();
+    await this.reserveCall();
     // Each call reserves a future 65-second slot globally; no inference retries.
     const slot=Math.floor(this.clock()/65000)+1;
     demand(await this.create(`kadr/starts/${slot}.json`,{job:this.job,start:slot*65000}),

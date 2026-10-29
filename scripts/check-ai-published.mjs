@@ -10,6 +10,17 @@ const out=config.output||'artifacts/published-ai';await mkdir(out,{recursive:tru
 const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,...(process.env.HTTPS_PROXY?{proxy:{server:process.env.HTTPS_PROXY}}:{})});
 const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();
 const evidence={kind:'REAL_PUBLISHED_HTTPS',physicalIPhone:'NOT_RUN',at:new Date().toISOString(),url:share.origin+'/ai.html',steps:[],errors:[]};
+await page.addInitScript(()=>{
+ const original=window.fetch.bind(window);window.__kadrQA=[];
+ window.fetch=async(input,options)=>{
+  const response=await original(input,options);let op;
+  try{if(String(input).includes('/api/ai'))op=JSON.parse(options?.body||'{}').op;}catch{}
+  if(['analysis','recognize'].includes(op)){
+   const record={op,status:response.status,events:[],done:false};window.__kadrQA.push(record);
+   response.clone().text().then(raw=>{record.events=raw.split('\n').filter(Boolean).map(s=>JSON.parse(s));record.done=true;},()=>{record.aborted=true;record.done=true;});
+  }return response;
+ };
+});
 page.on('pageerror',e=>evidence.errors.push(e.message));
 page.on('response',async response=>{
  try{if(new URL(response.url()).origin!==share.origin||!response.url().includes('/api/ai')||response.request().method()!=='POST')return;
@@ -55,9 +66,10 @@ try{
   const watches=await page.locator('#ai-watched input').all();for(const input of watches)await input.check();
   evidence.watchedConfirmed=watches.length;evidence.preparation=await page.locator('#ai-gate').innerText();
   const responsePromise=page.waitForResponse(r=>r.url().includes('/api/ai')&&r.request().method()==='POST'&&r.request().postDataJSON()?.op==='analysis',{timeout:15000});
-  await page.locator('#ai-analyze').click();const response=await responsePromise;const raw=await response.text();
-  const events=raw.split('\n').filter(Boolean).map(s=>JSON.parse(s));
-  evidence.steps.push({name:'real-UI-TMDB-scope-watch-sources-generation-review-UI',status:response.status(),events});
+  await page.locator('#ai-analyze').click();await responsePromise;
+  await page.waitForFunction(()=>window.__kadrQA.some(r=>r.op==='analysis'&&r.done),null,{timeout:295000});
+  const captured=await page.evaluate(()=>window.__kadrQA.find(r=>r.op==='analysis'));
+  evidence.steps.push({name:'real-UI-TMDB-scope-watch-sources-generation-review-UI',...captured});
   await page.waitForTimeout(300);evidence.rendered={verdict:await page.locator('#ai-verdict').innerText(),text:await page.locator('#ai-text').innerText(),sources:await page.locator('#ai-sources').innerText(),status:await page.locator('#ai-status').innerText()};
  }
  await page.screenshot({path:out+'/result.png',fullPage:true});await save();

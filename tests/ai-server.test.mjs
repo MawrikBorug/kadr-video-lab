@@ -18,7 +18,8 @@ test('orientation is applied without cropping; image name never enters inference
 test('admission is global atomic create, duplicate is not a new AI spend, quota failure closes',async()=>{
  const records=new Map();const storage={put:async(p,t)=>{if(records.has(p)){const e=Error('exists');e.name='BlobAlreadyExistsError';throw e;}records.set(p,JSON.parse(t));},head:async()=>{const e=Error();e.name='BlobNotFoundError';throw e;}};
  const a=new Admission({job:'00000000-0000-0000-0000-000000000001',operation:'recognize',storage});await a.reserve();
- await assert.rejects(a.reserve(),{code:'DUPLICATE'});assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,3);
+ await assert.rejects(a.reserve(),{code:'DUPLICATE'});assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,0);
+ await a.reserveCall();assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,1);
  assert.ok([...records.values()].every(x=>!JSON.stringify(x).includes('image')));
  const failing=new Admission({job:'00000000-0000-0000-0000-000000000002',operation:'recognize',storage:{put:async()=>{throw Error('offline');}}});
  await assert.rejects(failing.reserve(),{code:'LEDGER_UNAVAILABLE'});

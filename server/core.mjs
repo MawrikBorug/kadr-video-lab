@@ -28,6 +28,6 @@ export async function jsonFetch(url,{signal,headers={},timeout=18000,method='GET
 
 export const SECTIONS=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];
 export function sectionCoverage(text){
-  const numbers=[...text.matchAll(/^\s*(?:#{1,4}\s*|\*\*)?(\d)[.)]\s+/gm)].map(x=>Number(x[1]));
-  return SECTIONS.every((_,i)=>numbers.includes(i+1));
+  const lines=text.split('\n').map(x=>x.replace(/[*#]/g,'').trim());let last=-1;
+  return SECTIONS.every((name,i)=>{const heading=`${i+1}. ${name}`;const index=lines.findIndex((line,n)=>n>last&&(line===heading||line===`${i+1}) ${name}`));if(index<0)return false;last=index;return true;});
 }
