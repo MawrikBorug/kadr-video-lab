@@ -58,11 +58,11 @@ $('ai-find').onclick=async()=>{
   if(busy||processing)return;activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();$('ai-selection').hidden=true;selection=null;ready();
   const metadata=frames.map(({width,height,bytes,original})=>({width,height,bytes,original}));
   try{const result=await call({op:'recognize',job:activeJob,frames:frames.map(f=>f.data),description:$('ai-description').value},{long:true});
-    evidence={kind:'recognition',at:new Date().toISOString(),inputMetadata:metadata,result};showCandidates(result);
+    evidence={kind:'recognition',at:new Date().toISOString(),inputMetadata:metadata,result};$('ai-export').hidden=false;showCandidates(result);
   }catch(e){status(e.name==='AbortError'?'Поиск отменён. Выберите кадры заново.':e.message);if(e.evidence)evidence={kind:'recognition-error',at:new Date().toISOString(),error:e.evidence};}
   finally{clearFrames();activeJob=null;}
 };
-$('ai-catalog').onclick=async()=>{if(busy)return;try{showCandidates(await call({op:'catalog',query:$('ai-title-query').value}));}catch(e){status(e.message);}};
+$('ai-catalog').onclick=async()=>{if(busy||processing)return;selection=null;$('ai-selection').hidden=true;$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();ready();try{showCandidates(await call({op:'catalog',query:$('ai-title-query').value}));}catch(e){status(e.message);}};
 async function prepare(card,number){
   if(busy)return;selection=null;$('ai-analysis').hidden=true;ready();
   try{
@@ -94,6 +94,7 @@ $('ai-analyze').onclick=async()=>{
   finally{activeJob=null;}
 };
 function renderAnalysis(result){
+  $('ai-export').hidden=false;
   $('ai-analysis').hidden=false;$('ai-text').replaceChildren();$('ai-sources').replaceChildren();
   $('ai-verdict').textContent=result.status==='verified'?'Разбор допущен после отдельной проверки. '+result.verification:(result.reviewSummary||'Разбор не допущен.');
   if(result.status==='verified'&&result.text){

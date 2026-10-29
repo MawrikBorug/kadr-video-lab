@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
       - name: Offline closure controls
         run: npm ci --ignore-scripts
-      - name: Bounded live images and automatic analysis
+      - name: Remaining AI cases, one bounded run
         run: node scripts/ai-live-eval.mjs --review-only
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
