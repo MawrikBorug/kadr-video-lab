@@ -4,6 +4,18 @@ import {Sources} from './sources.mjs';
 import {Admission} from './admission.mjs';
 import {Models,recognize,generateAnalysis} from './models.mjs';
 
+export function basicAnalysisDossier(card,season){
+  const scope={id:`${card.type}:${card.id}`,type:card.type,title:card.original||card.title,year:card.year,
+    ...(season?{season:season.number,compositionRevision:season.revision}:{} )};
+  const source=season?card.url+'/season/'+season.number:card.url;
+  const metadata={title:card.original||card.title,year:card.year,type:card.type,imdb:card.imdb,
+    ...(season?{season:season.number,episodes:season.episodes.map(e=>({number:e.number,title:e.title})),cast:season.cast,crew:season.crew}:
+      {overview:card.overview,runtime:card.runtime,cast:card.cast,crew:card.crew})};
+  return {scope,documents:[{id:'T1',title:'TMDB: identity and selected-scope metadata',source,text:JSON.stringify(metadata)}],
+    references:[{id:'T1',title:'TMDB: карточка и метаданные',url:source}],
+    limitations:[],contextMode:'model_knowledge_with_catalog_metadata'};
+}
+
 export async function execute(body,{env,signal,session,progress=()=>{},factories={}}){
   const catalog=new (factories.Catalog||Catalog)(env,signal),sources=new (factories.Sources||Sources)(signal);
   const scoped=async()=>{
@@ -50,11 +62,24 @@ export async function execute(body,{env,signal,session,progress=()=>{},factories
   const models=new (factories.Models||Models)(env,admission,signal,progress);
   try{
     if(body.op==='recognize')return {...await recognize(models,catalog,body),usage:models.usage};
-    progress('Автоматически получаем материалы по проверенной карточке…');
-    const dossier=await sources.acquire(scope.card,scope.season,scope.finality);
+    demand(body.enrichSources===undefined||typeof body.enrichSources==='boolean','ENRICHMENT','Некорректный выбор дополнительных материалов.');
+    let dossier=basicAnalysisDossier(scope.card,scope.season);
+    if(body.enrichSources!==false){
+      progress('Пробуем получить дополнительные материалы…');
+      const enrichment=new (factories.Sources||Sources)(AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]));
+      try{
+        const extra=await enrichment.acquire(scope.card,scope.season,scope.finality);
+        // Identity/scope rejection in an optional adapter discards that material, never the base result.
+        demand(extra.scope?.id===dossier.scope.id&&extra.scope?.season===dossier.scope.season,'ENRICHMENT_SCOPE','Материалы относятся к другой работе или сезону.');
+        dossier={...extra,scope:dossier.scope,contextMode:'model_knowledge_with_optional_context'};
+      }catch{
+        signal?.throwIfAborted();
+        dossier.limitations.push('Дополнительные материалы недоступны; разбор опирается на знания модели и метаданные карточки.');
+      }
+    }
     const result=await generateAnalysis(models,dossier);
     await admission.checkpoint();
-    if(result.status==='verified'&&scope.season){
+    if(result.status==='generated'&&scope.season){
       const current=await catalog.season(scope.card.id,scope.season.number);
       demand(current.revision===selection.revision,'COMPOSITION_CHANGED','Состав сезона изменился за время проверки. Разбор не опубликован.',403);
       const released=await sources.finality(scope.card,current);demand(released.state==='confirmed','FINALITY_CHANGED','Подтверждение выпуска изменилось. Разбор не опубликован.',403);

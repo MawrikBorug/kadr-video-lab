@@ -20,7 +20,10 @@ test('real browser image orientation, payload privacy, result and clarification 
  await page.getByRole('button',{name:'Удалить',exact:true}).click();await expect(page.locator('.preview')).toHaveCount(0);
 });
 
-test('server rejects unverified prose without rendering it, explicit film-watch step',async({page})=>{
+test('watch confirmation precedes a direct generated analysis; text is not executable or marked verified',async({page})=>{
+ let analyses=0,analysisInput;
+ const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];
+ const text=headings.map((h,i)=>`${i+1}. ${h}\n\n${i===2?'Интерпретация: герой меняет своё отношение к прошлому.':'Synthetic generated paragraph.'}`).join('\n\n')+'\n<script>window.modelExecuted=true</script>';
  await page.route('**/api/ai',async route=>{
   if(route.request().method()==='GET')return route.fulfill({json:{ready:true}});
   const b=route.request().postDataJSON();
@@ -31,13 +34,40 @@ test('server rejects unverified prose without rendering it, explicit film-watch 
    if(!b.watched)return route.fulfill({status:403,json:{error:{message:'Подтвердите полный просмотр фильма.'}}});
    return route.fulfill({json:{proof:'watched-fixture'}});
   }
-  return route.fulfill({contentType:'application/x-ndjson',body:JSON.stringify({type:'result',result:{status:'rejected',text:null,reviewSummary:'Разбор отклонён проверкой.',usage:[]}})+'\n'});
+  if(b.op==='analysis'){
+   analyses++;analysisInput=b;
+   return route.fulfill({contentType:'application/x-ndjson',body:JSON.stringify({type:'result',result:{status:'generated',text,sources:[],usage:[{usage:{total_tokens:123}}]}})+'\n'});
+  }
+  return route.fulfill({status:400,json:{error:{message:'Unexpected synthetic operation'}}});
  });
  await page.goto('ai.html');await page.locator('summary').click();await page.locator('#ai-title-query').fill('Synthetic');await page.locator('#ai-catalog').click();
  await page.getByRole('button',{name:'Выбрать эту карточку'}).click();await page.locator('#ai-analyze').click();
  await expect(page.locator('#ai-status')).toContainText('Подтвердите полный просмотр');
+ expect(analyses).toBe(0);await expect(page.locator('#ai-text')).toBeEmpty();
+ await expect(page.locator('#ai-enrich-sources')).toBeChecked();
  await page.locator('#ai-watched input').check();await page.locator('#ai-analyze').click();
- await expect(page.locator('#ai-verdict')).toContainText('отклонён');await expect(page.locator('#ai-text')).toBeEmpty();
+ await expect(page.locator('#ai-verdict')).toContainText('Разбор создан ИИ');await expect(page.locator('#ai-text')).toContainText('Интерпретация: герой');
+ await expect(page.locator('#ai-text h3')).toHaveCount(9);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');
+ expect(analyses).toBe(1);expect(analysisInput.enrichSources).toBe(true);expect(analysisInput.proof).toBe('watched-fixture');
+ await expect(page.locator('#ai-text script')).toHaveCount(0);expect(await page.evaluate(()=>window.modelExecuted)).toBeUndefined();
+ await expect(page.locator('#ai-verdict')).not.toContainText('проверки');
+ await page.locator('#ai-enrich-sources').uncheck();await page.locator('#ai-analyze').click();
+ await expect.poll(()=>analyses).toBe(2);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');expect(analysisInput.enrichSources).toBe(false);
+});
+
+test('an access error never displays a returned spoiler body as a completed analysis',async({page})=>{
+ await page.route('**/api/ai',async route=>{
+  if(route.request().method()==='GET')return route.fulfill({json:{ready:true}});
+  const b=route.request().postDataJSON(),card={id:1,type:'movie',title:'Synthetic film',year:2000};
+  if(b.op==='catalog')return route.fulfill({json:{candidates:[card]}});
+  if(b.op==='prepare')return route.fulfill({json:{card,proof:'selected',finality:{state:'confirmed'}}});
+  if(b.op==='confirm')return route.fulfill({json:{proof:'watched'}});
+  return route.fulfill({contentType:'application/x-ndjson',body:JSON.stringify({type:'error',error:{code:'WATCHED_REQUIRED',message:'Подтверждение просмотра истекло.',text:'SPOILER MUST NOT RENDER'}})+'\n'});
+ });
+ await page.goto('ai.html');await page.locator('summary').click();await page.locator('#ai-title-query').fill('Synthetic');await page.locator('#ai-catalog').click();
+ await page.getByRole('button',{name:'Выбрать эту карточку'}).click();await page.locator('#ai-watched input').check();await page.locator('#ai-analyze').click();
+ await expect(page.locator('#ai-verdict')).toHaveText('Подтверждение просмотра истекло.');await expect(page.locator('#ai-text')).toBeEmpty();
+ await expect(page.locator('body')).not.toContainText('SPOILER MUST NOT RENDER');
 });
 
 test('small frames warn, maximum three, no browser persistence of image or description',async({page})=>{
