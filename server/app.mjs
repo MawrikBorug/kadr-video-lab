@@ -15,10 +15,12 @@ export async function execute(body,{env,signal,session,progress=()=>{},factories
   if(body.op==='catalog')return {candidates:await catalog.search(body.query)};
   if(body.op==='prepare'){
     const card=await catalog.detail(body.type,Number(body.id));
-    if(card.type==='tv'&&!body.season)return {card,seasons:card.seasons};
+    const {cast:privateCast,...publicCard}=card;
+    if(card.type==='tv'&&!body.season)return {card:publicCard,seasons:card.seasons};
     const season=card.type==='tv'?await catalog.season(card.id,Number(body.season)):null;
     const finality=await sources.finality(card,season);
-    return {card,season,finality:{state:finality.state,reason:finality.reason,basis:finality.basis,references:finality.references},
+    const publicSeason=season?(({cast,...value})=>value)(season):null;
+    return {card:publicCard,season:publicSeason,finality:{state:finality.state,reason:finality.reason,basis:finality.basis,references:finality.references},
       proof:sign({kind:'selection',session,type:card.type,id:card.id,season:season?.number||null,revision:season?.revision||null,
         episodeIds:season?.episodes.map(e=>e.id)||[],exp:Date.now()+900000},env.KADR_SESSION_SECRET)};
   }

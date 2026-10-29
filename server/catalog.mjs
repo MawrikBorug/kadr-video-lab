@@ -36,7 +36,7 @@ export class Catalog {
         if(!movie&&!tv)continue;
         const type=movie?'movie':'tv',value=Number(movie||tv);
         if(result.some(x=>x.id===value&&x.type===type))continue;
-        try{result.push({...await this.detail(type,value),retrievedBy:'visual-keyword-search'});}catch(e){if(e.code==='TMDB_NOT_CONFIGURED')throw e;}
+        try{const {cast,...card}=await this.detail(type,value);result.push({...card,retrievedBy:'visual-keyword-search'});}catch(e){if(e.code==='TMDB_NOT_CONFIGURED')throw e;}
         if(result.length>=3)return result;
       }
     }

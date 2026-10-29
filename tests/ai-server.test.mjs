@@ -99,3 +99,9 @@ test('known visual-source gap is labelled as server text; every generated block 
  const r=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'Synthetic evidence.'}],references:[],visualEvidenceIds:[],limitations:[]});
  assert.equal(r.status,'verified');assert.equal(calls,2);assert.ok(r.text.includes(VISUAL_GAP_NOTICE));assert.equal(r.systemNotices[0].origin,'server');
 });
+test('role evidence stays on the server before watched confirmation',async()=>{
+ class Catalog{async detail(){return{id:1,type:'tv',cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],seasons:[]};}async season(){return{number:1,cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],revision:'r1',episodes:[{id:11,number:1}]};}}
+ class Sources{async finality(){return{state:'confirmed',references:[]};}}
+ const r=await execute({op:'prepare',id:1,type:'tv',season:1},{env:{KADR_SESSION_SECRET:'synthetic-secret'},session:'s1',factories:{Catalog,Sources}});
+ assert.equal(r.card.cast,undefined);assert.equal(r.season.cast,undefined);assert.ok(!JSON.stringify(r).includes('PRIVATE_ROLE_EVIDENCE'));
+});
