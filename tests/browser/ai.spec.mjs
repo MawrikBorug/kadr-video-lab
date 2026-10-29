@@ -52,7 +52,7 @@ test('watch confirmation precedes a direct generated analysis; text is not execu
  await expect(page.locator('#ai-text script')).toHaveCount(0);expect(await page.evaluate(()=>window.modelExecuted)).toBeUndefined();
  await expect(page.locator('#ai-verdict')).not.toContainText('проверки');
  await page.locator('#ai-enrich-sources').check();await page.locator('#ai-analyze').click();
- await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');expect(analysisInput.enrichSources).toBe(true);expect(analyses).toBe(2);
+ await expect.poll(()=>analyses).toBe(2);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');expect(analysisInput.enrichSources).toBe(true);
 });
 
 test('an access error never displays a returned spoiler body as a completed analysis',async({page})=>{
