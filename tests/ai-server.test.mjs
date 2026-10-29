@@ -105,3 +105,12 @@ test('role evidence stays on the server before watched confirmation',async()=>{
  const r=await execute({op:'prepare',id:1,type:'tv',season:1},{env:{KADR_SESSION_SECRET:'synthetic-secret'},session:'s1',factories:{Catalog,Sources}});
  assert.equal(r.card.cast,undefined);assert.equal(r.season.cast,undefined);assert.ok(!JSON.stringify(r).includes('PRIVATE_ROLE_EVIDENCE'));
 });
+
+test('an admitted evidence gap cannot conceal a cited audience hypothesis',async()=>{
+ const dossier={documents:[{id:'S1',text:'The traveler reaches the island. No audience research is supplied.'}],visualEvidenceIds:['S1']};
+ const models={call:async()=>({checks:[{index:0,status:'evidence_gap',source_ids:[],evidence_gap_only:true,basis:'The paragraph acknowledges that the theory has no confirmed evidence.'}],issues:[]})};
+ const falsePass=await reviewText(models,dossier,'8. Теории\n\nГипотеза [S1]: зрители считают остров сном героя. Подтверждения в материалах нет.');
+ assert.equal(falsePass.verdict,'fail');assert.equal(falsePass.checks[0].status,'unsupported');assert.ok(falsePass.issues.length>0);
+ const honest=await reviewText(models,dossier,'8. Теории\n\nМатериалы не содержат альтернативных объяснений; обоснованную теорию предложить нельзя.');
+ assert.equal(honest.verdict,'pass');
+});

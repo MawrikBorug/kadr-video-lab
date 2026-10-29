@@ -138,6 +138,16 @@ export async function reviewText(models,dossier,text){
     prompt:'For each block FIRST state the concrete source facts/relationships in basis and compare ALL factual premises, THEN choose status. evidence_gap_only=true ONLY if the entire block honestly describes missing evidence/limits, without any assertion of visual appearance, new events or theories; a label alone does not qualify. Each cited source must actually support its claim; support in a different document does not fix a wrong citation. A vague statement that the block aligns is insufficient. Check internal identity contradictions across blocks too. Do not mistake a known canonical fact for a speculative theory. An explicitly labelled possible symbolic reading of TRUE sourced events does not need a creator statement.\n'+JSON.stringify({scope:dossier.scope,sources:dossier.documents,blocks:modelBlocks.map(({text},index)=>({index,text}))})});
   const allowed=new Set(dossier.documents.map(d=>d.id)),checks=Array.isArray(value.checks)?value.checks.map(x=>({...x,modelIndex:x.index,index:modelBlocks[x.index]?.originalIndex??-1})):[],serverIssues=[];
   for(const index of systemIndexes)checks.push(blocks[index].section===6?{index,status:'evidence_gap',source_ids:[],evidence_gap_only:true,basis:'Labelled server notice: these source adapters did not retrieve independent visual observations.',origin:'server'}:{index,status:'supported',source_ids:[...allowed],evidence_gap_only:false,basis:'Bibliography composed from actual retrieved reference metadata; listing a source is not proof of a claim.',origin:'server'});
+  for(const check of checks){
+    if(check.origin==='server'||!(check.evidence_gap_only||check.status==='evidence_gap'))continue;
+    const body=blocks[check.index]?.text||'';
+    const labelledClaim=/(?:^|[\s*])(?:Факт|Гипотеза|Интерпретация)(?:[\s*: ]|\[)/iu.test(body);
+    const citedClaim=/\[[A-ZА-Я][0-9]+\]/iu.test(body);
+    if(labelledClaim||citedClaim){
+      check.modelStatus=check.status;check.status='unsupported';
+      check.basis='Блок содержит утверждение с меткой факта/гипотезы/интерпретации или ссылкой. Его нельзя допустить как чистое отсутствие сведений: нужно проверить истинность предпосылок, содержание ссылки и любые приписывания зрителям.';
+    }
+  }
   if(!dossier.visualEvidenceIds?.length)for(const check of checks){
     const explicitGap=/недостат|отсутств|невозмож|нельзя|не хватает|ограничен|нет\s+(?:данных|сведений|описан|источник)|не\s+(?:содерж|описан|описыв|подтверж|предостав|позвол|дают|привод|раскрыв|переда)|cannot|insufficient|lack|no\s+(?:visual|evidence)/i.test(blocks[check.index]?.text||'');
     if(blocks[check.index]?.section===6&&!(check.evidence_gap_only===true&&explicitGap)){
