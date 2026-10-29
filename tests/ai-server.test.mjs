@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import {readFile} from 'node:fs/promises';
 import {Admission,DAILY_SLOTS} from '../server/admission.mjs';
-import {execute} from '../server/app.mjs';
+import {execute,basicAnalysisDossier} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
-import {Models,validateImages,generateAnalysis,recognize,reviewText,VISUAL_GAP_NOTICE} from '../server/models.mjs';
+import {Models,validateImages} from '../server/models.mjs';
 import {Sources} from '../server/sources.mjs';
 
 test('orientation is applied without cropping; image name never enters inference input',async()=>{
@@ -36,27 +36,6 @@ test('server rejects forged/cross-session scope, unviewed episodes, unknown fina
  class Sources{async finality(){return {state:'unknown',reason:'missing publisher evidence'};}}
  await assert.rejects(execute({op:'analysis',type:'tv',id:106379,season:1,proof:confirmed.proof},{env,session,factories:{Catalog,Sources}}),{code:'FINALITY_UNKNOWN'});
 });
-test('semantic rejection gets exactly one repair/re-review; rejected prose never returned',async()=>{
- const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];
- const calls=[],models={progress:()=>{},admission:{checkpoint:async()=>{}},call:async spec=>{
-  calls.push(spec);
-  if(spec.schema?.properties.replacements)return {replacements:[{index:0,text:'Still false prose'}]};
-  if(spec.structured){const blocks=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{'))).blocks;return {checks:blocks.map(({index})=>({index,status:index===0?'contradicted':'supported',source_ids:['S1'],basis:'Synthetic source supports the fictional paragraph except the stated contradiction.'})),issues:[{reason:'identity contradiction'}]};}
-  return headings.map((s,i)=>`${i+1}. ${s}\n\nUnverified prose ${i}`).join('\n\n');
- }};
- const result=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'evidence'}],visualEvidenceIds:['S1'],references:[],limitations:[]});
- assert.equal(calls.length,4);assert.equal(result.status,'rejected');assert.equal(result.text,null);assert.equal(result.reviews.length,2);
-});
-test('catalog existence alone is not a verified frame match; no fixture lookup',async()=>{
- const replies=['Example | 2000 | movie'];
- const models={progress:()=>{},call:async()=>replies.shift()},catalog={search:async()=>[
-  {id:2,type:'movie',year:2000,title:'Unrelated result',original:'Unrelated result',catalogVerified:true},
-  {id:3,type:'movie',year:2001,title:'Example',original:'Example',catalogVerified:true},
-  {id:1,type:'movie',year:2000,title:'Example',original:'Example',catalogVerified:true}]};
- const result=await recognize(models,catalog,{frames:[],description:'A synthetic story description.'});
- assert.equal(result.candidates.length,1);assert.equal(result.candidates[0].id,1);
- assert.equal(result.candidates[0].frameMatchVerified,false);assert.equal(result.candidates[0].assessment,'ambiguous');
-});
 test('B04 publisher port admits only matching eight episodes and excludes future subtree',async()=>{
  const source=new Sources(AbortSignal.timeout(1000));
  source.publicHTML=async url=>url.includes('aboutamazon')?{hash:'synthetic-amazon',html:'<html><body><h1>Fallout</h1><div class="contentItem-role-text">Watch all eight episodes of Fallout Season 1. The final episode of Fallout Season 1 is discussed.</div><h2>Season 2</h2><div class="contentItem-role-text">SECRET FUTURE</div><h2>Less was more visually</h2><p>Creators reported camera and visual effects choices for season one.</p></body></html>'}:{hash:'synthetic-prime',html:'<html><head><title>Fallout - Staffel 1</title></head><body>'+Array.from({length:8},(_,i)=>`<h3>${i+1}. Episode</h3>`).join('')+'</body></html>'};
@@ -74,34 +53,12 @@ test('a live TMDB Wikidata crosswalk still rejects conflicting work identifiers'
  source.entity=async()=>({id:'Q1',claims:{P4947:[{mainsnak:{datavalue:{value:'99'}}}]},sitelinks:{enwiki:{title:'Wrong work'}}});
  await assert.rejects(source.identity({id:1,type:'movie',wikidata:'Q1'}),{code:'SOURCE_IDENTITY_CONFLICT'});
 });
-test('a model false pass cannot admit visual prose without visual evidence',async()=>{
- const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];
- const text=headings.map((h,i)=>`${i+1}. ${h}\n\nSynthetic factual paragraph ${i}.`).join('\n\n');
- const models={call:async()=>({checks:headings.map((_,index)=>({index,status:'supported',source_ids:['S1'],basis:'Synthetic model falsely declares all paragraphs supported.'})),issues:[]})};
- const r=await reviewText(models,{documents:[{id:'S1',text:'Plot prose only.'}],visualEvidenceIds:[]},text);
- assert.equal(r.verdict,'fail');assert.equal(r.checks[6].modelStatus,'supported');assert.equal(r.checks[6].status,'unsupported');assert.equal(r.serverIssues.length,1);
- const gapText=text.replace('Synthetic factual paragraph 6.','В источниках отсутствуют данные для анализа света и цвета.');
- models.call=async()=>({checks:headings.map((_,index)=>({index,status:'supported',evidence_gap_only:index===6,source_ids:['S1'],basis:'The source contains only plot prose and no visual observations.'})),issues:[]});
- const honest=await reviewText(models,{documents:[{id:'S1',text:'Plot prose only.'}],visualEvidenceIds:[]},gapText);
- assert.equal(honest.verdict,'pass');assert.equal(honest.serverIssues.length,0);
-});
 test('season materials retain cast roles and every episode plot while excluding future content',async()=>{
  const source=new Sources(AbortSignal.timeout(1000)),qid='Q1';
  const html='<div class="mw-parser-output"><p>'+('Identity and background evidence. '.repeat(20))+'</p><h2>Cast and characters</h2><ul><li>Performer One as Character One</li></ul><h2>Episodes</h2><table>'+Array.from({length:8},(_,i)=>`<tr><td class="description">Episode ${i+1} contains its own distinct cause, character action and ending.</td></tr>`).join('')+'</table><h2>Season 2</h2><p>SECRET FUTURE CONTENT must never enter the selected-season materials.</p></div>';
  source.json=async(_u,p)=>p.action==='query'?{query:{pages:{1:{pageprops:{wikibase_item:qid}}}}}:{parse:{text:{'*':html}}};
  const r=await source.article({id:qid,sitelinks:{enwiki:{title:'Synthetic season'}}},1);
  assert.equal(r.episodeCount,8);assert.ok(r.text.includes('Performer One as Character One'));assert.ok(r.text.includes('Episode 8 contains'));assert.ok(!r.text.includes('SECRET FUTURE'));
-});
-test('known visual-source gap is labelled as server text; every generated block is reviewed',async()=>{
- const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];let calls=0;
- const models={progress:()=>{},admission:{checkpoint:async()=>{}},call:async spec=>{
-  calls++;if(!spec.schema)return headings.map((h,i)=>`${i+1}. ${h}\n\n${i===6?'Unsupported appearance claim.':'Synthetic source-backed paragraph.'}`).join('\n\n');
-  const payload=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{')));assert.equal(payload.blocks.length,7);
-  assert.ok(!spec.prompt.includes('Unsupported appearance claim'));assert.ok(!spec.prompt.includes(VISUAL_GAP_NOTICE));
-  return {checks:payload.blocks.map(b=>({index:b.index,status:'supported',source_ids:['S1'],evidence_gap_only:false,basis:'Synthetic source supports the supplied fictional test paragraph.'})),issues:[]};
- }};
- const r=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'Synthetic evidence.'}],references:[],visualEvidenceIds:[],limitations:[]});
- assert.equal(r.status,'verified');assert.equal(calls,2);assert.ok(r.text.includes(VISUAL_GAP_NOTICE));assert.ok(r.systemNotices.every(x=>x.origin==='server'));
 });
 test('role evidence stays on the server before watched confirmation',async()=>{
  class Catalog{async detail(){return{id:1,type:'tv',cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],seasons:[]};}async season(){return{number:1,cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],revision:'r1',episodes:[{id:11,number:1}]};}}
@@ -110,11 +67,31 @@ test('role evidence stays on the server before watched confirmation',async()=>{
  assert.equal(r.card.cast,undefined);assert.equal(r.season.cast,undefined);assert.ok(!JSON.stringify(r).includes('PRIVATE_ROLE_EVIDENCE'));
 });
 
-test('an admitted evidence gap cannot conceal a cited audience hypothesis',async()=>{
- const dossier={documents:[{id:'S1',text:'The traveler reaches the island. No audience research is supplied.'}],visualEvidenceIds:['S1']};
- const models={call:async()=>({checks:[{index:0,status:'evidence_gap',source_ids:[],evidence_gap_only:true,basis:'The paragraph acknowledges that the theory has no confirmed evidence.'}],issues:[]})};
- const falsePass=await reviewText(models,dossier,'8. Теории\n\nГипотеза [S1]: зрители считают остров сном героя. Подтверждения в материалах нет.');
- assert.equal(falsePass.verdict,'fail');assert.equal(falsePass.checks[0].status,'unsupported');assert.ok(falsePass.issues.length>0);
- const honest=await reviewText(models,dossier,'8. Теории\n\nМатериалы не содержат альтернативных объяснений; обоснованную теорию предложить нельзя.');
- assert.equal(honest.verdict,'pass');
+function directFixture({type='movie',enrich=false,after=false}={}){
+ const secret='synthetic-session-secret',session='test-session';let calls=0,acquisitions=0,seasonReads=0,finalityReads=0;
+ const card={id:1,type,title:'Example',original:'Example',year:2000,url:'https://www.themoviedb.org/'+type+'/1',overview:'Catalogue overview.'};
+ const season={number:1,revision:'r1',episodes:[{id:11,number:1,title:'First'}]};
+ class Catalog{async detail(){return card;}async season(){seasonReads++;return after&&seasonReads>1?{...season,revision:'changed'}:season;}}
+ class Sources{async finality(){finalityReads++;return {state:'confirmed'};}async acquire(){acquisitions++;throw new Failure('NO_SOURCE','Unavailable optional article.');}}
+ class Admission{async reserve(){}async checkpoint(){}}
+ class Models{constructor(_e,admission,_s,progress){Object.assign(this,{admission,progress,usage:[]});}async call(){calls++;return '1. Краткое резюме\n\nAn ordinary generated draft without external quotes.';}}
+ const proof=sign({kind:'watched',session,type,id:1,season:type==='tv'?1:null,revision:type==='tv'?'r1':null,episodeIds:type==='tv'?[11]:[],exp:Date.now()+10000},secret);
+ return {run:()=>execute({op:'analysis',type,id:1,...(type==='tv'?{season:1}:{}),proof,enrichSources:enrich},
+  {env:{KADR_SESSION_SECRET:secret},session,signal:AbortSignal.timeout(5000),factories:{Catalog,Sources,Admission,Models}}),counts:()=>({calls,acquisitions,seasonReads,finalityReads}),card,season};
+}
+test('analysis generates without fetching plot sources or requiring quote coverage',async()=>{
+ const f=directFixture(),r=await f.run();assert.equal(r.status,'generated');assert.ok(r.text.includes('ordinary generated draft'));
+ assert.deepEqual(f.counts(),{calls:1,acquisitions:0,seasonReads:0,finalityReads:1});
+});
+test('optional unavailable sources do not block generation or claim their retrieval',async()=>{
+ const f=directFixture({enrich:true}),r=await f.run();assert.equal(r.status,'generated');assert.equal(f.counts().acquisitions,1);assert.equal(f.counts().calls,1);
+ assert.ok(r.limitations.some(t=>t.includes('недоступны')));assert.ok(r.sources.every(s=>s.id==='T1'));
+});
+test('generated season is rechecked before return; changed composition blocks delivery',async()=>{
+ const normal=directFixture({type:'tv'});const result=await normal.run();assert.equal(result.status,'generated');assert.equal(normal.counts().seasonReads,2);assert.equal(normal.counts().finalityReads,2);
+ const changed=directFixture({type:'tv',after:true});await assert.rejects(changed.run(),{code:'COMPOSITION_CHANGED'});assert.equal(changed.counts().calls,1);
+});
+test('season analysis context contains selected season only, never the full-series overview',()=>{
+ const f=directFixture({type:'tv'});f.card.overview='FUTURE SERIES OVERVIEW';
+ const d=basicAnalysisDossier(f.card,f.season);assert.equal(d.scope.season,1);assert.ok(!JSON.stringify(d).includes('FUTURE SERIES OVERVIEW'));assert.ok(d.documents[0].text.includes('First'));
 });

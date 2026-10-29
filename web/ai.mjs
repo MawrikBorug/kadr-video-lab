@@ -1,7 +1,7 @@
 import {normalizeFrame} from './ai-images.mjs';
 const $=id=>document.getElementById(id),api='/api/ai';
 let frames=[],busy=false,processing=false,transformEpoch=0,controller=null,activeJob=null,selection=null,evidence=null,epoch=0;
-const ready=()=>{$('ai-find').disabled=busy||processing||!serverReady;$('ai-analyze').disabled=busy||processing||!selection?.proof||selection.finality?.state!=='confirmed';$('ai-cancel').disabled=!busy&&!processing;$('ai-files').disabled=busy||processing;};
+const ready=()=>{$('ai-find').disabled=busy||processing||!serverReady;$('ai-analyze').disabled=busy||processing||!selection?.proof||selection.finality?.state!=='confirmed';$('ai-cancel').disabled=!busy&&!processing;$('ai-files').disabled=busy||processing;$('ai-enrich-sources').disabled=busy||processing;};
 let serverReady=false;
 const status=t=>$('ai-status').textContent=t;
 function clearFrames(){++transformEpoch;for(const f of frames)URL.revokeObjectURL(f.url);frames=[];$('ai-files').value='';renderFrames();}
@@ -89,26 +89,26 @@ $('ai-analyze').onclick=async()=>{
     const checked=[...$('ai-watched').querySelectorAll('input:checked')].map(x=>Number(x.value));
     const watched=await call({op:'confirm',proof:selected.proof,watched:!selected.season&&document.querySelector('#ai-watched input')?.checked===true,watchedIds:checked});
     if(activeJob!==job)return;$('ai-analysis').hidden=true;
-    const result=await call({op:'analysis',job,type:selected.card.type,id:selected.card.id,season:selected.season?.number,proof:watched.proof},{long:true});if(activeJob!==job)return;
+    const result=await call({op:'analysis',job,type:selected.card.type,id:selected.card.id,season:selected.season?.number,proof:watched.proof,enrichSources:$('ai-enrich-sources').checked},{long:true});if(activeJob!==job)return;
     evidence={kind:'analysis',at:new Date().toISOString(),card:selected.card,result};renderAnalysis(result);
-  }catch(e){if(activeJob===job){status(e.name==='AbortError'?'Разбор отменён. Непринятый текст не показывается.':e.message);if(e.evidence){evidence={kind:'analysis-error',error:e.evidence};renderAnalysis({status:'error',reviewSummary:e.message,usage:e.evidence.usage});}}}
+  }catch(e){if(activeJob===job){status(e.name==='AbortError'?'Разбор отменён.':e.message);if(e.evidence){evidence={kind:'analysis-error',error:e.evidence};renderAnalysis({status:'error',message:e.message,usage:e.evidence.usage});}}}
   finally{if(activeJob===job)activeJob=null;}
 };
 function renderAnalysis(result){
   $('ai-export').hidden=false;
   $('ai-analysis').hidden=false;$('ai-text').replaceChildren();$('ai-sources').replaceChildren();
-  $('ai-verdict').textContent=result.status==='verified'?'Разбор допущен после отдельной проверки. '+result.verification:(result.reviewSummary||'Разбор не допущен.');
-  if(result.status==='verified'&&result.text){
+  $('ai-verdict').textContent=result.status==='generated'?'Разбор создан ИИ. Интерпретации и версии отмечены в тексте.':(result.message||result.reviewSummary||'Не удалось создать разбор.');
+  if(result.status==='generated'&&result.text){
     // Plain generated text only. Never render model HTML or executable markdown.
     for(const line of result.text.split('\n')){const title=/^(?:#{1,4}\s*|\*\*)?([1-9][.)]\s+.*?)(?:\*\*)?\s*$/.exec(line);$('ai-text').append(element(title?'h3':'p',title?title[1]:line));}
   }
-  if(result.sources?.length){$('ai-sources').append(element('h3','Проверенные источники'));for(const source of result.sources){
+  if(result.sources?.length){$('ai-sources').append(element('h3','Дополнительные материалы'));for(const source of result.sources){
     const p=element('p'),a=element('a',`${source.id}: ${source.title}`);a.href=source.url;a.target='_blank';a.rel='noreferrer';p.append(a);$('ai-sources').append(p);
   }}
   const total=(result.usage||[]).reduce((sum,x)=>sum+(x.usage?.total_tokens||0),0);
   const unknown=(result.usage||[]).filter(x=>!Number.isFinite(x.usage?.total_tokens)).length;
   $('ai-usage').textContent=`Фактически: ${(result.usage||[]).length} обращений к модели. По полученным usage: ${total} токенов.${unknown?` Для ${unknown} обращения расход не раскрыт провайдером.`:''} ${result.limitations?.join(' ')||''}`;
-  status(result.status==='verified'?'Разбор готов.':'Проверка завершена; готовый разбор не опубликован.');$('ai-analysis').scrollIntoView({behavior:'smooth'});
+  status(result.status==='generated'?'Разбор готов.':'Разбор не создан.');$('ai-analysis').scrollIntoView({behavior:'smooth'});
 }
 function cancel(reason='Операция отменена. Кадры очищены.'){
   ++epoch;controller?.abort();controller=null;busy=false;processing=false;clearFrames();
@@ -121,6 +121,6 @@ window.addEventListener('pagehide',()=>cancel('После возвращения
 $('ai-export').onclick=()=>{if(!evidence)return;const blob=new Blob([JSON.stringify(evidence,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=element('a');a.href=u;a.download='KADR_AI_RESULT.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);};
 try{
   if(location.hostname.endsWith('github.io')){$('ai-health').replaceChildren(element('span','Серверная сборка: '));const a=element('a','открыть закрытый AI-стенд');a.href='https://kadr-video-lab-ai-korotkowwww-4729.vercel.app/ai.html';$('ai-health').append(a);}
-  else{const h=await fetch(api,{credentials:'same-origin',cache:'no-store'}).then(r=>r.json());serverReady=h.ready===true&&h.budget?.remainingSlots!==0;$('ai-health').textContent=h.ready?(h.budget?.remainingSlots===0?'Сервер подключён. Дневной лимит исчерпан; AI будет доступен после 00:00 UTC.':`Сервер подключён. Ключи остаются на сервере.${h.budget?` На сегодня осталось до ${h.budget.remainingSlots} вызовов модели; поиск занимает до трёх, разбор — до четырёх.`:''}`):'Серверная конфигурация ещё не завершена. Запуск AI отключён; заглушка не используется.';$('ai-build').textContent=h.commit?`Версия ${h.commit.slice(0,12)}`:'';}
+  else{const h=await fetch(api,{credentials:'same-origin',cache:'no-store'}).then(r=>r.json());serverReady=h.ready===true&&h.budget?.remainingSlots!==0;$('ai-health').textContent=h.ready?(h.budget?.remainingSlots===0?'Дневной лимит исчерпан. Поиск и разборы будут доступны после 00:00 UTC.':`Готово к поиску и разбору.${h.budget?` На сегодня осталось до ${h.budget.remainingSlots} запросов.`:''}`):'Поиск и разборы пока недоступны: сервер ещё настраивается.';$('ai-build').textContent=h.commit?`Версия ${h.commit.slice(0,12)}`:'';}
 }catch{$('ai-health').textContent='Сервер недоступен. AI-запросы не отправлены.';}
 ready();

@@ -43,7 +43,9 @@ async function save(){await writeFile(out+'/report.json',JSON.stringify(evidence
 try{
  await page.goto(share.href,{waitUntil:'domcontentloaded',timeout:60000});await page.waitForFunction(()=>!document.querySelector('#ai-health')?.textContent.includes('Проверяем сервер'),null,{timeout:30000});
  evidence.health=await page.evaluate(()=>fetch('/api/ai').then(r=>r.json()));
- if(config.expectedCommit&&evidence.health.commit!==config.expectedCommit)throw Error('Published commit does not match the requested verification version.');
+ evidence.build=await page.evaluate(()=>fetch('/build-info.json').then(r=>r.json()));
+ if(config.expectedImplementation&&evidence.health.implementation!==config.expectedImplementation)throw Error('Published implementation does not match.');
+ if(config.expectedCommit&&evidence.build.commit!==config.expectedCommit)throw Error('Published commit does not match the requested verification version.');
  await page.screenshot({path:out+'/iphone-sized-page.png',fullPage:true});await save();
  if(config.mode==='metadata'){
   const cat=await call({op:'catalog',query:'Sintel'});evidence.steps.push({name:'live-TMDB-search',...cat});
@@ -53,7 +55,7 @@ try{
   const season=await call({op:'prepare',type:'tv',id:106379,season:1});delete season.body.proof;evidence.steps.push({name:'season-prepare-current-official-finality',...season});
  }else if(config.mode==='image'){
   const file=config.control||'tests/fixtures/ai-controls/control-01.jpg';
-  await page.locator('#ai-files').setInputFiles(file);await page.waitForFunction(()=>document.querySelectorAll('.preview').length===1&&!document.querySelector('#ai-find').disabled);
+  await page.locator('#ai-files').setInputFiles(config.controls||file);await page.waitForFunction(()=>document.querySelectorAll('.preview').length>=1&&!document.querySelector('#ai-find').disabled);
   if(config.description)await page.locator('#ai-description').fill(config.description);
   await page.locator('#ai-find').click();await page.waitForFunction(()=>!document.querySelector('#ai-cancel').disabled,null,{timeout:5000});
   await page.waitForFunction(()=>document.querySelector('#ai-cancel').disabled,null,{timeout:295000});
@@ -72,7 +74,7 @@ try{
   await page.locator('#ai-analyze').click();await responsePromise;
   await page.waitForFunction(()=>window.__kadrQA.some(r=>r.op==='analysis'&&r.done),null,{timeout:295000});
   const captured=await page.evaluate(()=>window.__kadrQA.find(r=>r.op==='analysis'));
-  evidence.steps.push({name:'real-UI-TMDB-scope-watch-sources-generation-review-UI',...captured});
+  evidence.steps.push({name:'real-UI-TMDB-scope-watch-direct-generation-UI',...captured});
   await page.waitForTimeout(300);evidence.rendered={verdict:await page.locator('#ai-verdict').innerText(),text:await page.locator('#ai-text').innerText(),sources:await page.locator('#ai-sources').innerText(),status:await page.locator('#ai-status').innerText()};
  }
  await page.screenshot({path:out+'/result.png',fullPage:true});await save();
