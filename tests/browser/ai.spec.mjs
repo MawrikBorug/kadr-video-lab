@@ -44,15 +44,15 @@ test('watch confirmation precedes a direct generated analysis; text is not execu
  await page.getByRole('button',{name:'Выбрать эту карточку'}).click();await page.locator('#ai-analyze').click();
  await expect(page.locator('#ai-status')).toContainText('Подтвердите полный просмотр');
  expect(analyses).toBe(0);await expect(page.locator('#ai-text')).toBeEmpty();
- await expect(page.locator('#ai-enrich-sources')).not.toBeChecked();
+ await expect(page.locator('#ai-enrich-sources')).toBeChecked();
  await page.locator('#ai-watched input').check();await page.locator('#ai-analyze').click();
  await expect(page.locator('#ai-verdict')).toContainText('Разбор создан ИИ');await expect(page.locator('#ai-text')).toContainText('Интерпретация: герой');
  await expect(page.locator('#ai-text h3')).toHaveCount(9);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');
- expect(analyses).toBe(1);expect(analysisInput.enrichSources).toBe(false);expect(analysisInput.proof).toBe('watched-fixture');
+ expect(analyses).toBe(1);expect(analysisInput.enrichSources).toBe(true);expect(analysisInput.proof).toBe('watched-fixture');
  await expect(page.locator('#ai-text script')).toHaveCount(0);expect(await page.evaluate(()=>window.modelExecuted)).toBeUndefined();
  await expect(page.locator('#ai-verdict')).not.toContainText('проверки');
- await page.locator('#ai-enrich-sources').check();await page.locator('#ai-analyze').click();
- await expect.poll(()=>analyses).toBe(2);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');expect(analysisInput.enrichSources).toBe(true);
+ await page.locator('#ai-enrich-sources').uncheck();await page.locator('#ai-analyze').click();
+ await expect.poll(()=>analyses).toBe(2);await expect(page.locator('#ai-status')).toHaveText('Разбор готов.');expect(analysisInput.enrichSources).toBe(false);
 });
 
 test('an access error never displays a returned spoiler body as a completed analysis',async({page})=>{

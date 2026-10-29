@@ -64,7 +64,7 @@ export async function execute(body,{env,signal,session,progress=()=>{},factories
     if(body.op==='recognize')return {...await recognize(models,catalog,body),usage:models.usage};
     demand(body.enrichSources===undefined||typeof body.enrichSources==='boolean','ENRICHMENT','Некорректный выбор дополнительных материалов.');
     let dossier=basicAnalysisDossier(scope.card,scope.season);
-    if(body.enrichSources===true){
+    if(body.enrichSources!==false){
       progress('Пробуем получить дополнительные материалы…');
       const enrichment=new (factories.Sources||Sources)(AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]));
       try{

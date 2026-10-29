@@ -99,3 +99,12 @@ test('blank successful provider text is a malformed response, without a second r
   assert.equal(calls,1);
  }finally{globalThis.fetch=saved;}
 });
+
+ test('a short shared title word does not turn another franchise into a catalogue candidate',async()=>{
+  const models={progress:()=>{},call:async()=>'The Ring | 2002 | movie'};
+  const catalog={search:async()=>[
+    {id:1,type:'movie',title:'The Ring',original:'The Ring',year:2002},
+    {id:2,type:'movie',title:'The Lord of the Rings: The Fellowship of the Ring',original:'The Lord of the Rings: The Fellowship of the Ring',year:2001}]};
+  const result=await recognize(models,catalog,{frames:[],description:'An uncertain title from a frame.'});
+  assert.deepEqual(result.candidates.map(x=>x.id),[1]);
+ });
