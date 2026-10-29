@@ -105,7 +105,8 @@ function renderAnalysis(result){
     const p=element('p'),a=element('a',`${source.id}: ${source.title}`);a.href=source.url;a.target='_blank';a.rel='noreferrer';p.append(a);$('ai-sources').append(p);
   }}
   const total=(result.usage||[]).reduce((sum,x)=>sum+(x.usage?.total_tokens||0),0);
-  $('ai-usage').textContent=`Фактически: ${(result.usage||[]).length} обращений к модели, ${total} токенов. ${result.limitations?.join(' ')||''}`;
+  const unknown=(result.usage||[]).filter(x=>!Number.isFinite(x.usage?.total_tokens)).length;
+  $('ai-usage').textContent=`Фактически: ${(result.usage||[]).length} обращений к модели. По полученным usage: ${total} токенов.${unknown?` Для ${unknown} обращения расход не раскрыт провайдером.`:''} ${result.limitations?.join(' ')||''}`;
   status(result.status==='verified'?'Разбор готов.':'Проверка завершена; готовый разбор не опубликован.');$('ai-analysis').scrollIntoView({behavior:'smooth'});
 }
 function cancel(reason='Операция отменена. Кадры очищены.'){

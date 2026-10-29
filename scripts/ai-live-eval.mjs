@@ -73,5 +73,7 @@ for(const kind of (process.argv.includes('--review-only')?[]:['film','season']))
  await save();
 }
 report.completedAt=new Date().toISOString();report.attempted=report.requests.length;
-report.actualTokens=report.requests.reduce((n,r)=>n+(r.usage?.total_tokens||0),0);await save();
+report.reportedTokens=report.requests.reduce((n,r)=>n+(r.usage?.total_tokens||0),0);
+report.usageUnknownRequests=report.requests.filter(r=>r.startedAt&&!r.usage).length;
+report.actualTokens=report.usageUnknownRequests?null:report.reportedTokens;await save();
 console.log(JSON.stringify({attempted:report.attempted,actualTokens:report.actualTokens,cases:report.cases.map(x=>({id:x.id,status:x.error?'ERROR':x.result?.status||x.result?.verdict||'RESPONSE'}))}));
