@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {Admission} from '../server/admission.mjs';
 import {execute} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
-import {Models,validateImages,generateAnalysis,recognize} from '../server/models.mjs';
+import {Models,validateImages,generateAnalysis,recognize,reviewText} from '../server/models.mjs';
 import {Sources} from '../server/sources.mjs';
 
 test('orientation is applied without cropping; image name never enters inference input',async()=>{
@@ -69,4 +69,18 @@ test('a live TMDB Wikidata crosswalk still rejects conflicting work identifiers'
  source.json=async()=>{throw Error('search index must not replace a supplied crosswalk');};
  source.entity=async()=>({id:'Q1',claims:{P4947:[{mainsnak:{datavalue:{value:'99'}}}]},sitelinks:{enwiki:{title:'Wrong work'}}});
  await assert.rejects(source.identity({id:1,type:'movie',wikidata:'Q1'}),{code:'SOURCE_IDENTITY_CONFLICT'});
+});
+test('a model false pass cannot admit visual prose without visual evidence',async()=>{
+ const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];
+ const text=headings.map((h,i)=>`${i+1}. ${h}\n\nSynthetic factual paragraph ${i}.`).join('\n\n');
+ const models={call:async()=>({checks:headings.map((_,index)=>({index,status:'supported',source_ids:['S1'],basis:'Synthetic model falsely declares all paragraphs supported.'})),issues:[]})};
+ const r=await reviewText(models,{documents:[{id:'S1',text:'Plot prose only.'}],visualEvidenceIds:[]},text);
+ assert.equal(r.verdict,'fail');assert.equal(r.checks[6].modelStatus,'supported');assert.equal(r.checks[6].status,'unsupported');assert.equal(r.serverIssues.length,1);
+});
+test('season materials retain cast roles and every episode plot while excluding future content',async()=>{
+ const source=new Sources(AbortSignal.timeout(1000)),qid='Q1';
+ const html='<div class="mw-parser-output"><p>'+('Identity and background evidence. '.repeat(20))+'</p><h2>Cast and characters</h2><ul><li>Performer One as Character One</li></ul><h2>Episodes</h2><table>'+Array.from({length:8},(_,i)=>`<tr><td class="description">Episode ${i+1} contains its own distinct cause, character action and ending.</td></tr>`).join('')+'</table><h2>Season 2</h2><p>SECRET FUTURE CONTENT must never enter the selected-season materials.</p></div>';
+ source.json=async(_u,p)=>p.action==='query'?{query:{pages:{1:{pageprops:{wikibase_item:qid}}}}}:{parse:{text:{'*':html}}};
+ const r=await source.article({id:qid,sitelinks:{enwiki:{title:'Synthetic season'}}},1);
+ assert.equal(r.episodeCount,8);assert.ok(r.text.includes('Performer One as Character One'));assert.ok(r.text.includes('Episode 8 contains'));assert.ok(!r.text.includes('SECRET FUTURE'));
 });
