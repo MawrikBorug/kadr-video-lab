@@ -1,12 +1,13 @@
 import {put,head,list} from '@vercel/blob';
 import {setTimeout as delay} from 'node:timers/promises';
 import {Failure,demand} from './core.mjs';
+export const DAILY_SLOTS=24,DAILY_RESERVED_CAP=DAILY_SLOTS*7900;
 
 export async function budgetSummary(){
   const day=new Date().toISOString().slice(0,10),prefix=`kadr/budget/${day}/`;
-  const result=await list({prefix,limit:21});
+  const result=await list({prefix,limit:DAILY_SLOTS+1});
   const used=result.blobs.filter(x=>/^\d+\.json$/.test(x.pathname.slice(prefix.length))).length;
-  return {day,reservedSlots:used,remainingSlots:Math.max(0,20-used),reservedTokens:used*7900,maxReservedTokens:158000};
+  return {day,reservedSlots:used,remainingSlots:Math.max(0,DAILY_SLOTS-used),reservedTokens:used*7900,maxReservedTokens:DAILY_RESERVED_CAP};
 }
 
 // Atomic create-only objects. Only typed accounting metadata; NEVER prompts/images/text.
@@ -22,8 +23,8 @@ export class Admission {
       'DUPLICATE','Этот запрос уже запускался. Его повтор не расходует AI; начните новый поиск.',409);
   }
   async reserveCall(){
-    // 20 slots × 7900 = 158000 reserved tokens/day across ALL deployed instances.
-    for(let i=0;i<20;i++)if(await this.create(`kadr/budget/${this.day}/${i}.json`,{job:this.job,reserved:7900,at:this.clock()}))return;
+    // 24 × 7900 = 189600 reserved tokens/day across ALL deployed instances.
+    for(let i=0;i<DAILY_SLOTS;i++)if(await this.create(`kadr/budget/${this.day}/${i}.json`,{job:this.job,reserved:7900,at:this.clock()}))return;
     throw new Failure('DAILY_BUDGET','Дневной бюджет лаборатории исчерпан. Повторите завтра.',429);
   }
   async checkpoint(){

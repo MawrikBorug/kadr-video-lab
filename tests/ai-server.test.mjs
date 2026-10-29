@@ -20,6 +20,7 @@ test('admission is global atomic create, duplicate is not a new AI spend, quota 
  const a=new Admission({job:'00000000-0000-0000-0000-000000000001',operation:'recognize',storage});await a.reserve();
  await assert.rejects(a.reserve(),{code:'DUPLICATE'});assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,0);
  await a.reserveCall();assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,1);
+ for(let i=1;i<24;i++)await a.reserveCall();await assert.rejects(a.reserveCall(),{code:'DAILY_BUDGET'});
  assert.ok([...records.values()].every(x=>!JSON.stringify(x).includes('image')));
  const failing=new Admission({job:'00000000-0000-0000-0000-000000000002',operation:'recognize',storage:{put:async()=>{throw Error('offline');}}});
  await assert.rejects(failing.reserve(),{code:'LEDGER_UNAVAILABLE'});
