@@ -17,17 +17,17 @@ const admission={checkpoint:async()=>{signal.throwIfAborted();},beforeCall:async
 async function save(){await writeFile(out+'/report.json',JSON.stringify(report,null,2));}
 function client(name){
   const m=new Models(process.env,admission,signal,()=>{}),original=m.call.bind(m);
-  m.call=async spec=>{const idx=report.requests.length;report.requests.push({case:name,index:idx,status:'STARTING'});await save();
+  m.call=async spec=>{const idx=report.requests.length,usedBefore=m.usage.length;report.requests.push({case:name,index:idx,status:'STARTING'});await save();
     try{
       const response=await original(spec);report.requests[idx]={case:name,...m.usage.at(-1)};
       await writeFile(`${out}/${idx}-request.json`,JSON.stringify({...spec,images:spec.images?.map(()=>({pixels:'control JPEG in repository; no filename/title supplied'}))},null,2));
       await writeFile(`${out}/${idx}-response.json`,JSON.stringify(response,null,2));await save();return response;
-    }catch(e){report.requests[idx]={case:name,...m.usage.at(-1),error:{code:e.code||'ERROR',message:e.message}};await save();throw e;}
+    }catch(e){report.requests[idx]={case:name,...(m.usage.length>usedBefore?m.usage.at(-1):{}),error:{code:e.code||'ERROR',message:e.message}};await save();throw e;}
   };return m;
 }
 await save();
 // Cases use only neutral filenames. Evaluator manifest is not read by this runner.
-for(const number of (process.argv.includes('--followup')?['01','03']:['01','02','03','04','05','06','07'])){
+for(const number of (process.argv.includes('--review-only')?[]:process.argv.includes('--followup')?['01','03']:['01','02','03','04','05','06','07'])){
  const id='image-'+number,m=client(id);const row={id,kind:'LIVE_INFERENCE_REAL_LICENSED_PIXELS'};report.cases.push(row);
  try{
   let raw=await readFile(`tests/fixtures/ai-controls/control-${number}.jpg`);
@@ -48,7 +48,7 @@ try{
  const m=client('rejected-sintel-regression'),text=await readFile('tests/fixtures/ai-controls/rejected-sintel-response.md','utf8');
  const result=await reviewText(m,filmDossier,text);report.cases.push({id:'rejected-sintel-regression',kind:'LIVE_REVIEW_OF_SAVED_WRONG_OUTPUT_CURRENT_AUTOMATIC_SOURCES',result});await save();
 }catch(e){report.cases.push({id:'rejected-sintel-regression',error:{code:e.code,message:e.message}});await save();}
-for(const kind of ['film','season']){
+for(const kind of (process.argv.includes('--review-only')?[]:['film','season'])){
  const row={id:'analysis-'+kind,kind:'LIVE_AUTOMATIC_SOURCE_GENERATION_REVIEW_NOT_LIVE_TMDB_END_TO_END'};report.cases.push(row);
  try{
   let dossier=filmDossier;

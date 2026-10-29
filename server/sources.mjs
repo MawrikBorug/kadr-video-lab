@@ -18,24 +18,30 @@ export class Sources {
   async identity(card){
     const prop=card.type==='movie'?'P4947':'P4983';
     const found=await this.json(wd,{action:'query',list:'search',srsearch:`haswbstatement:${prop}=${card.id}`,srlimit:'3'});
+    const matches=[];
     for(const row of found.query?.search||[]){
       if(!/^Q\d+$/.test(row.title))continue;
       const e=await this.entity(row.title);
       if(!e?.claims?.[prop]?.some(x=>String(qvalue(x))===String(card.id)))continue;
       const imdb=e.claims.P345?.map(qvalue)||[];
       if(card.imdb&&imdb.length&&!imdb.includes(card.imdb))throw new Failure('SOURCE_IDENTITY_CONFLICT','IMDb в источнике не совпал с карточкой.');
-      demand(e.sitelinks?.enwiki,'NO_SOURCE','Для этой карточки не найден проверенный текстовый источник.');return e;
+      if(e.sitelinks?.enwiki)matches.push(e);
     }
+    demand(matches.length<=1,'SOURCE_IDENTITY_AMBIGUOUS','Источники связали карточку с несколькими работами. Автоматический разбор остановлен.');
+    if(matches.length===1)return matches[0];
     throw new Failure('NO_SOURCE','Не удалось связать источники с точной карточкой. Выдуманный разбор не создаётся.');
   }
   async seasonal(parent,number){
     const rel=(parent.claims.P527||[]).filter(x=>x.qualifiers?.P1545?.some(q=>String(q.datavalue?.value)===String(number)));
+    const matches=[];
     for(const r of rel){
       const qid=qvalue(r)?.id;if(!qid)continue;
       const e=await this.entity(qid);
       const back=(e?.claims?.P179||[]).some(x=>qvalue(x)?.id===parent.id&&x.qualifiers?.P1545?.some(q=>String(q.datavalue?.value)===String(number)));
-      if(back&&e.sitelinks?.enwiki)return e;
+      if(back&&e.sitelinks?.enwiki&&!matches.some(x=>x.id===e.id))matches.push(e);
     }
+    demand(matches.length<=1,'SEASON_SOURCE_AMBIGUOUS','Для сезона найдены конфликтующие источники. Автоматический разбор остановлен.');
+    if(matches.length===1)return matches[0];
     throw new Failure('SEASON_SOURCE_IDENTITY','Отдельный источник этого сезона не подтверждён. Общая статья сериала не используется вместо него.');
   }
   async article(entity,season){

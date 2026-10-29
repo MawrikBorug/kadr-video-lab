@@ -30,7 +30,7 @@ jobs:
       - name: Offline closure controls
         run: npm ci --ignore-scripts
       - name: Bounded live images and automatic analysis
-        run: node scripts/ai-live-eval.mjs --followup
+        run: node scripts/ai-live-eval.mjs --review-only
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       - name: Safe evidence for independent review

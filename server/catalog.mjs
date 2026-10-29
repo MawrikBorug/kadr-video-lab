@@ -16,7 +16,7 @@ export class Catalog {
     return {id:row.id,type:kind,title:cut(row.title||row.name,250),original:cut(row.original_title||row.original_name,250),
       year:Number((row.release_date||row.first_air_date||'').slice(0,4))||null,
       poster:row.poster_path&&/^\/[\w.-]+$/.test(row.poster_path)?'https://image.tmdb.org/t/p/w342'+row.poster_path:null,
-      catalogVerified:true,frameMatchVerified:false,url:`https://www.themoviedb.org/${kind}/${row.id}`};
+      overview:cut(row.overview,1100),catalogVerified:true,frameMatchVerified:false,url:`https://www.themoviedb.org/${kind}/${row.id}`};
   }
   async search(query){
     demand(typeof query==='string'&&query.trim().length>=2&&query.length<=250,'QUERY','Введите название или используйте описание для AI-поиска.');
