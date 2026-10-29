@@ -1,0 +1,132 @@
+{
+  "schema": "kadr.ai-controls.public-domain.evaluator-only.v1",
+  "evaluator_only": true,
+  "checked_at": "2026-10-29T14:13:07.606057+00:00",
+  "inference_performed": false,
+  "input_policy": "Pass pixels only and any explicitly chosen user-like description. Never pass expected titles, filenames, hashes, source descriptions, URLs, license metadata or expected outcomes to the model; no hash/filename matching in runtime.",
+  "assets": [
+    {
+      "id": "control-08",
+      "path": "control-08.jpg",
+      "evaluator_only_work": {
+        "title": "Nosferatu",
+        "year": 1922,
+        "format": "film"
+      },
+      "control_kind": "public-domain-film-frame",
+      "difficulty": "characteristic iconic silhouette; measures identification from a real film image, not actor existence.",
+      "sha256": "6469024547fd8a488cb8c774d4485e2a4275d78834b548184488422819b2b1a7",
+      "bytes": 109591,
+      "dimensions": [
+        584,
+        438
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Nosferatu_%281922%29_-_Count_Orlok_Climbing_Up_The_Stairs.gif",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Nosferatu_%281922%29_-_Count_Orlok_Climbing_Up_The_Stairs.gif",
+      "source_sha1_commons": "f430addbe72f36483ef4dc6084cec2a931593adc",
+      "downloaded_original_sha1": "f430addbe72f36483ef4dc6084cec2a931593adc",
+      "original_sha256": "3ae2cbc00029f7cc73538a330c6e8f2097d96ae8f167276ddfdf417f5e3f8f27",
+      "original_bytes": 11332009,
+      "original_dimensions": [
+        584,
+        438
+      ],
+      "original_animation_frames": 57,
+      "selected_frame_index": 28,
+      "license": "Public domain",
+      "license_template": "PD-old-auto-expired|1949",
+      "license_scope": "Commons marks the 1922 film public domain by expired author term (last credited author died1949) and US publication expiry. Do not infer rights for unrelated newer film versions.",
+      "license_evidence": "Current Commons imageinfo/extmetadata reported Public domain and Copyrighted=False; Commons revision wikitext supplied the recorded PD template.",
+      "attribution": "F. W. Murnau / Henrik Galeen",
+      "source_description": "Count Orlok elongated claw-like shadow climbing stairs toward Ellen Hutter bedroom; excerpt from the 1922 film.",
+      "modification": "Extracted actual GIF frame index 28 of 57 (zero-based), converted to RGB JPEG quality94/4:4:4. Native dimensions retained; no crop, upscale, generated content or text overlay.",
+      "checked_at": "2026-10-29T14:13:07.386007+00:00",
+      "inference_performed": false
+    },
+    {
+      "id": "control-09",
+      "path": "control-09.jpg",
+      "evaluator_only_work": {
+        "title": "Night of the Living Dead",
+        "year": 1968,
+        "format": "film"
+      },
+      "control_kind": "public-domain-film-frame",
+      "difficulty": "ambiguous ordinary two-person interior; correct abstention must not be counted as successful recognition.",
+      "sha256": "c4760ffe9e2295190a526f0dd5b961342c8cecdb1c09ca75325727e055fc4fcb",
+      "bytes": 26086,
+      "dimensions": [
+        640,
+        480
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Ben_giving_Barbra_slippers_in_Night_of_the_Living_Dead_bw.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Ben_giving_Barbra_slippers_in_Night_of_the_Living_Dead_bw.jpg",
+      "source_sha1_commons": "178d16da7535dd9ef485396353557b388d1e7dbe",
+      "downloaded_original_sha1": "178d16da7535dd9ef485396353557b388d1e7dbe",
+      "original_sha256": "c4760ffe9e2295190a526f0dd5b961342c8cecdb1c09ca75325727e055fc4fcb",
+      "original_bytes": 26086,
+      "original_dimensions": [
+        640,
+        480
+      ],
+      "original_animation_frames": 1,
+      "selected_frame_index": 0,
+      "license": "Public domain",
+      "license_template": "PD-Pre1978",
+      "license_scope": "Commons file page explicitly states public domain in the United States because the original1968 film was distributed without the required copyright notice. This is not a claim of worldwide public domain.",
+      "license_evidence": "Current Commons imageinfo/extmetadata reported Public domain and Copyrighted=False; Commons revision wikitext supplied the recorded PD template.",
+      "attribution": "Direction and cinematography: George A. Romero",
+      "source_description": "Duane Jones as Ben gives Judith O Dea as Barbra her slippers in a scene from the1968 film.",
+      "modification": "Byte-identical copy of current Commons original JPEG; no cropping, resizing, recoloring or recompression.",
+      "checked_at": "2026-10-29T14:13:07.501642+00:00",
+      "inference_performed": false
+    },
+    {
+      "id": "control-10",
+      "path": "control-10.jpg",
+      "evaluator_only_work": {
+        "title": "Sherlock Jr.",
+        "year": 1924,
+        "format": "film"
+      },
+      "control_kind": "public-domain-film-frame",
+      "difficulty": "recognizable actor/projection booth, but the original is only250x173. Treat low detail separately from model capabilities; do not upscale or claim catalogue-wide accuracy.",
+      "sha256": "f644604bfdab82a7ab58f4555428f36ea859f98b070582a8c0a4deba01dcaf75",
+      "bytes": 8498,
+      "dimensions": [
+        250,
+        173
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Buster_keaton_in_sherlock_jr%2C_1924.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Buster_keaton_in_sherlock_jr%2C_1924.jpg",
+      "source_sha1_commons": "bba44de64f2d9e07d6c184bd83bc27d4e5d4401e",
+      "downloaded_original_sha1": "bba44de64f2d9e07d6c184bd83bc27d4e5d4401e",
+      "original_sha256": "f644604bfdab82a7ab58f4555428f36ea859f98b070582a8c0a4deba01dcaf75",
+      "original_bytes": 8498,
+      "original_dimensions": [
+        250,
+        173
+      ],
+      "original_animation_frames": 1,
+      "selected_frame_index": 0,
+      "license": "Public domain",
+      "license_template": "PD-US-expired",
+      "license_scope": "Commons marks the1924 US-published film image public domain in the United States by publication-term expiry. This is not a claim of worldwide public domain.",
+      "license_evidence": "Current Commons imageinfo/extmetadata reported Public domain and Copyrighted=False; Commons revision wikitext supplied the recorded PD template.",
+      "attribution": "Buster Keaton; Metro Pictures Corporation",
+      "source_description": "Buster Keaton in the projection booth in Sherlock Jr. (1924), per Commons source attribution to the film.",
+      "modification": "Byte-identical copy of current Commons original JPEG; no cropping, resizing, recoloring or recompression.",
+      "checked_at": "2026-10-29T14:13:07.606032+00:00",
+      "inference_performed": false
+    }
+  ],
+  "limitations": [
+    "Three feature-length film works, silent comedy/silent horror/1968 horror; still not representative of modern commercial cinema, TV, anime or the Russian catalogue.",
+    "PD-US status for controls09/10 is jurisdiction-specific and must not be relabelled as worldwide PD. Exact file-page grounds are retained.",
+    "Control10 is intrinsically small (250x173); model failure there must be separated from a failure on high-detail input.",
+    "No inference or physical iPhone test was performed. Existing transport/image preprocessing remains the common path for all user uploads."
+  ]
+}

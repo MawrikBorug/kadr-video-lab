@@ -7,8 +7,8 @@ if not (root / 'dist/index.html').is_file():
 out = root / 'artifacts'
 out.mkdir(exist_ok=True)
 archive = out / 'kadr-video-lab-search-2.zip'
-folders = ['web', 'scripts', 'tests', 'docs', 'evidence', 'protocol', 'history', '.github', 'dist']
-files = ['README.md', 'package.json', 'package-lock.json', 'playwright.config.mjs', '.gitignore']
+folders = ['web', 'server', 'api', 'scripts', 'tests', 'docs', 'evidence', 'protocol', 'history', '.github', 'dist']
+files = ['README.md', 'package.json', 'package-lock.json', 'playwright.config.mjs', 'vercel.json', '.gitignore']
 def add(bundle,file):
     info=ZipInfo(str(file.relative_to(root)),(2026,10,19,0,0,0));info.compress_type=ZIP_DEFLATED;info.external_attr=0o644 << 16;bundle.writestr(info,file.read_bytes())
 with ZipFile(archive, 'w', ZIP_DEFLATED) as bundle:

@@ -9,7 +9,8 @@ const dist = new URL('dist/', root);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(new URL('web/', root), dist, { recursive: true });
-let commit = process.env.GITHUB_SHA;
+let commit = process.env.GITHUB_SHA || process.env.VERCEL_GIT_COMMIT_SHA;
+if (!commit) { try { const {execFileSync}=await import('node:child_process');commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(); } catch {} }
 if (!commit) {
   try {
     const head = (await readFile(new URL('.git/HEAD',root),'utf8')).trim();

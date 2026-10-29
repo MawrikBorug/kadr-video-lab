@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
-const allowed = new Set(['index.html','harness.mjs','collector.mjs','lift-api.mjs','journal.mjs','legacy.mjs','config.js','build.js','build-info.json','style.css','sw.js','manifest.webmanifest','.nojekyll','icons','catalog.json','torrent.mjs','torrent-materials.js','piece-store.mjs','transport-diagnostics.mjs','fixtures','vendor','search-config.mjs','source-utils.mjs','source-search.mjs','torrent-metadata.mjs','source-probe.mjs','search-session.mjs','search-ui.mjs','search-fixtures']);
+const allowed = new Set(['index.html','ai.html','ai.css','ai.mjs','ai-images.mjs','harness.mjs','collector.mjs','lift-api.mjs','journal.mjs','legacy.mjs','config.js','build.js','build-info.json','style.css','sw.js','manifest.webmanifest','.nojekyll','icons','catalog.json','torrent.mjs','torrent-materials.js','piece-store.mjs','transport-diagnostics.mjs','fixtures','vendor','search-config.mjs','source-utils.mjs','source-search.mjs','torrent-metadata.mjs','source-probe.mjs','search-session.mjs','search-ui.mjs','search-fixtures']);
 for (const dir of ['dist','dist/a01']) {
 for (const item of await readdir(dir)) assert.ok(allowed.has(item) || (dir==='dist' && item==='a01') || (dir==='dist/a01' && ['lift-settings-probe.mjs','resume-query.mjs'].includes(item)), `Unexpected public asset: ${item}`);
 for (const item of await readdir(dir)) {
@@ -23,7 +23,7 @@ const catalog=JSON.parse(await readFile('dist/catalog.json'));
 assert.equal(catalog.filter(item=>item.ownerSample).length,10);
 assert.ok(catalog.filter(item=>item.ownerSample).every(item=>item.access==='native-player-user-selected'));
 assert.ok(!(await readFile('dist/harness.mjs','utf8')).includes('mediaPermission'));
-console.log('Public build PASS: Lift + isolated browser WebTorrent; no old providers, remote backend or signed iframe URL.');
+console.log('Public build PASS: Lift + isolated browser WebTorrent + AI client; no provider credentials, private controls or signed iframe URL.');
 
 assert.equal(await readFile('dist/harness.mjs','utf8'),await readFile('web/harness.mjs','utf8'));
 assert.ok((await readFile('dist/a01/harness.mjs','utf8')).includes('attachLiftSettingsProbe'));

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102c35"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://image.tmdb.org; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="ai.css"><link rel="icon" href="icons/icon.svg"><title>КАДР · найти по кадру и разобрать</title></head>
+<body><main class="ai-main"><header><a href="index.html">← Видеолаборатория</a><p class="eyebrow">КАДР / ПОИСК И РАЗБОР</p><h1>Узнать фильм.<br>Разобраться в истории.</h1><p>От одного до трёх кадров, описание или оба сразу. Карточки проверяем в TMDB, разбор — по полученным источникам.</p><p id="ai-health" role="status">Проверяем сервер…</p><p id="ai-build" class="meta"></p></header>
+<section aria-labelledby="ai-search-title"><h2 id="ai-search-title">1. Найти по кадрам или описанию</h2>
+<p class="meta">Кадры остаются в памяти активного запроса. После результата, ошибки, отмены или ухода со страницы они очищаются. Для уточнения выберите их заново.</p>
+<label class="upload" for="ai-files">＋ Добавить кадры · до трёх</label><input id="ai-files" type="file" accept="image/*" multiple>
+<div id="ai-previews" class="previews"></div>
+<label for="ai-description">Описание и уточнения · необязательно</label><textarea id="ai-description" rows="4" maxlength="2000" placeholder="Что происходит, кто в кадре, запомнившиеся детали…"></textarea>
+<p class="meta">Изображение передаётся целиком: без обрезки, с учётом ориентации. Небольшой или тёмный кадр может не содержать достаточно деталей. Отказ и неоднозначные варианты допустимы.</p>
+<div class="actions"><button id="ai-find" class="primary" disabled>Найти</button><button id="ai-cancel" disabled>Отменить</button></div>
+<p id="ai-status" role="status" aria-live="polite"></p><div id="ai-candidates" class="cards"></div>
+<details><summary>Знаю название — найти карточку напрямую</summary><label for="ai-title-query">Название фильма или сериала</label><input id="ai-title-query" maxlength="250"><button id="ai-catalog">Найти в TMDB</button><p class="meta">Этот поиск не распознаёт изображение и не расходует AI.</p></details>
+</section>
+<section id="ai-selection" hidden aria-labelledby="ai-selected-title"><h2 id="ai-selected-title">2. Подтвердить просмотр</h2><div id="ai-selected-card"></div><div id="ai-seasons"></div><div id="ai-watched"></div><p id="ai-gate" role="status"></p><button id="ai-analyze" class="primary" disabled>Получить полный спойлерный разбор</button><p class="meta">Держите страницу открытой: получение материалов, текст, проверка и одна возможная доработка занимают до пяти минут. Будущие сезоны не включаются.</p></section>
+<section id="ai-analysis" hidden aria-labelledby="ai-analysis-title"><h2 id="ai-analysis-title">3. Результат проверки</h2><p id="ai-verdict" role="status"></p><article id="ai-text"></article><div id="ai-sources"></div><p id="ai-usage" class="meta"></p></section>
+<button id="ai-export" hidden>Скачать ответ и доказательства</button>
+<footer><p class="meta">Доступ закрыт владельцу. Общий серверный резерв: до 395 000 токенов в сутки, до четырёх обращений на разбор. Сбой не вызывает скрытый повтор. Проверка моделью не гарантирует абсолютную достоверность. Физическая проверка iPhone ещё не выполнена.</p><p><a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">Данные и постеры TMDB</a> · This product uses the TMDB API but is not endorsed or certified by TMDB.</p></footer>
+</main><script type="module" src="ai.mjs"></script></body></html>

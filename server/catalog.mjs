@@ -1,0 +1,43 @@
+import {Failure,demand,jsonFetch,cut} from './core.mjs';
+const creditJobs=['Director','Creator','Writer','Screenplay','Story','Executive Producer','Producer'];
+const crewOf=rows=>(rows||[]).filter(x=>creditJobs.includes(x.job)).sort((a,b)=>creditJobs.indexOf(a.job)-creditJobs.indexOf(b.job)).slice(0,6).map(x=>({name:x.name,job:x.job}));
+
+export class Catalog {
+  constructor(env,signal){this.env=env;this.signal=signal;this.calls=0;}
+  async get(path,params={}){
+    const token=this.env.TMDB_READ_ACCESS_TOKEN||this.env.TMDB_API_READ_ACCESS_TOKEN;
+    demand(token||this.env.TMDB_API_KEY,'TMDB_NOT_CONFIGURED','Серверный TMDB-ключ ещё не настроен.',503);
+    demand(++this.calls<=28,'CATALOG_BUDGET','Достигнут лимит каталожных запросов.');
+    const url=new URL('https://api.themoviedb.org/3'+path);
+    for(const [k,v]of Object.entries({language:'ru-RU',...params}))url.searchParams.set(k,v);
+    if(!token)url.searchParams.set('api_key',this.env.TMDB_API_KEY);
+    return jsonFetch(url,{signal:this.signal,headers:token?{Authorization:'Bearer '+token}:{}});
+  }
+  project(row,type){
+    const kind=type||row.media_type;
+    return {id:row.id,type:kind,title:cut(row.title||row.name,250),original:cut(row.original_title||row.original_name,250),
+      year:Number((row.release_date||row.first_air_date||'').slice(0,4))||null,
+      poster:row.poster_path&&/^\/[\w.-]+$/.test(row.poster_path)?'https://image.tmdb.org/t/p/w342'+row.poster_path:null,
+      overview:cut(row.overview,1100),catalogVerified:true,frameMatchVerified:false,url:`https://www.themoviedb.org/${kind}/${row.id}`};
+  }
+  async search(query,language='ru-RU'){
+    demand(typeof query==='string'&&query.trim().length>=2&&query.length<=250,'QUERY','Введите название или используйте описание для AI-поиска.');
+    const data=await this.get('/search/multi',{query:query.trim(),include_adult:'false',language});
+    return (data.results||[]).filter(x=>['movie','tv'].includes(x.media_type)).slice(0,6).map(x=>this.project(x));
+  }
+  async detail(type,id){
+    demand(['movie','tv'].includes(type)&&Number.isSafeInteger(id)&&id>0,'IDENTITY','Неверная карточка.');
+    const d=await this.get(`/${type}/${id}`,{append_to_response:type==='movie'?'external_ids,credits':'external_ids',language:'en-US'});
+    demand(d.id===id,'CATALOG_IDENTITY','Каталог вернул другую карточку.');
+    return {...this.project(d,type),imdb:d.imdb_id||d.external_ids?.imdb_id||null,wikidata:d.external_ids?.wikidata_id||null,
+      runtime:type==='movie'?d.runtime:null,cast:(d.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),crew:crewOf(d.credits?.crew),overview:cut(d.overview,1800),homepage:d.homepage||null,
+      seasons:(d.seasons||[]).filter(s=>s.season_number>0).map(s=>({number:s.season_number,count:s.episode_count,title:s.name}))};
+  }
+  async season(id,number){
+    demand(Number.isSafeInteger(number)&&number>=1&&number<=100,'SEASON','Неверный сезон.');
+    const s=await this.get(`/tv/${id}/season/${number}`,{language:'en-US',append_to_response:'credits'});
+    demand(s.season_number===number&&(s.episodes||[]).length>0,'SEASON_IDENTITY','Состав сезона не подтверждён.');
+    return {number,cast:(s.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),crew:crewOf(s.credits?.crew),episodes:s.episodes.map(x=>({id:x.id,number:x.episode_number,title:x.name})),
+      revision:s.episodes.map(x=>`${x.id}:${x.episode_number}`).join(',')};
+  }
+}

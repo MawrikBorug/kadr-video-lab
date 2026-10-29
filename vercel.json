@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "regions": ["fra1"],
+  "functions": {"api/ai.mjs": {"maxDuration": 300, "supportsCancellation": true, "excludeFiles": "{tests/**,artifacts/**,history/**,web/**,dist/**}"}},
+  "rewrites": [{"source": "/kadr-video-lab/:path*", "destination": "/:path*"}],
+  "headers": [{"source": "/ai.html", "headers": [{"key":"Cache-Control","value":"no-store"}]}]
+}
