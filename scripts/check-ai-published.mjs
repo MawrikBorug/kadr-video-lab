@@ -70,7 +70,8 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll('#ai-watched input').length>0,null,{timeout:60000});
   const watches=await page.locator('#ai-watched input').all();for(const input of watches)await input.check();
   evidence.watchedConfirmed=watches.length;evidence.preparation=await page.locator('#ai-gate').innerText();
-  const responsePromise=page.waitForResponse(r=>r.url().includes('/api/ai')&&r.request().method()==='POST'&&r.request().postDataJSON()?.op==='analysis',{timeout:15000});
+  if(config.enrichSources)await page.locator('#ai-enrich-sources').check();
+  const responsePromise=page.waitForResponse(r=>r.url().includes('/api/ai')&&r.request().method()==='POST'&&r.request().postDataJSON()?.op==='analysis',{timeout:120000});
   await page.locator('#ai-analyze').click();await responsePromise;
   await page.waitForFunction(()=>window.__kadrQA.some(r=>r.op==='analysis'&&r.done),null,{timeout:295000});
   const captured=await page.evaluate(()=>window.__kadrQA.find(r=>r.op==='analysis'));
@@ -79,5 +80,5 @@ try{
  }
  await page.screenshot({path:out+'/result.png',fullPage:true});await save();
  console.log(JSON.stringify({url:evidence.url,health:evidence.health,steps:evidence.steps.map(s=>({name:s.name,status:s.status,result:s.events?.at(-1)?.result?.status,error:s.events?.at(-1)?.error||s.body?.error,gate:s.body?.finality?.state||s.status})),errors:evidence.errors}));
-}catch(e){evidence.failure=e.message;await save();console.log(JSON.stringify({failure:e.message}));process.exitCode=1;}
+}catch(e){evidence.failure=e.message;try{evidence.failureStatus=await page.locator('#ai-status').innerText();await page.screenshot({path:out+'/failure.png',fullPage:true});}catch{}await save();console.log(JSON.stringify({failure:e.message}));process.exitCode=1;}
 finally{await browser.close();}
