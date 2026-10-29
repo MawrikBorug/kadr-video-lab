@@ -52,7 +52,7 @@ for(const number of (process.argv.includes('--review-only')?[]:process.argv.incl
 const film={id:45745,type:'movie',title:'Sintel',original:'Sintel',year:2010,imdb:'tt1727587',runtime:null,url:'https://www.themoviedb.org/movie/45745'};
 let filmDossier;
 try{
- const s=new Sources(signal);filmDossier=await s.acquire(film,null,await s.finality(film,null));
+ const s=new Sources(signal);filmDossier=process.argv.includes('--review-only')?JSON.parse(await readFile('tests/fixtures/ai-controls/sintel-sources.EVALUATOR-ONLY.json','utf8')):await s.acquire(film,null,await s.finality(film,null));
  // No expected-error list or evaluation guidance enters this independent reviewer.
  const m=client('rejected-sintel-regression'),text=await readFile('tests/fixtures/ai-controls/rejected-sintel-response.md','utf8');
  const result=await reviewText(m,filmDossier,text);report.cases.push({id:'rejected-sintel-regression',kind:'LIVE_REVIEW_OF_SAVED_WRONG_OUTPUT_CURRENT_AUTOMATIC_SOURCES',result});await save();

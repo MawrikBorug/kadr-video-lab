@@ -1,0 +1,45 @@
+{
+  "evaluator_only": true,
+  "provenance": {
+    "run": 40858368288,
+    "retrievedAt": "2026-10-29T10:35:01Z",
+    "kind": "REUSED_AUTOMATIC_SOURCE_DOCUMENTS_UNMODIFIED",
+    "license": "Wikipedia CC BY-SA; Blender CC BY3.0; TMDB metadata",
+    "note": "Negative reviewer control only; never imported by runtime. No expected error list."
+  },
+  "scope": {
+    "id": "movie:45745",
+    "title": "Sintel",
+    "year": 2010
+  },
+  "documents": [
+    {
+      "id": "W1",
+      "title": "Sintel",
+      "source": "https://en.wikipedia.org/wiki/Sintel",
+      "text": "Sintel (code-named Project Durian during production) is a 2010 animated fantasy short film and the third Blender \"open movie\". It was produced by Ton Roosendaal, chairman of the Blender Foundation, written by Esther Wouda, directed by Colin Levy, at the time an artist at Pixar and art direction by David Revoy, who is known for Pepper&Carrot, a free and open source webcomic series. It was made at the Blender Institute, part of the Blender Foundation. The plot follows the character, Sintel, who is tracking down her pet Scales, a dragon. Just like the other Blender \"open movies,\" the film was made using Blender, a free and open source software application for animation, created and supported by the Blender Foundation. The name comes from the Dutch word sintel, which can mean 'cinder', or 'ember'. Overview Work began in May 2009. The film was officially released on 27 September 2010 at the Netherlands Film Festival. The online release was made available for download on 30 September 2010. The film was viewed over 1,000,000 times in a matter of weeks. By May 2020, it was viewed 5.2 million times on YouTube. Plot The main character, a young woman named Sintel, is ambushed while traveling through a wintry mountainside. After defeating her attacker and taking his spear, she finds refuge in a shaman's hut. When the shaman asks Sintel why she is traveling, she confesses that she is looking for a dragon, leading into a flashback. Sintel was a homeless loner, looking for food when she discovered an injured baby dragon. She nursed him back to health and named him Scales, and the two quickly formed an emotional bond. One day, while Scales was flying, he was captured by an adult dragon. Determined to get him back, she began the long and dangerous journey that led her to the shaman's hut. Sintel is ready to give up when the shaman tells her that they are in dragon lands, showing her the glyph on her attacker's spear as proof. She finds the tree pictured on the spear, and near it a cave with an adult dragon and his baby resembling Scales. The baby flees upon seeing Sintel, and the adult dragon attacks. After a brief battle the adult dragon pins Sintel to the ground, but freezes when he recognizes her scent. Sintel takes advantage of this momentary pause and stabs the dragon in the heart. As she is about to land the killing blow, she notices the scar on his wing is exactly the same as her old friend's. Sintel discovers in a moment of horror that she has just killed Scales. Scales bleeds out rapidly, and Sintel stares in shock at her reflection in a pool of blood. It is revealed that she is significantly older than she has appeared throughout the film. She has much gray hair, worn and wrinkled skin, and several scars on her body. The long search for Scales had lasted many years, and she had never realized that Scales would have grown up. Her single-minded quest to get back her friend, and to take revenge on the large dragon who took Scales away, contributed to her mistaking Scales for the small dragon. The cave begins to collapse as Scales succumbs, and Sintel runs for the entrance. After mourning over the friend she killed, Sintel leaves, heartbroken. Scales' baby, having nowhere else to go, follows her. Announcements Some sections were displayed on 25 October 2009, the trailer on YouTube was made available on 13 May 2010, while an almost-final version of the movie screened at a \"pre-premiere\" on 19 July 2010. The full movie premiered at the Netherlands Film Festival on 27 September 2010, and was officially released online on 30 September. Technical information Following Elephants Dream, Big Buck Bunny, and Yo Frankie!, the short movie is the fourth project created by the Blender Foundation. Sintel was created by the Blender Institute, a division of the Blender Foundation set up specifically to facilitate the creation of open content films and games. The film was funded by the Blender Foundation, donations from the Blender community, pre-sales of the film's DVD and commercial sponsorship. Both the final product and production data, including animation data, characters and textures are released under the Creative Commons Attribution License. Improvements to Blender As with the previous Blender Open Movie Projects, Blender developers worked extensively to improve the software in accordance with the needs of the movie team. Improvements were made in the user interface, the particle system, sculpting, shading, the render pipeline, constraints, and smoke simulation. These features were released to the public with Blender v. 2.50 alpha through 2.54 beta. Copyright incident On 5 April 2014, Sintel was temporarily blocked from viewing on the Blender Foundation's official YouTube channel after Sony Pictures issued a takedown notice to YouTube falsely claiming it owned the copyrights to the film. Reviews Dutch daily newspaper Het Parool featured a capture of the film on its front page, along with a short review describing it as \"darker and less accessible than its child friendly predecessors,\" but also stating that in \"image quality, detail and characters, the film is on par with Hollywood animation.\" Game A game based on Sintel was officially announced on blenderartists.org on 12 May 2010. Alpha version became available in July 2012.",
+      "hash": "1c1530e46aa5b8d6ba85b08305326a99f559fbfb4d2add0a88eb0126b2020215",
+      "rights": "Wikipedia contributors, CC BY-SA",
+      "truncated": false
+    },
+    {
+      "id": "T1",
+      "title": "TMDB verified identity and runtime",
+      "source": "https://www.themoviedb.org/movie/45745",
+      "text": "{\"title\":\"Sintel\",\"year\":2010,\"type\":\"movie\",\"runtime_minutes\":null,\"imdb\":\"tt1727587\"}",
+      "rights": "TMDB API metadata"
+    },
+    {
+      "id": "P1",
+      "title": "Sintel official production account",
+      "source": "https://durian.blender.org/about/",
+      "text": "“Sintel” is licensed as Creative Commons Attribution 3.0. That means you can share and show the movie freely, for as long you include the credit scroll of the film itself. Read more >> This 15 minute film has been realized in the studio of the Amsterdam Blender Institute, by an international team of artists and developers. In addition to that, several crucial technical and creative targets have been realized online, by developers and artists and teams all over the world. “Sintel” commenced in May 2009, with producer Ton Roosendaal establishing a core team consisting of Colin Levy (director), David Revoy (concept art), Martin Lodewijk (story) and Jan Morgenstern (composer). In August script writer Esther Wouda was approached as a consultant, which resulted in her taking the responsibility for the entire screenplay. Esther then worked in close cooperation with Colin, David and Ton to deliver the final script early November. Meanwhile, Colin and David realized the first storyboards. With the highly anticipated extra funding from the Amsterdam Cinegrid – also funding a 4k resolution version – Ton finally could extend the team with 5 artists and a developer in March 2010. With 14 people the film then was completed for a first screening on July 18th in cinema Studio K in Amsterdam. Three artists then stayed in Amsterdam working on final shot edits, lighting design, compositing, and on the impressive 2 minute film credits. The movie ended up with a total duration of 14m:48s, 888 seconds! The movie itself, and all of the work of the Durian team in the past 18 months will be released under the Creative Commons Attribution license, free for everyone to distribute, learn from or re-use. The 4-disc DVD set will provide all data to be able to recreate and rerender the film in its entirety. We do this by inviting the best of the talents from the Blender community to work in Amsterdam for half a year or more, in the studio of the Blender Institute. They get excellent working conditions, and full coverage for travel and housing, including a reasonable fee. All of tools",
+      "hash": "3f1bcaa60479dd274ad7fb6123b83212f66894dccf7ecf672d5a06afb4682925",
+      "rights": "Blender Foundation, CC BY 3.0"
+    }
+  ],
+  "references": [],
+  "limitations": [
+    "Reused snapshot, not a fresh retrieval."
+  ]
+}
