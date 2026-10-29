@@ -44,7 +44,7 @@ test('semantic rejection gets exactly one repair/re-review; rejected prose never
   if(spec.structured)return {checks:headings.map((_,index)=>({index,status:index===0?'contradicted':'supported',source_ids:['S1'],basis:'evidence'})),issues:[{reason:'identity contradiction'}]};
   return headings.map((s,i)=>`${i+1}. ${s}\n\nUnverified prose ${i}`).join('\n\n');
  }};
- const result=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'evidence'}],references:[],limitations:[]});
+ const result=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'evidence'}],visualEvidenceIds:['S1'],references:[],limitations:[]});
  assert.equal(calls.length,4);assert.equal(result.status,'rejected');assert.equal(result.text,null);assert.equal(result.reviews.length,2);
 });
 test('catalog existence alone is not a verified frame match; no fixture lookup',async()=>{

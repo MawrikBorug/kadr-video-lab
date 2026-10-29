@@ -146,7 +146,8 @@ export class Sources {
       }catch{/* Secondary dossier retains an explicit missing-primary limitation. */}
     }
     return {scope:{id:`${card.type}:${card.id}`,...(season?{season:season.number,compositionRevision:season.revision}:{}),title:card.original,year:card.year},
-      documents:docs,references:[...docs.map(x=>({id:x.id,title:x.title,url:x.source,hash:x.hash||null,rights:x.rights})),...(season?finality.references:[])],
+      // These adapters retrieve plot and production prose, not independently observed shots.
+      documents:docs,visualEvidenceIds:[],references:[...docs.map(x=>({id:x.id,title:x.title,url:x.source,hash:x.hash||null,rights:x.rights})),...(season?finality.references:[])],
       limitations:['Источники получены автоматически; визуальные выводы допустимы только при явном свидетельстве. Сами кадры поиска не являются просмотром всего фильма.',...(article.truncated?['Объём статьи ограничен 1500 словами; пробелы должны быть явно обозначены.']:[])]};
   }
 }
