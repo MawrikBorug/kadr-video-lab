@@ -60,11 +60,13 @@ export class Sources {
     if(sourceQ)demand(sourceQ===entity.id,'ARTICLE_IDENTITY','Статья относится к другой работе.');
     const {document}=parseHTML(p.parse.text['*']);
     document.querySelectorAll('script,style,.navbox,.vertical-navbox,.reflist,.mw-references-wrap,sup,.reference,.noprint,table.infobox,.hatnote,.toc').forEach(x=>x.remove());
-    const chunks=[];let allow=true,skipLevel=null,excludedLevel=null;
+    const chunks=[],cast=[],episodePlots=[];let allow=true,skipLevel=null,excludedLevel=null,castLevel=null;
     for(const child of [...(document.querySelector('.mw-parser-output')||document.body).children]){
       const heading=/^H([1-6])$/.exec(child.tagName)||child.classList?.contains('mw-heading')&&/^H([1-6])$/.exec(child.querySelector('h1,h2,h3,h4,h5,h6')?.tagName||'');
       if(heading){
         const level=Number(heading[1]),name=child.textContent.trim();
+        if(/^(?:Cast|Characters)/i.test(name))castLevel=level;
+        else if(castLevel!==null&&level<=castLevel)castLevel=null;
         if(season&&future.test(name)){skipLevel=level;allow=false;continue;}
         if(skipLevel!==null){if(level>skipLevel)continue;skipLevel=null;}
         if(excludedLevel!==null){if(level>excludedLevel)continue;excludedLevel=null;}
@@ -73,18 +75,30 @@ export class Sources {
         if(allow)chunks.push('\n'+name+'\n');continue;
       }
       if(!allow||skipLevel!==null)continue;
+      if(castLevel!==null)for(const li of child.querySelectorAll('li')){
+        const t=textOf(li).replace(/\[\d+\]/g,'');if(t.length>8&&t.length<700&&(!season||!future.test(t)))cast.push(t);
+      }
       // A season article is separately identity-bound. Reject future-marked paragraphs.
       for(const node of child.matches('p')?[child]:child.querySelectorAll('p,td.description')){
         const t=node.textContent.replace(/\[\d+\]/g,'').replace(/\s+/g,' ').trim();
-        if(t.length>45&&(!season||!future.test(t)))chunks.push(t);
+        if(node.tagName==='P'&&node.closest('td.description'))continue;
+        if(t.length>45&&(!season||!future.test(t))){if(season&&node.matches('td.description'))episodePlots.push(t);else chunks.push(t);}
       }
     }
-    let text=chunks.join('\n');
+    let text=chunks.join('\n');const castText=words(cast.join('\n'),140);
     demand(text.length>300,'SOURCE_TEXT_EMPTY','Не удалось получить содержательные материалы.');
     // Plot/episode content precedes production. Explicit limit, never silently claims full coverage.
-    const truncated=text.split(/\s+/).length>1500;text=words(text,1500);
+    const totalWords=(text+' '+castText+' '+episodePlots.join(' ')).split(/\s+/).length;
+    if(season){
+      demand(episodePlots.length>0,'SEASON_PLOT_MISSING','В источнике нет сюжетных описаний основных серий.');
+      const plots=episodePlots.map((t,i)=>`Episode ${i+1}: ${t}`).join('\n');
+      const reserved=(plots+' '+castText).split(/\s+/).length+6;
+      demand(reserved<1500,'SEASON_PLOT_BUDGET','Полные сюжеты серий не помещаются в безопасный запрос. Финал не обрезается и разбор не создаётся.');
+      text='Episodes\n'+plots+'\nCast and characters\n'+castText+'\nBackground and production\n'+words(text,1500-reserved);
+    }else text=words(text,1500-castText.split(/\s+/).length)+'\nCast and characters\n'+castText;
+    const truncated=totalWords>1500;
     return {id:'W1',title,source:'https://en.wikipedia.org/wiki/'+encodeURIComponent(title.replaceAll(' ','_')),
-      text,hash:digest(p.parse.text['*']),rights:'Wikipedia contributors, CC BY-SA',truncated};
+      text,hash:digest(p.parse.text['*']),rights:'Wikipedia contributors, CC BY-SA',truncated,episodeCount:season?episodePlots.length:null};
   }
   async publicHTML(source){
     let target=source,r;
@@ -136,6 +150,7 @@ export class Sources {
   async acquire(card,season,finality){
     const parent=await this.identity(card),entity=season?await this.seasonal(parent,season.number):parent;
     const article=await this.article(entity,season?.number);
+    if(season)demand(article.episodeCount===season.episodes.length,'SEASON_PLOT_COVERAGE','Источник не содержит сюжет всех подтверждённых основных серий. Неполный разбор не создаётся.');
     const docs=[article,{id:'T1',title:'TMDB verified identity and runtime',source:card.url,text:JSON.stringify({title:card.original,year:card.year,type:card.type,runtime_minutes:card.runtime,imdb:card.imdb}),rights:'TMDB API metadata'}];
     if(season)docs.push(...(finality.documents||[]));
     // Primary production material discovered from a verified film identity; not a prepared answer.
