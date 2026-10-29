@@ -1,7 +1,7 @@
 import {put,head,list} from '@vercel/blob';
 import {setTimeout as delay} from 'node:timers/promises';
 import {Failure,demand} from './core.mjs';
-export const DAILY_SLOTS=40,DAILY_RESERVED_CAP=DAILY_SLOTS*7900;
+export const DAILY_SLOTS=50,DAILY_RESERVED_CAP=DAILY_SLOTS*7900;
 
 export async function budgetSummary(){
   const day=new Date().toISOString().slice(0,10),prefix=`kadr/budget/${day}/`;
@@ -23,7 +23,7 @@ export class Admission {
       'DUPLICATE','Этот запрос уже запускался. Его повтор не расходует AI; начните новый поиск.',409);
   }
   async reserveCall(){
-    // 40 × 7900 = 316000 reserved tokens/day across ALL deployed instances.
+    // 50 × 7900 = 395000 reserved tokens/day across ALL deployed instances.
     for(let i=0;i<DAILY_SLOTS;i++)if(await this.create(`kadr/budget/${this.day}/${i}.json`,{job:this.job,reserved:7900,at:this.clock()}))return;
     throw new Failure('DAILY_BUDGET','Дневной бюджет лаборатории исчерпан. Повторите завтра.',429);
   }

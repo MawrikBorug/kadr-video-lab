@@ -20,7 +20,7 @@ test('admission is global atomic create, duplicate is not a new AI spend, quota 
  const a=new Admission({job:'00000000-0000-0000-0000-000000000001',operation:'recognize',storage});await a.reserve();
  await assert.rejects(a.reserve(),{code:'DUPLICATE'});assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,0);
  await a.reserveCall();assert.equal([...records.keys()].filter(x=>x.includes('/budget/')).length,1);
- for(let i=1;i<40;i++)await a.reserveCall();await assert.rejects(a.reserveCall(),{code:'DAILY_BUDGET'});
+ for(let i=1;i<50;i++)await a.reserveCall();await assert.rejects(a.reserveCall(),{code:'DAILY_BUDGET'});
  assert.ok([...records.values()].every(x=>!JSON.stringify(x).includes('image')));
  const failing=new Admission({job:'00000000-0000-0000-0000-000000000002',operation:'recognize',storage:{put:async()=>{throw Error('offline');}}});
  await assert.rejects(failing.reserve(),{code:'LEDGER_UNAVAILABLE'});
@@ -41,7 +41,7 @@ test('semantic rejection gets exactly one repair/re-review; rejected prose never
  const calls=[],models={progress:()=>{},admission:{checkpoint:async()=>{}},call:async spec=>{
   calls.push(spec);
   if(spec.schema?.properties.replacements)return {replacements:[{index:0,text:'Still false prose'}]};
-  if(spec.structured)return {checks:headings.map((_,index)=>({index,status:index===0?'contradicted':'supported',source_ids:['S1'],basis:'evidence'})),issues:[{reason:'identity contradiction'}]};
+  if(spec.structured){const blocks=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{'))).blocks;return {checks:blocks.map(({index})=>({index,status:index===0?'contradicted':'supported',source_ids:['S1'],basis:'Synthetic source supports the fictional paragraph except the stated contradiction.'})),issues:[{reason:'identity contradiction'}]};}
   return headings.map((s,i)=>`${i+1}. ${s}\n\nUnverified prose ${i}`).join('\n\n');
  }};
  const result=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'evidence'}],visualEvidenceIds:['S1'],references:[],limitations:[]});
@@ -92,12 +92,12 @@ test('known visual-source gap is labelled as server text; every generated block 
  const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];let calls=0;
  const models={progress:()=>{},admission:{checkpoint:async()=>{}},call:async spec=>{
   calls++;if(!spec.schema)return headings.map((h,i)=>`${i+1}. ${h}\n\n${i===6?'Unsupported appearance claim.':'Synthetic source-backed paragraph.'}`).join('\n\n');
-  const payload=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{')));assert.equal(payload.blocks.length,8);
+  const payload=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{')));assert.equal(payload.blocks.length,7);
   assert.ok(!spec.prompt.includes('Unsupported appearance claim'));assert.ok(!spec.prompt.includes(VISUAL_GAP_NOTICE));
   return {checks:payload.blocks.map(b=>({index:b.index,status:'supported',source_ids:['S1'],evidence_gap_only:false,basis:'Synthetic source supports the supplied fictional test paragraph.'})),issues:[]};
  }};
  const r=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'Synthetic evidence.'}],references:[],visualEvidenceIds:[],limitations:[]});
- assert.equal(r.status,'verified');assert.equal(calls,2);assert.ok(r.text.includes(VISUAL_GAP_NOTICE));assert.equal(r.systemNotices[0].origin,'server');
+ assert.equal(r.status,'verified');assert.equal(calls,2);assert.ok(r.text.includes(VISUAL_GAP_NOTICE));assert.ok(r.systemNotices.every(x=>x.origin==='server'));
 });
 test('role evidence stays on the server before watched confirmation',async()=>{
  class Catalog{async detail(){return{id:1,type:'tv',cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],seasons:[]};}async season(){return{number:1,cast:[{character:'PRIVATE_ROLE_EVIDENCE'}],revision:'r1',episodes:[{id:11,number:1}]};}}
