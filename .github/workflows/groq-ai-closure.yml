@@ -22,22 +22,22 @@ jobs:
       github.workflow_ref == 'MawrikBorug/kadr-video-lab/.github/workflows/groq-ai-closure.yml@refs/heads/feat/ai-user-flows' &&
       github.run_attempt == 1 && inputs.confirm_budget
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           persist-credentials: false
       - name: Offline closure controls
-        run: python3 -m py_compile scripts/ai-model-access.py
-      - name: Existing model access and safe metadata
-        run: python3 scripts/ai-model-access.py
+        run: npm ci --ignore-scripts
+      - name: Bounded live images and automatic analysis
+        run: node scripts/ai-live-eval.mjs
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       - name: Safe evidence for independent review
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ai-access-${{ github.run_id }}
-          path: artifacts/ai-access/report.json
+          name: ai-live-eval-${{ github.run_id }}
+          path: artifacts/ai-live-eval/
           retention-days: 7
           if-no-files-found: ignore

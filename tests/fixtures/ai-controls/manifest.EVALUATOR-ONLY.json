@@ -1,0 +1,292 @@
+{
+  "schema": "kadr.ai-controls.evaluator-only.v1",
+  "checked_at": "2026-10-29T09:55:34.136344+00:00",
+  "evaluator_only": true,
+  "never_model_input": [
+    "evaluator_only_work",
+    "source_page",
+    "source_url",
+    "source_description",
+    "path",
+    "sha256",
+    "original_sha1",
+    "original_sha256"
+  ],
+  "source_metadata_basis": "Commons current imageinfo/extmetadata, exact original SHA-1 comparison before normalization, current official licensing pages; no model output used for provenance.",
+  "model_input_policy": "Only image pixels and any deliberately specified user-like description. Never filenames, hashes, source URLs, catalogue IDs or evaluator work labels. Real uploads use the same preprocessing and server path as these controls.",
+  "limitations": [
+    "Only three open-movie works, all associated with Blender Foundation; not representative of commercial cinema, TV, Russian works, anime or an entire catalogue.",
+    "A recognized full still does not prove arbitrary-shot recognition; ambiguous and low-quality controls must be reported separately.",
+    "Quality difference is controlled only for control-01/control-05; orientation difference for control-02/control-06. Different works/frames are not clean quality ablations.",
+    "Physical iPhone/Safari/PWA test not performed. These files are inputs, not inference results."
+  ],
+  "license_checks": [
+    {
+      "url": "https://peach.blender.org/about/",
+      "status": 200,
+      "final_url": "https://peach.blender.org/about/",
+      "sha256": "d7f47e9ac1ee22b928ee4e80a4c903a5cff1a73949c748d4c48e45ee42253b29",
+      "checked_at": "2026-10-29T09:54:05.272145+00:00"
+    },
+    {
+      "url": "https://orange.blender.org/background/",
+      "status": 200,
+      "final_url": "https://orange.blender.org/background/",
+      "sha256": "c334f8dafb323c281de433ff60ec4154a8dc5a3f8212596bb9b8cc7d275a7b5e",
+      "checked_at": "2026-10-29T09:54:05.273264+00:00"
+    },
+    {
+      "url": "https://mango.blender.org/about/",
+      "status": 200,
+      "final_url": "https://mango.blender.org/about/",
+      "sha256": "5d57b10556347456b77e05f775e4acb522f4b39229e6ed00393eb8ff34371723",
+      "checked_at": "2026-10-29T09:54:05.231460+00:00"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Elephants_Dream",
+      "status": 200,
+      "sha256": "adce533036d58067557d29573d7ee0487c53c86a7ed0ada608cc7ef1155e97c4",
+      "role": "Secondary release-year cross-check; creation date, not date-based inference of identity.",
+      "checked_at": "2026-10-29T09:54:19.504943+00:00"
+    }
+  ],
+  "assets": [
+    {
+      "id": "control-01",
+      "path": "control-01.jpg",
+      "sha256": "bec59261d6053acc66c07f75571d90f821c143bbf058800626a9a1a8e3495eb5",
+      "bytes": 300649,
+      "dimensions": [
+        1600,
+        833
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Big.Buck.Bunny.-.Bunny.with.Bow.png",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Big.Buck.Bunny.-.Bunny.with.Bow.png",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution": "Film: Blender Foundation; www.bigbuckbunny.orgScreenshot: User:Church of emacs",
+      "source_description": "Screenshot of the Big Buck Bunny movie",
+      "original_sha1": "8c33f10491c567c148216d473a8e183919a81722",
+      "original_sha256": "9d9e0c0bcc2dc83e6b296adb54caad38f0d31acc6d57a9084034a477e53daf18",
+      "original_bytes": 1460710,
+      "original_dimensions": [
+        1920,
+        1000
+      ],
+      "modification": "EXIF orientation applied; uncropped proportional resize to longest edge 1600px only if needed; JPEG quality94, 4:4:4; EXIF/ICC stripped.",
+      "checked_at": "2026-10-29T09:53:04.128235+00:00",
+      "evaluator_only_work": {
+        "title": "Big Buck Bunny",
+        "year": 2008,
+        "format": "film"
+      },
+      "control_kind": "real-film-frame",
+      "image_scope": "Distinctive animated rabbit with bow; characteristic full still.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames."
+    },
+    {
+      "id": "control-02",
+      "path": "control-02.jpg",
+      "sha256": "084b4d4d4d73a02efcf23a26ad873ac660db75afe65acd2207a8f78c58ea1d1c",
+      "bytes": 293799,
+      "dimensions": [
+        1600,
+        900
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Elephants_Dream_-_Emo_and_Proog.png",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Elephants_Dream_-_Emo_and_Proog.png",
+      "license": "CC BY 2.5",
+      "license_url": "https://creativecommons.org/licenses/by/2.5",
+      "attribution": "Ton Roosendaal et al.",
+      "source_description": "Image of Emo and Proog from the film Elephants Dream.",
+      "original_sha1": "81351045bad3b8c6415ddc25c8ad6bacb9b229b5",
+      "original_sha256": "5e3af5216eb51732bb71ec45d61b8659467ba5d535af2453b1ff382ab791e185",
+      "original_bytes": 1774134,
+      "original_dimensions": [
+        1920,
+        1080
+      ],
+      "modification": "EXIF orientation applied; uncropped proportional resize to longest edge 1600px only if needed; JPEG quality94, 4:4:4; EXIF/ICC stripped.",
+      "checked_at": "2026-10-29T09:53:05.425875+00:00",
+      "evaluator_only_work": {
+        "title": "Elephants Dream",
+        "year": 2006,
+        "format": "film"
+      },
+      "control_kind": "real-film-frame",
+      "image_scope": "Two distinctive animated characters within a surreal machine; characteristic full still.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames."
+    },
+    {
+      "id": "control-03",
+      "path": "control-03.jpg",
+      "sha256": "cb8131f5162121acc42b13788cfc4b2b0b8de2ec317510bb8dc0febdb50b1793",
+      "bytes": 558772,
+      "dimensions": [
+        1600,
+        667
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_09_1a.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Tears_of_Steel_frame_09_1a.jpg",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution": "(CC) Blender Foundation | Project Mango",
+      "source_description": "Sergio Hasselbaink in the short film \"Tears of Steel\".",
+      "original_sha1": "691f437299c4bda4ab8cfa72fe3ee4688b9e1803",
+      "original_sha256": "4984ed1f72f713a377a3ffd4f79254ff013d6bc0a08568ac7a32a672b59edd26",
+      "original_bytes": 3903526,
+      "original_dimensions": [
+        3840,
+        1600
+      ],
+      "modification": "EXIF orientation applied; uncropped proportional resize to longest edge 1600px only if needed; JPEG quality94, 4:4:4; EXIF/ICC stripped.",
+      "checked_at": "2026-10-29T09:53:06.568897+00:00",
+      "evaluator_only_work": {
+        "title": "Tears of Steel",
+        "year": 2012,
+        "format": "film"
+      },
+      "control_kind": "real-film-frame",
+      "image_scope": "Live-action person amid robots; broad sci-fi resemblance can be ambiguous.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames."
+    },
+    {
+      "id": "control-04",
+      "path": "control-04.jpg",
+      "sha256": "e98db9ab35edd401367e482505397c327f1b50165bc00d77e49e76a65d94e338",
+      "bytes": 452000,
+      "dimensions": [
+        1600,
+        667
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_01_2a.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/18/Tears_of_Steel_frame_01_2a.jpg",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution": "(CC) Blender Foundation | Project Mango",
+      "source_description": "Denise Rebergen and Vanja Rukavina in the short film \"Tears of Steel\".",
+      "original_sha1": "b3cf3986d96553b03c940764304bcb87a659241f",
+      "original_sha256": "6afd33f29f600fb4feae27d9a1afc4073f7a52c142249b2e63422a86dd62b8c7",
+      "original_bytes": 5376707,
+      "original_dimensions": [
+        3840,
+        1600
+      ],
+      "modification": "EXIF orientation applied; uncropped proportional resize to longest edge 1600px only if needed; JPEG quality94, 4:4:4; EXIF/ICC stripped.",
+      "checked_at": "2026-10-29T09:53:07.704060+00:00",
+      "evaluator_only_work": {
+        "title": "Tears of Steel",
+        "year": 2012,
+        "format": "film"
+      },
+      "control_kind": "real-film-frame",
+      "image_scope": "Two people on bridge, one with mechanical arm; broader live-action setting, potentially ambiguous.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames."
+    },
+    {
+      "id": "control-05",
+      "path": "control-05.jpg",
+      "sha256": "a67ff6eca78186c9ec92de0170d709735c25f6c8cc3c72e71145bf6d21c4fc83",
+      "bytes": 2576,
+      "dimensions": [
+        160,
+        83
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Big.Buck.Bunny.-.Bunny.with.Bow.png",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Big.Buck.Bunny.-.Bunny.with.Bow.png",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution": "Film: Blender Foundation; www.bigbuckbunny.orgScreenshot: User:Church of emacs",
+      "source_description": "Screenshot of the Big Buck Bunny movie",
+      "original_sha1": "8c33f10491c567c148216d473a8e183919a81722",
+      "original_sha256": "9d9e0c0bcc2dc83e6b296adb54caad38f0d31acc6d57a9084034a477e53daf18",
+      "original_bytes": 1460710,
+      "original_dimensions": [
+        1920,
+        1000
+      ],
+      "modification": "Same full image and aspect ratio as control-01, deliberately reduced to 160px longest edge and JPEG quality35, chroma subsampling 4:2:0. No crop. This degradation is a CONTROL, not preprocessing used by the product.",
+      "checked_at": "2026-10-29T09:53:04.128235+00:00",
+      "evaluator_only_work": {
+        "title": "Big Buck Bunny",
+        "year": 2008,
+        "format": "film"
+      },
+      "control_kind": "same-frame-quality-control",
+      "image_scope": "Only input resolution/encoding varies relative to control-01. Evaluate whether the same model still recognizes it; unknown on this degraded input is not evidence that the original is unrecognizable.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames.",
+      "parent_control": "control-01"
+    },
+    {
+      "id": "control-06",
+      "path": "control-06.jpg",
+      "sha256": "a3f127033a07f3ff2162c58d1677028c89d9bf67ada7cac1d3c69388f02c63a5",
+      "bytes": 289971,
+      "dimensions": [
+        900,
+        1600
+      ],
+      "mime": "image/jpeg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Elephants_Dream_-_Emo_and_Proog.png",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Elephants_Dream_-_Emo_and_Proog.png",
+      "license": "CC BY 2.5",
+      "license_url": "https://creativecommons.org/licenses/by/2.5",
+      "attribution": "Ton Roosendaal et al.",
+      "source_description": "Image of Emo and Proog from the film Elephants Dream.",
+      "original_sha1": "81351045bad3b8c6415ddc25c8ad6bacb9b229b5",
+      "original_sha256": "5e3af5216eb51732bb71ec45d61b8659467ba5d535af2453b1ff382ab791e185",
+      "original_bytes": 1774134,
+      "original_dimensions": [
+        1920,
+        1080
+      ],
+      "modification": "Raw pixels rotated 90 degrees counter-clockwise; JPEG EXIF Orientation=6. Correct orientation-aware decoding restores the same upright landscape content as control-02. JPEG quality94, 4:4:4. No crop.",
+      "checked_at": "2026-10-29T09:53:05.425875+00:00",
+      "evaluator_only_work": {
+        "title": "Elephants Dream",
+        "year": 2006,
+        "format": "film"
+      },
+      "control_kind": "same-frame-exif-control",
+      "image_scope": "Tests the input pipeline orientation independently of scene identity. Do not send raw sideways pixels without applying EXIF orientation.",
+      "inference_performed": false,
+      "expected_evaluation": "Measure correct recognition separately from safe unknown; verify any candidate against live catalogue, not against filenames.",
+      "oriented_dimensions": [
+        1600,
+        900
+      ],
+      "exif_orientation": 6,
+      "parent_control": "control-02"
+    },
+    {
+      "id": "control-07",
+      "path": "control-07.jpg",
+      "sha256": "b2fa1cef6ea8ea205041d47c612eda9d65600b88ffb41e929d1bdc76faef73f4",
+      "bytes": 16812,
+      "dimensions": [
+        640,
+        360
+      ],
+      "mime": "image/jpeg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Original deterministic evaluation chart by Codex for KADR, reused from accepted groq-eval media fixture.",
+      "source_path": "../groq-eval/closure-media/nonfilm-chart.jpg",
+      "control_kind": "nonfilm-negative",
+      "evaluator_only_work": null,
+      "expected_evaluation": "unknown/non-film, no invented catalogue match",
+      "modification": "Byte-identical reuse; no crop or encoding changes.",
+      "inference_performed": false
+    }
+  ]
+}

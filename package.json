@@ -18,6 +18,9 @@
     "json5": "2.2.3"
   },
   "dependencies": {
+    "@vercel/blob": "2.3.0",
+    "linkedom": "0.18.12",
+    "sharp": "0.34.5",
     "webtorrent": "3.0.21"
   }
 }
