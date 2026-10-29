@@ -43,6 +43,7 @@ async function save(){await writeFile(out+'/report.json',JSON.stringify(evidence
 try{
  await page.goto(share.href,{waitUntil:'domcontentloaded',timeout:60000});await page.waitForFunction(()=>!document.querySelector('#ai-health')?.textContent.includes('Проверяем сервер'),null,{timeout:30000});
  evidence.health=await page.evaluate(()=>fetch('/api/ai').then(r=>r.json()));
+ if(config.expectedCommit&&evidence.health.commit!==config.expectedCommit)throw Error('Published commit does not match the requested verification version.');
  await page.screenshot({path:out+'/iphone-sized-page.png',fullPage:true});await save();
  if(config.mode==='metadata'){
   const cat=await call({op:'catalog',query:'Sintel'});evidence.steps.push({name:'live-TMDB-search',...cat});
@@ -56,7 +57,9 @@ try{
   if(config.description)await page.locator('#ai-description').fill(config.description);
   await page.locator('#ai-find').click();await page.waitForFunction(()=>!document.querySelector('#ai-cancel').disabled,null,{timeout:5000});
   await page.waitForFunction(()=>document.querySelector('#ai-cancel').disabled,null,{timeout:295000});
-  evidence.steps.push({name:'real-browser-upload-search',status:await page.locator('#ai-status').innerText(),candidates:await page.locator('#ai-candidates').innerText(),imageCleared:await page.locator('.preview').count()===0});
+  const captured=await page.evaluate(()=>window.__kadrQA.find(r=>r.op==='recognize'));
+  evidence.steps.push({name:'real-browser-upload-search',status:await page.locator('#ai-status').innerText(),candidates:await page.locator('#ai-candidates').innerText(),imageCleared:await page.locator('.preview').count()===0,captured});
+  evidence.controlDescription=config.description||'';
  }else if(config.mode==='film'||config.mode==='season'){
   const type=config.mode==='film'?'movie':'tv',id=config.mode==='film'?45745:106379,number=config.mode==='film'?undefined:1;
   await page.locator('summary').click();await page.locator('#ai-title-query').fill(config.mode==='film'?'Sintel':'Fallout');await page.locator('#ai-catalog').click();

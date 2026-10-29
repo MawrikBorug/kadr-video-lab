@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {Admission} from '../server/admission.mjs';
 import {execute} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
-import {Models,validateImages,generateAnalysis,recognize,reviewText} from '../server/models.mjs';
+import {Models,validateImages,generateAnalysis,recognize,reviewText,VISUAL_GAP_NOTICE} from '../server/models.mjs';
 import {Sources} from '../server/sources.mjs';
 
 test('orientation is applied without cropping; image name never enters inference input',async()=>{
@@ -87,4 +87,15 @@ test('season materials retain cast roles and every episode plot while excluding 
  source.json=async(_u,p)=>p.action==='query'?{query:{pages:{1:{pageprops:{wikibase_item:qid}}}}}:{parse:{text:{'*':html}}};
  const r=await source.article({id:qid,sitelinks:{enwiki:{title:'Synthetic season'}}},1);
  assert.equal(r.episodeCount,8);assert.ok(r.text.includes('Performer One as Character One'));assert.ok(r.text.includes('Episode 8 contains'));assert.ok(!r.text.includes('SECRET FUTURE'));
+});
+test('known visual-source gap is labelled as server text; every generated block is reviewed',async()=>{
+ const headings=['Краткое резюме','Сюжет и финал','Смысл','Детали и отсылки','Создание','Персонажи','Визуальный язык','Теории','Источники'];let calls=0;
+ const models={progress:()=>{},admission:{checkpoint:async()=>{}},call:async spec=>{
+  calls++;if(!spec.schema)return headings.map((h,i)=>`${i+1}. ${h}\n\n${i===6?'Unsupported appearance claim.':'Synthetic source-backed paragraph.'}`).join('\n\n');
+  const payload=JSON.parse(spec.prompt.slice(spec.prompt.indexOf('{')));assert.equal(payload.blocks.length,8);
+  assert.ok(!spec.prompt.includes('Unsupported appearance claim'));assert.ok(!spec.prompt.includes(VISUAL_GAP_NOTICE));
+  return {checks:payload.blocks.map(b=>({index:b.index,status:'supported',source_ids:['S1'],evidence_gap_only:false,basis:'Synthetic source supports the supplied fictional test paragraph.'})),issues:[]};
+ }};
+ const r=await generateAnalysis(models,{scope:{id:'movie:1'},documents:[{id:'S1',text:'Synthetic evidence.'}],references:[],visualEvidenceIds:[],limitations:[]});
+ assert.equal(r.status,'verified');assert.equal(calls,2);assert.ok(r.text.includes(VISUAL_GAP_NOTICE));assert.equal(r.systemNotices[0].origin,'server');
 });

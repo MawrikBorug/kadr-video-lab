@@ -151,7 +151,7 @@ export class Sources {
     const parent=await this.identity(card),entity=season?await this.seasonal(parent,season.number):parent;
     const article=await this.article(entity,season?.number);
     if(season)demand(article.episodeCount===season.episodes.length,'SEASON_PLOT_COVERAGE','Источник не содержит сюжет всех подтверждённых основных серий. Неполный разбор не создаётся.');
-    const docs=[article,{id:'T1',title:'TMDB verified identity and runtime',source:card.url,text:JSON.stringify({title:card.original,year:card.year,type:card.type,runtime_minutes:card.runtime,imdb:card.imdb}),rights:'TMDB API metadata'}];
+    const docs=[article,{id:'T1',title:'TMDB verified identity, runtime and credited roles',source:season?card.url+'/season/'+season.number:card.url,text:JSON.stringify({title:card.original,year:card.year,type:card.type,runtime_minutes:card.runtime,imdb:card.imdb,season:season?.number,cast:season?season.cast:card.cast}),rights:'TMDB API metadata'}];
     if(season)docs.push(...(finality.documents||[]));
     // Primary production material discovered from a verified film identity; not a prepared answer.
     if(parent.id==='Q925587'&&!season){
