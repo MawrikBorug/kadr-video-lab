@@ -8,6 +8,7 @@ const url=(base,params)=>base+'?'+new URLSearchParams({format:'json',...params})
 const qvalue=s=>s?.mainsnak?.datavalue?.value;
 const words=(text,max)=>String(text).split(/\s+/).slice(0,max).join(' ');
 const digest=text=>createHash('sha256').update(text).digest('hex');
+const textOf=node=>[...node.childNodes].map(x=>x.nodeType===3?x.textContent:textOf(x)).join(' ').replace(/\s+/g,' ').trim();
 const future=/\b(?:season\s*[2-9]|second season|third season|fourth season)\b/i;
 
 export class Sources {
@@ -88,32 +89,34 @@ export class Sources {
     if(card.id!==106379||season.number!==1)return {state:'unknown',reason:'Для этого сезона пока нет проверенного адаптера официального подтверждения выпуска. Дата последней серии не является доказательством.'};
     const amazon='https://www.aboutamazon.com/news/entertainment/fallout-tv-series-cast';
     const prime='https://www.primevideo.com/-/de/detail/0HAQAA7JM43QWX0H6GUD3IOF70?tr=pr';
+    let signals;
     try{
       const [a,p]=await Promise.all([this.publicHTML(amazon),this.publicHTML(prime)]);
       const {document:ad}=parseHTML(a.html);ad.querySelectorAll('script,style,nav,footer').forEach(x=>x.remove());
       let allowed=true,skipLevel=null,visual=false;const paragraphs=[],visuals=[];
       for(const node of ad.querySelectorAll('h1,h2,h3,h4,p')){
         if(/^H/.test(node.tagName)){
-          const level=Number(node.tagName[1]);if(future.test(node.textContent)){skipLevel=level;allowed=false;continue;}
+          const level=Number(node.tagName[1]);if(future.test(textOf(node))){skipLevel=level;allowed=false;continue;}
           if(skipLevel!==null&&level<=skipLevel){skipLevel=null;allowed=true;}
-          visual=allowed&&/Less was more visually/i.test(node.textContent);continue;
+          visual=allowed&&/Less was more visually/i.test(textOf(node));continue;
         }
-        if(allowed&&skipLevel===null&&!future.test(node.textContent)){paragraphs.push(node.textContent);if(visual)visuals.push(node.textContent);}
+        if(allowed&&skipLevel===null&&!future.test(textOf(node))){paragraphs.push(textOf(node));if(visual)visuals.push(textOf(node));}
       }
       const at=paragraphs.join(' ').replace(/\s+/g,' ');
       const all=/watch\s+all\s+eight\s+episodes\s+of\s+Fallout\s+Season\s+1|all\s+eight\s+episodes\s+of\s+Fallout\s+Season\s+1\s+are\s+(?:now\s+)?available/i.test(at);
       const final=/final\s+episode\s+of\s+Fallout\s+Season\s+1/i.test(at);
       const {document:pd}=parseHTML(p.html),pt=pd.querySelector('title')?.textContent||'';
       const nums=new Set();for(const h of pd.querySelectorAll('h1,h2,h3,h4')){
-        const m=/^(?:S(?:taffel)?\s*1\s*[-–:]\s*)?(?:E(?:pisode)?\s*)?([1-8])[.\s–:-]+(.{1,90})$/i.exec(h.textContent.trim());if(m)nums.add(Number(m[1]));
+        const m=/^(?:S(?:taffel)?\s*1\s*[-–:]\s*)?(?:E(?:pisode)?\s*)?([1-8])[.\s–:-]+(.{1,90})$/i.exec(textOf(h));if(m)nums.add(Number(m[1]));
       }
-      demand(all&&final&&/Fallout.{0,40}(?:Staffel\s*1|Season\s*1)/i.test(pt)&&nums.size===8&&season.episodes.length===8&&season.episodes.every(e=>nums.has(e.number)),
+      signals={amazonAvailable:all,amazonFinalEpisode:final,primeSelectedSeason:/Fallout.{0,40}(?:Staffel\s*1|Season\s*1)/i.test(pt),primeEpisodeNumbers:[...nums].sort(),tmdbEpisodeCount:season.episodes.length};
+      demand(all&&final&&signals.primeSelectedSeason&&nums.size===8&&season.episodes.length===8&&season.episodes.every(e=>nums.has(e.number)),
         'FINALITY_UNKNOWN','Официальные подтверждения выпуска и состава сезона не совпали.');
       const docs=[{id:'A1',title:'Amazon — creators and visual production (season 1 only)',source:amazon,text:words(visuals.join(' '),180),hash:a.hash,rights:'Amazon; bounded input, original generated analysis only'}].filter(x=>x.text.length>30);
       return {state:'confirmed',checkedAt:new Date().toISOString(),revision:season.revision,episodeIds:season.episodes.map(x=>x.id),
         basis:'Amazon: all eight available and explicit final episode; Prime: selected S1 entries 1–8',
         references:[{id:'F1',title:'Amazon — availability and final episode',url:amazon,hash:a.hash},{id:'F2',title:'Prime Video — season 1 entries',url:prime,hash:p.hash}],documents:docs};
-    }catch(e){return {state:'unknown',reason:e instanceof Failure?e.message:'Официальное подтверждение не получено.'};}
+    }catch(e){return {state:'unknown',reason:e instanceof Failure?e.message:'Официальное подтверждение не получено.',signals};}
   }
   async acquire(card,season,finality){
     const parent=await this.identity(card),entity=season?await this.seasonal(parent,season.number):parent;
