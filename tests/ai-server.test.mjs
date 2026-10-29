@@ -63,3 +63,9 @@ test('actual model preflight rejects excessive input before any inference admiss
  let called=false;const m=new Models({GROQ_API_KEY:'synthetic'}, {beforeCall:async()=>{called=true;}},AbortSignal.timeout(1000));
  await assert.rejects(m.call({system:'test',prompt:'impossible oversized prompt '.repeat(10000),output:3600}),{code:'INPUT_BUDGET'});assert.equal(called,false);
 });
+test('a live TMDB Wikidata crosswalk still rejects conflicting work identifiers',async()=>{
+ const source=new Sources(AbortSignal.timeout(1000));
+ source.json=async()=>{throw Error('search index must not replace a supplied crosswalk');};
+ source.entity=async()=>({id:'Q1',claims:{P4947:[{mainsnak:{datavalue:{value:'99'}}}]},sitelinks:{enwiki:{title:'Wrong work'}}});
+ await assert.rejects(source.identity({id:1,type:'movie',wikidata:'Q1'}),{code:'SOURCE_IDENTITY_CONFLICT'});
+});

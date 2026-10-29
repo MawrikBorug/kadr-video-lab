@@ -46,7 +46,7 @@ export class Catalog {
     demand(['movie','tv'].includes(type)&&Number.isSafeInteger(id)&&id>0,'IDENTITY','Неверная карточка.');
     const d=await this.get(`/${type}/${id}`,{append_to_response:'external_ids',language:'en-US'});
     demand(d.id===id,'CATALOG_IDENTITY','Каталог вернул другую карточку.');
-    return {...this.project(d,type),imdb:d.imdb_id||d.external_ids?.imdb_id||null,
+    return {...this.project(d,type),imdb:d.imdb_id||d.external_ids?.imdb_id||null,wikidata:d.external_ids?.wikidata_id||null,
       runtime:type==='movie'?d.runtime:null,overview:cut(d.overview,1800),homepage:d.homepage||null,
       seasons:(d.seasons||[]).filter(s=>s.season_number>0).map(s=>({number:s.season_number,count:s.episode_count,title:s.name}))};
   }

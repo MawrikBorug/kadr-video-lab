@@ -17,12 +17,16 @@ export class Sources {
   async entity(id){return (await this.json(wd,{action:'wbgetentities',ids:id,props:'claims|sitelinks',sitefilter:'enwiki'})).entities?.[id];}
   async identity(card){
     const prop=card.type==='movie'?'P4947':'P4983';
-    const found=await this.json(wd,{action:'query',list:'search',srsearch:`haswbstatement:${prop}=${card.id}`,srlimit:'3'});
+    // Prefer the LIVE TMDB crosswalk over a potentially stale Wiki search index.
+    const direct=/^Q\d+$/.test(card.wikidata||'');
+    const found=direct?{query:{search:[{title:card.wikidata}]}}:await this.json(wd,{action:'query',list:'search',srsearch:`haswbstatement:${prop}=${card.id}`,srlimit:'3'});
     const matches=[];
     for(const row of found.query?.search||[]){
       if(!/^Q\d+$/.test(row.title))continue;
       const e=await this.entity(row.title);
-      if(!e?.claims?.[prop]?.some(x=>String(qvalue(x))===String(card.id)))continue;
+      const tmdbIds=e?.claims?.[prop]?.map(qvalue)||[],imdbIds=e?.claims?.P345?.map(qvalue)||[];
+      if(direct&&tmdbIds.length&&!tmdbIds.some(x=>String(x)===String(card.id)))throw new Failure('SOURCE_IDENTITY_CONFLICT','TMDB и Wikidata связали разные карточки.');
+      if(!tmdbIds.some(x=>String(x)===String(card.id))&&!(direct&&card.imdb&&imdbIds.includes(card.imdb)))continue;
       const imdb=e.claims.P345?.map(qvalue)||[];
       if(card.imdb&&imdb.length&&!imdb.includes(card.imdb))throw new Failure('SOURCE_IDENTITY_CONFLICT','IMDb в источнике не совпал с карточкой.');
       if(e.sitelinks?.enwiki)matches.push(e);
