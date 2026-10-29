@@ -40,6 +40,9 @@ export class Sources {
   }
   async article(entity,season){
     const title=entity.sitelinks.enwiki.title;
+    const identity=await this.json(wiki,{action:'query',prop:'pageprops',titles:title,redirects:1});
+    const pages=Object.values(identity.query?.pages||{});
+    demand(pages.length===1&&pages[0].pageprops?.wikibase_item===entity.id,'ARTICLE_IDENTITY','Статья не подтвердила точный идентификатор работы.');
     const p=await this.json(wiki,{action:'parse',page:title,prop:'text|sections|properties',disableeditsection:1});
     demand(p.parse&&!p.error,'WIKI_SOURCE','Статья временно недоступна.');
     const props=p.parse.properties||[];
@@ -79,7 +82,7 @@ export class Sources {
       const next=new URL(r.headers.get('location'),target);
       demand(next.protocol==='https:'&&next.origin===new URL(source).origin,'SOURCE_REDIRECT','Официальный источник перенаправил на другой домен.');target=next.href;
     }
-    demand(r.ok,'OFFICIAL_SOURCE_HTTP','Официальное подтверждение временно недоступно.',502);
+    demand(r.ok,'OFFICIAL_SOURCE_HTTP',`Официальный источник ${new URL(source).hostname} временно недоступен (HTTP ${r.status}).`,502);
     const html=await r.text();demand(html.length<=4000000,'SOURCE_TOO_LARGE','Официальный источник слишком большой.');
     return {html,hash:digest(html)};
   }
@@ -94,7 +97,7 @@ export class Sources {
       const [a,p]=await Promise.all([this.publicHTML(amazon),this.publicHTML(prime)]);
       const {document:ad}=parseHTML(a.html);ad.querySelectorAll('script,style,nav,footer').forEach(x=>x.remove());
       let allowed=true,skipLevel=null,visual=false;const paragraphs=[],visuals=[];
-      for(const node of ad.querySelectorAll('h1,h2,h3,h4,p')){
+      for(const node of ad.querySelectorAll('h1,h2,h3,h4,p,div.contentItem-role-text')){
         if(/^H/.test(node.tagName)){
           const level=Number(node.tagName[1]);if(future.test(textOf(node))){skipLevel=level;allowed=false;continue;}
           if(skipLevel!==null&&level<=skipLevel){skipLevel=null;allowed=true;}
