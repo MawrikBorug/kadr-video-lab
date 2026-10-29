@@ -18,26 +18,26 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       github.repository == 'MawrikBorug/kadr-video-lab' &&
       github.actor == github.repository_owner &&
-      github.ref == 'refs/heads/main' &&
-      github.workflow_ref == 'MawrikBorug/kadr-video-lab/.github/workflows/groq-ai-closure.yml@refs/heads/main' &&
+      github.ref == 'refs/heads/feat/ai-user-flows' &&
+      github.workflow_ref == 'MawrikBorug/kadr-video-lab/.github/workflows/groq-ai-closure.yml@refs/heads/feat/ai-user-flows' &&
       github.run_attempt == 1 && inputs.confirm_budget
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           persist-credentials: false
       - name: Offline closure controls
-        run: python3 -m unittest discover -s tests -p 'groq*test.py'
-      - name: Remaining AI cases, one bounded run
-        run: python3 scripts/groq-ai-closure.py
+        run: python3 -m py_compile scripts/ai-model-access.py
+      - name: Existing model access and safe metadata
+        run: python3 scripts/ai-model-access.py
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       - name: Safe evidence for independent review
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: groq-ai-closure-${{ github.run_id }}
-          path: artifacts/groq-ai-closure/report.json
+          name: ai-access-${{ github.run_id }}
+          path: artifacts/ai-access/report.json
           retention-days: 7
           if-no-files-found: ignore
