@@ -47,3 +47,24 @@ test('small frames warn, maximum three, no browser persistence of image or descr
  await page.locator('#ai-files').setInputFiles('tests/fixtures/ai-controls/control-04.jpg');await expect(page.locator('.preview')).toHaveCount(3);
  expect(await page.evaluate(()=>[Object.keys(localStorage),Object.keys(sessionStorage)])).toEqual([[],[]]);
 });
+
+test('synthetic visibility interruption and late abort preserve a fresh foreground upload',async({page})=>{
+ await page.route('**/api/ai',r=>r.fulfill({json:{ready:true}}));
+ await page.addInitScript(()=>{
+  const original=window.fetch.bind(window);let first=true;
+  window.fetch=(input,options)=>{
+   if(options?.body&&JSON.parse(options.body).op==='recognize'&&first){
+    first=false;return new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>setTimeout(()=>reject(new DOMException('Late synthetic abort','AbortError')),650),{once:true}));
+   }return original(input,options);
+  };
+ });
+ await page.goto('ai.html');await page.locator('#ai-files').setInputFiles('tests/fixtures/ai-controls/control-01.jpg');
+ await expect(page.locator('.preview')).toHaveCount(1);await page.locator('#ai-find').click();
+ await expect(page.locator('#ai-cancel')).toBeEnabled();
+ await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
+ await expect(page.locator('.preview')).toHaveCount(0);await expect(page.locator('#ai-status')).toContainText('Страница скрыта');
+ await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});});
+ await page.locator('#ai-files').setInputFiles('tests/fixtures/ai-controls/control-02.jpg');await expect(page.locator('.preview')).toHaveCount(1);
+ await page.waitForTimeout(800);await expect(page.locator('.preview')).toHaveCount(1);await expect(page.locator('#ai-find')).toBeEnabled();
+ expect(await page.evaluate(()=>[Object.keys(localStorage),Object.keys(sessionStorage)])).toEqual([[],[]]);
+});
