@@ -1,4 +1,6 @@
 import {Failure,demand,jsonFetch,cut} from './core.mjs';
+const creditJobs=['Director','Creator','Writer','Screenplay','Story','Executive Producer','Producer'];
+const crewOf=rows=>(rows||[]).filter(x=>creditJobs.includes(x.job)).sort((a,b)=>creditJobs.indexOf(a.job)-creditJobs.indexOf(b.job)).slice(0,6).map(x=>({name:x.name,job:x.job}));
 
 export class Catalog {
   constructor(env,signal){this.env=env;this.signal=signal;this.calls=0;}
@@ -36,7 +38,7 @@ export class Catalog {
         if(!movie&&!tv)continue;
         const type=movie?'movie':'tv',value=Number(movie||tv);
         if(result.some(x=>x.id===value&&x.type===type))continue;
-        try{const {cast,...card}=await this.detail(type,value);result.push({...card,retrievedBy:'visual-keyword-search'});}catch(e){if(e.code==='TMDB_NOT_CONFIGURED')throw e;}
+        try{const {cast,crew,...card}=await this.detail(type,value);result.push({...card,retrievedBy:'visual-keyword-search'});}catch(e){if(e.code==='TMDB_NOT_CONFIGURED')throw e;}
         if(result.length>=3)return result;
       }
     }
@@ -47,14 +49,14 @@ export class Catalog {
     const d=await this.get(`/${type}/${id}`,{append_to_response:type==='movie'?'external_ids,credits':'external_ids',language:'en-US'});
     demand(d.id===id,'CATALOG_IDENTITY','Каталог вернул другую карточку.');
     return {...this.project(d,type),imdb:d.imdb_id||d.external_ids?.imdb_id||null,wikidata:d.external_ids?.wikidata_id||null,
-      runtime:type==='movie'?d.runtime:null,cast:(d.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),overview:cut(d.overview,1800),homepage:d.homepage||null,
+      runtime:type==='movie'?d.runtime:null,cast:(d.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),crew:crewOf(d.credits?.crew),overview:cut(d.overview,1800),homepage:d.homepage||null,
       seasons:(d.seasons||[]).filter(s=>s.season_number>0).map(s=>({number:s.season_number,count:s.episode_count,title:s.name}))};
   }
   async season(id,number){
     demand(Number.isSafeInteger(number)&&number>=1&&number<=100,'SEASON','Неверный сезон.');
     const s=await this.get(`/tv/${id}/season/${number}`,{language:'en-US',append_to_response:'credits'});
     demand(s.season_number===number&&(s.episodes||[]).length>0,'SEASON_IDENTITY','Состав сезона не подтверждён.');
-    return {number,cast:(s.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),episodes:s.episodes.map(x=>({id:x.id,number:x.episode_number,title:x.name})),
+    return {number,cast:(s.credits?.cast||[]).slice(0,6).map(x=>({name:x.name,character:x.character})),crew:crewOf(s.credits?.crew),episodes:s.episodes.map(x=>({id:x.id,number:x.episode_number,title:x.name})),
       revision:s.episodes.map(x=>`${x.id}:${x.episode_number}`).join(',')};
   }
 }
