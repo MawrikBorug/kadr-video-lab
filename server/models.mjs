@@ -10,7 +10,7 @@ const matchSchema=object({candidates:{type:'array',items:object({index:integer,a
 
 export class Models {
   constructor(env,admission,signal,progress=()=>{}){Object.assign(this,{env,admission,signal,progress});this.usage=[];}
-  async call({system,prompt,images=[],output=1600,structured=false,schema,vision=false,review=false,effort='low'}){
+  async call({system,prompt,images=[],output=1600,structured=false,schema,vision=false,review=false,effort}){
     demand(this.env.GROQ_API_KEY,'GROQ_NOT_CONFIGURED','Серверный ключ Groq ещё не настроен.',503);
     const model=vision?(this.env.KADR_VISION_MODEL||'qwen/qwen3.8-27b'):review?(this.env.KADR_REVIEW_MODEL||'openai/gpt-oss-120b'):(this.env.KADR_TEXT_MODEL||'openai/gpt-oss-120b');
     const material=system+prompt+(schema?JSON.stringify(schema):'');
@@ -20,7 +20,7 @@ export class Models {
     demand(this.usage.length<4,'MODEL_BUDGET','Достигнут предел четырёх обращений к модели.');
     const body={model,messages:[{role:'system',content:system},{role:'user',content:images.length?[
       {type:'text',text:prompt},...images.map(x=>({type:'image_url',image_url:{url:x}}))]:prompt}],
-      temperature:0,max_completion_tokens:output,stream:false,include_reasoning:false,reasoning_effort:vision?'none':effort};
+      temperature:0,max_completion_tokens:output,stream:false,include_reasoning:false,reasoning_effort:effort??(vision?'none':'low')};
     if(schema)body.response_format={type:'json_schema',json_schema:{name:'kadr_result',strict:true,schema}};
     else if(structured)body.response_format={type:'json_object'};
     this.progress('Ожидаем безопасный интервал перед обращением к модели…');
