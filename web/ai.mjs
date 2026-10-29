@@ -84,7 +84,7 @@ $('ai-analyze').onclick=async()=>{
   if(busy||!selection?.proof)return;const selected=selection;
   try{
     const checked=[...$('ai-watched').querySelectorAll('input:checked')].map(x=>Number(x.value));
-    const watched=await call({op:'confirm',proof:selected.proof,watched:!selected.season&&$('ai-watched input')?.checked===true,watchedIds:checked});
+    const watched=await call({op:'confirm',proof:selected.proof,watched:!selected.season&&document.querySelector('#ai-watched input')?.checked===true,watchedIds:checked});
     activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;
     const result=await call({op:'analysis',job:activeJob,type:selected.card.type,id:selected.card.id,season:selected.season?.number,proof:watched.proof},{long:true});
     evidence={kind:'analysis',at:new Date().toISOString(),card:selected.card,result};renderAnalysis(result);

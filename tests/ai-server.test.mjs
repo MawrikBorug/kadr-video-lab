@@ -6,6 +6,7 @@ import {Admission} from '../server/admission.mjs';
 import {execute} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
 import {validateImages,generateAnalysis,recognize} from '../server/models.mjs';
+import {Sources} from '../server/sources.mjs';
 
 test('orientation is applied without cropping; image name never enters inference input',async()=>{
  const raw=await readFile('tests/fixtures/ai-controls/control-06.jpg');
@@ -45,4 +46,11 @@ test('catalog existence alone is not a verified frame match; no fixture lookup',
  const models={progress:()=>{},call:async()=>replies.shift()},catalog={search:async()=>[{id:1,type:'movie',year:2000,title:'Example',catalogVerified:true}]};
  const result=await recognize(models,catalog,{frames:[],description:'A synthetic story description.'});
  assert.equal(result.candidates[0].frameMatchVerified,false);assert.equal(result.candidates[0].assessment,'ambiguous');
+});
+test('B04 publisher port admits only matching eight episodes and excludes future subtree',async()=>{
+ const source=new Sources(AbortSignal.timeout(1000));
+ source.publicHTML=async url=>url.includes('aboutamazon')?{hash:'synthetic-amazon',html:'<html><body><h1>Fallout</h1><div class="contentItem-role-text">Watch all eight episodes of Fallout Season 1. The final episode of Fallout Season 1 is discussed.</div><h2>Season 2</h2><div class="contentItem-role-text">SECRET FUTURE</div><h2>Less was more visually</h2><p>Creators reported camera and visual effects choices for season one.</p></body></html>'}:{hash:'synthetic-prime',html:'<html><head><title>Fallout - Staffel 1</title></head><body>'+Array.from({length:8},(_,i)=>`<h3>${i+1}. Episode</h3>`).join('')+'</body></html>'};
+ const card={id:106379,type:'tv'},season={number:1,revision:'r1',episodes:Array.from({length:8},(_,i)=>({id:i+1,number:i+1}))};
+ const result=await source.finality(card,season);assert.equal(result.state,'confirmed');assert.ok(!JSON.stringify(result.documents).includes('SECRET FUTURE'));
+ const missing=await source.finality(card,{...season,episodes:season.episodes.slice(0,7)});assert.equal(missing.state,'unknown');
 });
