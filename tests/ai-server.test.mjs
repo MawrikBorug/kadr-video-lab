@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {Admission} from '../server/admission.mjs';
 import {execute} from '../server/app.mjs';
 import {sign,unseal,Failure} from '../server/core.mjs';
-import {validateImages,generateAnalysis,recognize} from '../server/models.mjs';
+import {Models,validateImages,generateAnalysis,recognize} from '../server/models.mjs';
 import {Sources} from '../server/sources.mjs';
 
 test('orientation is applied without cropping; image name never enters inference input',async()=>{
@@ -53,4 +53,8 @@ test('B04 publisher port admits only matching eight episodes and excludes future
  const card={id:106379,type:'tv'},season={number:1,revision:'r1',episodes:Array.from({length:8},(_,i)=>({id:i+1,number:i+1}))};
  const result=await source.finality(card,season);assert.equal(result.state,'confirmed');assert.ok(!JSON.stringify(result.documents).includes('SECRET FUTURE'));
  const missing=await source.finality(card,{...season,episodes:season.episodes.slice(0,7)});assert.equal(missing.state,'unknown');
+});
+test('actual model preflight rejects excessive input before any inference admission',async()=>{
+ let called=false;const m=new Models({GROQ_API_KEY:'synthetic'}, {beforeCall:async()=>{called=true;}},AbortSignal.timeout(1000));
+ await assert.rejects(m.call({system:'test',prompt:'impossible oversized prompt '.repeat(10000),output:3600}),{code:'INPUT_BUDGET'});assert.equal(called,false);
 });

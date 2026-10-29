@@ -29,7 +29,7 @@ export class Admission {
     const slot=Math.floor(this.clock()/65000)+1;
     demand(await this.create(`kadr/starts/${slot}.json`,{job:this.job,start:slot*65000}),
       'BUSY','Другой запрос уже выполняется. Подождите около минуты и повторите.',429);
-    while(this.clock()<slot*65000){await this.checkpoint();await delay(Math.min(3000,slot*65000-this.clock()),undefined,{signal:this.signal});}
+    while(this.clock()<slot*65000){this.signal?.throwIfAborted();await delay(Math.min(5000,slot*65000-this.clock()),undefined,{signal:this.signal});}
     await this.checkpoint();
   }
   async cancel(){await this.create(`kadr/cancel/${this.job}.json`,{at:this.clock(),expires:this.clock()+86400000});}

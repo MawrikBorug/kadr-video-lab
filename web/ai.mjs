@@ -1,28 +1,30 @@
 import {normalizeFrame} from './ai-images.mjs';
 const $=id=>document.getElementById(id),api='/api/ai';
-let frames=[],busy=false,controller=null,activeJob=null,selection=null,evidence=null,epoch=0;
-const ready=()=>{$('ai-find').disabled=busy||!serverReady;$('ai-analyze').disabled=busy||!selection?.proof||selection.finality?.state!=='confirmed';$('ai-cancel').disabled=!busy;};
+let frames=[],busy=false,processing=false,transformEpoch=0,controller=null,activeJob=null,selection=null,evidence=null,epoch=0;
+const ready=()=>{$('ai-find').disabled=busy||processing||!serverReady;$('ai-analyze').disabled=busy||processing||!selection?.proof||selection.finality?.state!=='confirmed';$('ai-cancel').disabled=!busy&&!processing;$('ai-files').disabled=busy||processing;};
 let serverReady=false;
 const status=t=>$('ai-status').textContent=t;
-function clearFrames(){for(const f of frames)URL.revokeObjectURL(f.url);frames=[];$('ai-files').value='';renderFrames();}
+function clearFrames(){++transformEpoch;for(const f of frames)URL.revokeObjectURL(f.url);frames=[];$('ai-files').value='';renderFrames();}
 function element(tag,text,cls){const e=document.createElement(tag);if(text)e.textContent=text;if(cls)e.className=cls;return e;}
 function renderFrames(){
+  $('ai-description').maxLength=frames.length===3?120:frames.length===2?600:2000;
   $('ai-previews').replaceChildren();
   frames.forEach((frame,index)=>{
     const box=element('figure',null,'preview'),img=new Image();img.src=frame.url;img.alt=`Выбранный кадр ${index+1}`;
     box.append(img,element('p',`${frame.width}×${frame.height} · JPEG · ${Math.round(frame.bytes/1024)} КБ · без обрезки`));
     if(frame.warning)box.append(element('p',frame.warning,'warning'));
+    if(index===0&&frames.length>1)box.append(element('p',`Описание: до ${$('ai-description').maxLength} символов для ${frames.length} кадров. Более подробное описание доступно с одним кадром.`));
     const remove=element('button','Удалить');remove.type='button';remove.onclick=()=>{if(busy)return;URL.revokeObjectURL(frame.url);frames.splice(index,1);renderFrames();};
     const replace=element('button','Заменить'),input=element('input');input.type='file';input.accept='image/*';input.hidden=true;
-    replace.onclick=()=>{if(!busy)input.click();};input.onchange=async()=>{if(!input.files[0]||busy)return;try{const next=await normalizeFrame(input.files[0]);URL.revokeObjectURL(frame.url);frames[index]=next;renderFrames();}catch(e){status(e.message);}};
+    replace.onclick=()=>{if(!busy&&!processing)input.click();};input.onchange=async()=>{if(!input.files[0]||busy||processing)return;processing=true;ready();const version=transformEpoch;try{const next=await normalizeFrame(input.files[0]);if(version!==transformEpoch||frames[index]!==frame){URL.revokeObjectURL(next.url);return;}URL.revokeObjectURL(frame.url);frames[index]=next;renderFrames();}catch(e){if(version===transformEpoch)status(e.message);}finally{if(version===transformEpoch){processing=false;ready();}}};
     box.append(remove,replace,input);$('ai-previews').append(box);
   });
 }
 $('ai-files').onchange=async event=>{
-  if(busy)return;
-  for(const file of event.target.files){if(frames.length>=3){status('Можно выбрать не более трёх кадров. Удалите или замените один.');break;}
-    try{frames.push(await normalizeFrame(file));renderFrames();}catch(e){status(e.message);}}
-  event.target.value='';
+  if(busy||processing)return;processing=true;ready();const version=transformEpoch;
+  try{for(const file of [...event.target.files]){if(frames.length>=3){status('Можно выбрать не более трёх кадров. Удалите или замените один.');break;}
+    try{const next=await normalizeFrame(file);if(version!==transformEpoch){URL.revokeObjectURL(next.url);break;}frames.push(next);renderFrames();}catch(e){if(version===transformEpoch)status(e.message);}}}
+  finally{if(version===transformEpoch){event.target.value='';processing=false;ready();}}
 };
 async function call(body,{long=false}={}){
   controller=new AbortController();const current=++epoch;busy=true;ready();
@@ -53,7 +55,7 @@ function showCandidates(result){
   }
 }
 $('ai-find').onclick=async()=>{
-  if(busy)return;activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;selection=null;ready();
+  if(busy||processing)return;activeJob=crypto.randomUUID();$('ai-analysis').hidden=true;$('ai-candidates').replaceChildren();$('ai-selection').hidden=true;selection=null;ready();
   const metadata=frames.map(({width,height,bytes,original})=>({width,height,bytes,original}));
   try{const result=await call({op:'recognize',job:activeJob,frames:frames.map(f=>f.data),description:$('ai-description').value},{long:true});
     evidence={kind:'recognition',at:new Date().toISOString(),inputMetadata:metadata,result};showCandidates(result);
@@ -106,16 +108,16 @@ function renderAnalysis(result){
   status(result.status==='verified'?'Разбор готов.':'Проверка завершена; готовый разбор не опубликован.');$('ai-analysis').scrollIntoView({behavior:'smooth'});
 }
 function cancel(reason='Операция отменена. Кадры очищены.'){
-  ++epoch;controller?.abort();controller=null;busy=false;clearFrames();
+  ++epoch;controller?.abort();controller=null;busy=false;processing=false;clearFrames();
   if(activeJob)fetch(api,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({op:'cancel',job:activeJob}),keepalive:true}).catch(()=>{});
   activeJob=null;status(reason);ready();
 }
 $('ai-cancel').onclick=()=>cancel();
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&(busy||frames.length))cancel('Страница скрыта: операция остановлена, кадры очищены. Для продолжения выберите их заново.');});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&(busy||processing||frames.length))cancel('Страница скрыта: операция остановлена, кадры очищены. Для продолжения выберите их заново.');});
 window.addEventListener('pagehide',()=>cancel('После возвращения выберите кадры заново.'));
 $('ai-export').onclick=()=>{if(!evidence)return;const blob=new Blob([JSON.stringify(evidence,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=element('a');a.href=u;a.download='KADR_AI_RESULT.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);};
 try{
-  if(location.hostname.endsWith('github.io')){$('ai-health').replaceChildren(element('span','Серверная сборка: '));const a=element('a','открыть закрытый AI-стенд');a.href='https://kadr-video-lab-ai.vercel.app/ai.html';$('ai-health').append(a);}
+  if(location.hostname.endsWith('github.io')){$('ai-health').replaceChildren(element('span','Серверная сборка: '));const a=element('a','открыть закрытый AI-стенд');a.href='https://kadr-video-lab-ai-korotkowwww-4729.vercel.app/ai.html';$('ai-health').append(a);}
   else{const h=await fetch(api,{credentials:'same-origin',cache:'no-store'}).then(r=>r.json());serverReady=h.ready===true;$('ai-health').textContent=serverReady?'Сервер подключён. Ключи остаются на сервере.':'Серверная конфигурация ещё не завершена. Запуск AI отключён; заглушка не используется.';$('ai-build').textContent=h.commit?`Версия ${h.commit.slice(0,12)}`:'';}
 }catch{$('ai-health').textContent='Сервер недоступен. AI-запросы не отправлены.';}
 ready();

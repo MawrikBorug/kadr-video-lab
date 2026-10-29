@@ -50,14 +50,16 @@ export class Sources {
     if(sourceQ)demand(sourceQ===entity.id,'ARTICLE_IDENTITY','Статья относится к другой работе.');
     const {document}=parseHTML(p.parse.text['*']);
     document.querySelectorAll('script,style,.navbox,.vertical-navbox,.reflist,.mw-references-wrap,sup,.reference,.noprint,table.infobox,.hatnote,.toc').forEach(x=>x.remove());
-    const chunks=[];let allow=true,skipLevel=null;
+    const chunks=[];let allow=true,skipLevel=null,excludedLevel=null;
     for(const child of [...(document.querySelector('.mw-parser-output')||document.body).children]){
       const heading=/^H([1-6])$/.exec(child.tagName)||child.classList?.contains('mw-heading')&&/^H([1-6])$/.exec(child.querySelector('h1,h2,h3,h4,h5,h6')?.tagName||'');
       if(heading){
         const level=Number(heading[1]),name=child.textContent.trim();
         if(season&&future.test(name)){skipLevel=level;allow=false;continue;}
         if(skipLevel!==null){if(level>skipLevel)continue;skipLevel=null;}
+        if(excludedLevel!==null){if(level>excludedLevel)continue;excludedLevel=null;}
         allow=!/^(?:References|External links|See also|Notes|Accolades|Reception|Release|Marketing|Ratings|Awards|Future)/i.test(name);
+        if(!allow)excludedLevel=level;
         if(allow)chunks.push('\n'+name+'\n');continue;
       }
       if(!allow||skipLevel!==null)continue;
@@ -95,7 +97,7 @@ export class Sources {
     let signals;
     try{
       const [a,p]=await Promise.all([this.publicHTML(amazon),this.publicHTML(prime)]);
-      const {document:ad}=parseHTML(a.html);ad.querySelectorAll('script,style,nav,footer').forEach(x=>x.remove());
+      const {document:ad}=parseHTML(a.html);ad.querySelectorAll('script,style,nav,footer,.related-content').forEach(x=>x.remove());
       let allowed=true,skipLevel=null,visual=false;const paragraphs=[],visuals=[];
       for(const node of ad.querySelectorAll('h1,h2,h3,h4,p,div.contentItem-role-text')){
         if(/^H/.test(node.tagName)){

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@vercel/blob": "2.3.0",
+    "js-tiktoken": "1.0.21",
     "linkedom": "0.18.12",
     "sharp": "0.34.5",
     "webtorrent": "3.0.21"
