@@ -6,6 +6,15 @@ import {Models,validateImages,reviewText,generateAnalysis} from '../server/model
 import {Sources} from '../server/sources.mjs';
 
 const out='artifacts/ai-live-eval';await mkdir(out,{recursive:true});
+// Evaluator-only diagnostics: fixed public-source cases, never user uploads/prompts.
+const networkFetch=globalThis.fetch;
+globalThis.fetch=async(...args)=>{
+ const response=await networkFetch(...args);
+ if(String(args[0]).startsWith('https://api.groq.com/')&&!response.ok){
+  let body;try{body=await response.clone().json();}catch{}
+  await writeFile(out+'/provider-error.json',JSON.stringify({status:response.status,error:body?.error},null,2));
+ }return response;
+};
 const report={schema:'kadr.ai-user-live-eval.v1',createdAt:new Date().toISOString(),git:process.env.GITHUB_SHA,cases:[],requests:[],
   inferenceMax:16,notPublishedProductQuality:true,physicalIPhone:'NOT_RUN',tmdbLive:false};
 let starts=0,last=0;
