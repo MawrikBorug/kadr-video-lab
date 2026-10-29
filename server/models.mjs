@@ -91,7 +91,10 @@ export async function recognize(models,catalog,{frames,description=''}){
 }
 
 export async function reviewText(models,dossier,text){
-  const blocks=text.split(/\n\s*\n/).map(x=>x.replace(/^\s*(?:\*\*|#{1,4})?\s*[1-9][.)][^\n]*\n?/,'').trim()).filter(x=>x&&x!=='---');
+  const headings=[...SECTIONS,'Summary','Plot and ending','Meaning','Details and references','Creation','Characters','Visual language','Theories','Sources'].map(x=>x.toLowerCase());
+  const blocks=text.split(/\n\s*\n/).map(x=>x.split('\n').filter(line=>{
+    const clean=line.replace(/[*#]/g,'').trim().replace(/^[1-9][.)]\s*/, '');return !headings.includes(clean.toLowerCase());
+  }).join('\n').trim()).filter(x=>x&&x!=='---');
   const value=await models.call({structured:true,output:2100,
     system:'Independent semantic review. Check ALL numbered candidate blocks against actual sources, without early exit. Do not use memory or trust citation IDs. A secondary source is not an official/author statement. Audience attributions need evidence. A theory cannot introduce false events, identities, causal facts or premises. Technical software facts do not prove shot colors/style. Honest evidence gaps are valid. Give a brief factual basis for each block. Russian issues. JSON only.',
     prompt:JSON.stringify({scope:dossier.scope,sources:dossier.documents,blocks:blocks.map((text,index)=>({index,text})),
@@ -108,13 +111,13 @@ export async function generateAnalysis(models,dossier){
   const prompt=JSON.stringify({task:'Write a complete substantive spoiler analysis in all nine numbered sections, in the specified order. Explain causal links, ending and character identities. Cite source IDs at supported claims. Do not force three fact/interpretation/hypothesis paragraphs into every section. Theories belong in section8 and must be explicitly YOUR reading grounded in true source facts, not claims about audience or authors. A theory must have a true, cited premise. If a topic lacks evidence explain that limitation; do not invent. Aim for 650-850 Russian words.',
     sections:SECTIONS.map((s,i)=>`${i+1}. ${s}`),scope:dossier.scope,sources:dossier.documents});
   models.progress('Материалы получены. Пишем цельный разбор…');
-  let text=await models.call({system,prompt,output:3600});
+  let text=await models.call({system,prompt,output:3000});
   models.progress('Проверяем факты, персонажей, причинность и источники…');
   let review=await reviewText(models,dossier,text);const reviews=[review];
   const passes=r=>r?.verdict==='pass'&&r.coverage_complete===true&&Array.isArray(r.issues)&&r.issues.length===0&&Number.isInteger(r.checked_fact_count)&&r.checked_fact_count>0;
   if(!passes(review)||!sectionCoverage(text)){
     models.progress('Проверка нашла замечания. Одна попытка исправления…');
-    text=await models.call({system,prompt:JSON.stringify({task:'Revise the whole nine-section Russian analysis. Fix EVERY review issue from original source evidence; remove unsupported assertions rather than make another guess. Preserve all nine sections and honest limitations.',scope:dossier.scope,sources:dossier.documents,previous:text,review}),output:3600});
+    text=await models.call({system,prompt:JSON.stringify({task:'Revise the whole nine-section Russian analysis. Fix EVERY review issue from original source evidence; remove unsupported assertions rather than make another guess. Preserve all nine sections and honest limitations.',scope:dossier.scope,sources:dossier.documents,previous:text,review:{issues:review.issues,failed_checks:review.checks?.filter(x=>['unsupported','contradicted'].includes(x.status))}}),output:3000});
     models.progress('Повторно проверяем исправленный текст…');review=await reviewText(models,dossier,text);reviews.push(review);
   }
   if(!passes(review)||!sectionCoverage(text))return {status:'rejected',text:null,reviewSummary:'Разбор не прошёл проверку достоверности после одной попытки исправления. Непринятый текст скрыт.',

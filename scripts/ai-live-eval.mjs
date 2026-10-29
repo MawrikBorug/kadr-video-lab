@@ -27,7 +27,7 @@ function client(name){
 }
 await save();
 // Cases use only neutral filenames. Evaluator manifest is not read by this runner.
-for(const number of ['01','02','03','04','05','06','07']){
+for(const number of (process.argv.includes('--followup')?['01','03']:['01','02','03','04','05','06','07'])){
  const id='image-'+number,m=client(id);const row={id,kind:'LIVE_INFERENCE_REAL_LICENSED_PIXELS'};report.cases.push(row);
  try{
   let raw=await readFile(`tests/fixtures/ai-controls/control-${number}.jpg`);
@@ -36,7 +36,7 @@ for(const number of ['01','02','03','04','05','06','07']){
   const images=await validateImages(['data:image/jpeg;base64,'+raw.toString('base64')]);row.image=images.metadata;
   row.response=await m.call({vision:true,structured:true,images:images.images,output:700,
     system:'Identify film/TV from actual pixels. Similarity is not identity. Return JSON; unknown is valid.',
-    prompt:'Identify this work. Return {"hypotheses":[{"title":"original title","year":2000,"type":"movie or tv","clues":"observed distinguishing clues and conflicts"}],"uncertain":true}. At most 3 hypotheses. Do not invent IDs.'});
+    prompt:'Identify from pixels. Return {"hypotheses":[{"title":"original title","year":2000,"type":"movie|tv","clues":"observed clues"}],"visual_queries":["2-4 objective English visible keywords and medium, alternative wording"],"uncertain":true}. Max3 hypotheses,2 queries. No guessed title/year/duration/city in queries. Consider independent films.'});
  }catch(e){row.error={code:e.code,message:e.message};await save();if(e.code==='MODEL_HTTP'||e.code==='MODEL_RATE_LIMIT')break;}
  await save();
 }
